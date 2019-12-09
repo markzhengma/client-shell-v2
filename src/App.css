@@ -13,3 +13,14 @@
   background-color: grey;
   color: white;
 }
+
+.record-single{
+  display: flex;
+  flex-direction: row;
+}
+.record-column{
+  width: 100px;
+  height: 60px;
+  background-color: grey;
+  color: white
+}

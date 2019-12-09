@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import UserSingle from './UserSingle';
+import RecordList from './RecordList';
 
 class FindUser extends Component {
   constructor(props){
@@ -9,7 +10,8 @@ class FindUser extends Component {
     this.state = {
       filter: 'record_num',
       value: '',
-      data: ''
+      userData: '',
+      recordListData: ''
     }
   };
 
@@ -25,13 +27,27 @@ class FindUser extends Component {
   handleFindUserSubmit(e) {
     e.preventDefault();
     axios.get(`http://localhost:7001/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
-        .then(res => {
-          if(res.data.code !== 200){
-            alert(res.data)
+        .then(user => {
+          if(user.data.code !== 200){
+            alert(user.data)
           } else {
             this.setState({
-              data: res.data.data
+              userData: user.data.data
             });
+            const record_num = user.data.data.record_num;
+            axios.get(`http://localhost:7001/api/record/user/${record_num}`)
+              .then(records => {
+                if(records.data.code !== 200){
+                  alert(records.data);
+                } else {
+                  this.setState({
+                    recordListData: records.data.data
+                  })
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              })
           }
         })
         .catch(err => {
@@ -51,8 +67,11 @@ class FindUser extends Component {
           <input type = "text" name = "value" value = {this.state.value} onChange = {this.handleChange.bind(this)} placeholder = "内容"></input>
           <button type = "submit">查找</button>
         </form>
-        {this.state.data !== '' ? 
-          <UserSingle data = {this.state.data}/>
+        {this.state.userData !== '' ? 
+          <UserSingle userData = {this.state.userData}/>
+        : ""}
+        {this.state.recordListData !== '' ? 
+          <RecordList recordListData = {this.state.recordListData}/>
         : ""}
       </div>
     )
