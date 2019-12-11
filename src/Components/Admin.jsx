@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
 import FindUser from './FindUser';
-import CreateUser from './CreateUser';
+import NewUser from './NewUser';
 
 class Admin extends Component {
   constructor(props){
     super(props);
     this.state = {
-      action: 'find_user'
+      action: 'new_user'
     }
   };
 
@@ -31,10 +31,10 @@ class Admin extends Component {
       <div>
         <div className = "nav-bar">
           <div className = "nav-btn" onClick = {() => this.changeAction('find_user')}>查找老用户</div>
-          <div className = "nav-btn" onClick = {() => this.changeAction('create_user')}>创建新用户</div>
+          <div className = "nav-btn" onClick = {() => this.changeAction('new_user')}>创建新用户</div>
         </div>
         { this.state.action === 'find_user' ? <FindUser/> : '' }
-        { this.state.action === 'create_user' ? <CreateUser/> : '' }
+        { this.state.action === 'new_user' ? <NewUser changeAction = {this.changeAction.bind(this)}/> : '' }
       </div>
     )
   }

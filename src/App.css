@@ -1,3 +1,17 @@
+.submit-btn{
+  width: 160px;
+  height: 30px;
+  margin: 10px;
+  border: none;
+  background-color: #F9D148;
+  color: grey;
+}
+.input-single{
+  width: 200px;
+  height: 20px;
+  margin: 10px;
+}
+
 .nav-bar{
   width: 100%;
   display: flex;
@@ -23,4 +37,10 @@
   height: 60px;
   background-color: grey;
   color: white
+}
+
+.user-box{
+  display: flex;
+  flex-direction: column;
+  width: 400px;
 }

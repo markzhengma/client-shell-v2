@@ -29,7 +29,7 @@ class FindUser extends Component {
     axios.get(`http://localhost:7001/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
         .then(user => {
           if(user.data.code !== 200){
-            alert(user.data)
+            alert(user.data.code + '\n' + JSON.stringify(user.data.data))
           } else {
             this.setState({
               userData: user.data.data
