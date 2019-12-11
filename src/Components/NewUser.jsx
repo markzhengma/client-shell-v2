@@ -29,7 +29,7 @@ class NewUser extends Component {
     e.preventDefault();
     let confirmed = window.confirm(`请核对新用户信息：\n${this.state.user_name}\n${this.state.record_num}\n${this.state.phone}\n${this.state.make}\n${this.state.plate}`);
     if(confirmed){
-      axios.post(`http://localhost:7001/api/user/single?make=${this.state.make}&phone=${this.state.phone}&plate=${this.state.plate}&record_num=${this.state.record_num}&user_name=${this.state.user_name}`)
+      axios.post(`https://www.hailarshell.cn/api/user/single?make=${this.state.make}&phone=${this.state.phone}&plate=${this.state.plate}&record_num=${this.state.record_num}&user_name=${this.state.user_name}`)
           .then(res => {
             if(res.data.code !== 200){
               alert(res.data.code + '\n' + JSON.stringify(res.data.data))

@@ -26,7 +26,7 @@ class FindUser extends Component {
 
   handleFindUserSubmit(e) {
     e.preventDefault();
-    axios.get(`http://localhost:7001/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
+    axios.get(`https://www.hailarshell.cn/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
         .then(user => {
           if(user.data.code !== 200){
             alert(user.data.code + '\n' + JSON.stringify(user.data.data))
@@ -35,7 +35,7 @@ class FindUser extends Component {
               userData: user.data.data
             });
             const record_num = user.data.data.record_num;
-            axios.get(`http://localhost:7001/api/record/user/${record_num}`)
+            axios.get(`https://www.hailarshell.cn/api/record/user/${record_num}`)
               .then(records => {
                 if(records.data.code !== 200){
                   alert(records.data);
