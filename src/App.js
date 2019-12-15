@@ -9,7 +9,7 @@ class App extends Component {
     super();
     this.state = {
       admin: {},
-      page: 'admin'
+      page: 'login'
     }
   }
 
@@ -24,6 +24,13 @@ class App extends Component {
       page: page
     })
   }
+
+  // componentDidMount(){
+  //   let tcb = require('tcb-js-sdk');
+  //   tcb.init({
+  //     env: 'hailar-shell-zb8lp'
+  //   })
+  // }
 
   render() {
     return (

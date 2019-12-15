@@ -7,7 +7,7 @@ class Admin extends Component {
   constructor(props){
     super(props);
     this.state = {
-      action: 'new_user'
+      action: 'find_user'
     }
   };
 
