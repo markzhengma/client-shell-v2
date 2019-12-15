@@ -25,12 +25,29 @@ class App extends Component {
     })
   }
 
-  // componentDidMount(){
-  //   let tcb = require('tcb-js-sdk');
-  //   tcb.init({
-  //     env: 'hailar-shell-zb8lp'
-  //   })
-  // }
+  componentDidMount(){
+    let tcb = require('tcb-js-sdk');
+    tcb.init({
+      env: 'hailar-shell-zb8lp'
+    });
+    let auth = tcb.auth();
+    auth.weixinAuthProvider({
+      appid: 'wx1e21359edb78fd06',  //微信应用appid
+      scope: 'snsapi_login'     //网页授权类型
+    })
+      .signIn()
+      .then(res => {
+        // 登录成功
+        console.log(res)
+        let db = tcb.database();
+        console.log(tcb)
+      })
+      .catch(err => {
+        // 登录失败
+        console.log(err)
+      })
+      // console.log('client initiated')
+  }
 
   render() {
     return (

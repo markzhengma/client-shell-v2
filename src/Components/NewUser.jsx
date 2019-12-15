@@ -29,19 +29,29 @@ class NewUser extends Component {
     e.preventDefault();
     let confirmed = window.confirm(`请核对新用户信息：\n${this.state.user_name}\n${this.state.record_num}\n${this.state.phone}\n${this.state.make}\n${this.state.plate}`);
     if(confirmed){
-      axios.post(`https://www.hailarshell.cn/api/user/single?make=${this.state.make}&phone=${this.state.phone}&plate=${this.state.plate}&record_num=${this.state.record_num}&user_name=${this.state.user_name}`)
-          .then(res => {
-            if(res.data.code !== 200){
-              alert(res.data.code + '\n' + JSON.stringify(res.data.data))
-            } else {
-              this.setState({
-                userData: res.data.data
-              });
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          })
+      axios({
+        url: `https://www.hailarshell.cn/api/user/single`,
+        method: 'POST',
+        data: {
+          make: this.state.make,
+          phone: this.state.phone,
+          plate: this.state.plate,
+          record_num: this.state.record_num,
+          user_name: this.state.user_name,
+        }
+      })
+        .then(res => {
+          if(res.data.code !== 200){
+            alert(res.data.code + '\n' + JSON.stringify(res.data.data))
+          } else {
+            this.setState({
+              userData: res.data.data
+            });
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
     }
   }
 
@@ -49,7 +59,10 @@ class NewUser extends Component {
     return (
       <div>
         {this.state.userData !== '' ? 
+        <div>
+          <h3>新用户：</h3>
           <UserSingle userData = {this.state.userData}/>
+        </div>
         : 
           <div className = "user-box">
             客户姓名：<input className = "input-single" name = "user_name" onChange = {this.handleChange.bind(this)} value = {this.state.user_name}></input>

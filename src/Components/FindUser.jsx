@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import UserSingle from './UserSingle';
+import UserUpdate from './UserUpdate';
 import RecordList from './RecordList';
 
 class FindUser extends Component {
@@ -11,7 +12,8 @@ class FindUser extends Component {
       filter: 'record_num',
       value: '',
       userData: '',
-      recordListData: ''
+      recordListData: [],
+      isUserUpdating: ''
     }
   };
 
@@ -23,6 +25,63 @@ class FindUser extends Component {
       [name]: value
     })
   };
+
+  resetStates(){
+    this.setState({
+      filter: 'record_num',
+      value: '',
+      userData: '',
+      recordListData: '',
+    })
+  };
+
+  changeUserUpdate() {
+    this.setState({
+      isUserUpdating: !this.state.isUserUpdating
+    })
+  };
+
+  confirmUserUpdate(e, data) {
+    e.preventDefault();
+    axios({
+      url: `https://www.hailarshell.cn/api/user/single/${this.state.userData.record_num}`,
+      method: 'PUT',
+      data: {
+        make: data.make,
+        phone: data.phone,
+        plate: data.plate,
+        user_name: data.user_name,
+        detail: data.detail,
+      }
+    })
+      .then(res => {
+        if(res.data.code === 200){
+          this.changeUserUpdate();
+          this.handleFindUserSubmit(e);
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  };
+
+  confirmUserDelete() {
+    let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
+    if(confirm){
+      axios.delete(`https://www.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
+        .then(res => {
+          if(res.data.code !== 200){
+            alert(res.data.code + '\n' + JSON.stringify(res.data.data))
+          } else {
+            this.resetStates();
+          }
+        })
+        .catch(err => {
+          alert(err);
+          console.log(err)
+        })
+    }
+  }
 
   handleFindUserSubmit(e) {
     e.preventDefault();
@@ -39,6 +98,7 @@ class FindUser extends Component {
               .then(records => {
                 if(records.data.code !== 200){
                   alert(records.data);
+                  console.log(records.data)
                 } else {
                   this.setState({
                     recordListData: records.data.data
@@ -46,6 +106,7 @@ class FindUser extends Component {
                 }
               })
               .catch(err => {
+                alert(err);
                 console.log(err);
               })
           }
@@ -67,12 +128,26 @@ class FindUser extends Component {
           <input type = "text" name = "value" value = {this.state.value} onChange = {this.handleChange.bind(this)} placeholder = "内容"></input>
           <button type = "submit">查找</button>
         </form>
-        {this.state.userData !== '' ? 
-          <UserSingle userData = {this.state.userData}/>
+        {this.state.userData !== '' ? this.state.isUserUpdating ? 
+          <UserUpdate 
+            userData = {this.state.userData} 
+            // changeUserUpdate = {this.changeUserUpdate.bind(this)}
+            confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
+          />
+        :
+          <div>
+            <UserSingle userData = {this.state.userData}/>
+            <button onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</button>
+            <button onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</button>
+            <RecordList 
+              recordListData = {this.state.recordListData}
+              record_num = {this.state.userData.record_num}
+              handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
+            />
+          </div>
         : ""}
-        {this.state.recordListData !== '' ? 
-          <RecordList recordListData = {this.state.recordListData}/>
-        : ""}
+        {/* {this.state.recordListData.length > 0 ? 
+        : ""} */}
       </div>
     )
   }
