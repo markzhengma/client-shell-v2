@@ -44,7 +44,7 @@ class FindUser extends Component {
   confirmUserUpdate(e, data) {
     e.preventDefault();
     axios({
-      url: `https://www.hailarshell.cn/api/user/single/${this.state.userData.record_num}`,
+      url: `http://123.207.165.116:7001/api/user/single/${this.state.userData.record_num}`,
       method: 'PUT',
       data: {
         make: data.make,
@@ -68,7 +68,7 @@ class FindUser extends Component {
   confirmUserDelete() {
     let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
     if(confirm){
-      axios.delete(`https://www.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
+      axios.delete(`http://123.207.165.116:7001/api/user/single/${this.state.userData.record_num}`)
         .then(res => {
           if(res.data.code !== 200){
             alert(res.data.code + '\n' + JSON.stringify(res.data.data))
@@ -85,7 +85,7 @@ class FindUser extends Component {
 
   handleFindUserSubmit(e) {
     e.preventDefault();
-    axios.get(`https://www.hailarshell.cn/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
+    axios.get(`http://123.207.165.116:7001/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
         .then(user => {
           if(user.data.code !== 200){
             alert(user.data.code + '\n' + JSON.stringify(user.data.data))
@@ -94,7 +94,7 @@ class FindUser extends Component {
               userData: user.data.data
             });
             const record_num = user.data.data.record_num;
-            axios.get(`https://www.hailarshell.cn/api/record/user/${record_num}`)
+            axios.get(`http://123.207.165.116:7001/api/record/user/${record_num}`)
               .then(records => {
                 if(records.data.code !== 200){
                   alert(records.data);

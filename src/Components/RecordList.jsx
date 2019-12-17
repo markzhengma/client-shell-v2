@@ -45,7 +45,7 @@ class RecordList extends Component {
     e.preventDefault();
     const record_num = this.props.record_num;
     axios({
-      url: `https://www.hailarshell.cn/api/record/user/${record_num}`,
+      url: `http://123.207.165.116:7001/api/record/user/${record_num}`,
       method: 'POST',
       data: {
         date: this.state.newRecord.date,
@@ -73,7 +73,7 @@ class RecordList extends Component {
   }
 
   handleDeleteRecord(e, id){
-    axios.delete(`https://www.hailarshell.cn/api/record/single/${id}`)
+    axios.delete(`http://123.207.165.116:7001/api/record/single/${id}`)
       .then(res => {
         if(res.data.code !== 200){
           alert(res.data.code + '\n' + JSON.stringify(res.data.data));

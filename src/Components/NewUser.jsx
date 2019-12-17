@@ -30,7 +30,7 @@ class NewUser extends Component {
     let confirmed = window.confirm(`请核对新用户信息：\n${this.state.user_name}\n${this.state.record_num}\n${this.state.phone}\n${this.state.make}\n${this.state.plate}`);
     if(confirmed){
       axios({
-        url: `https://www.hailarshell.cn/api/user/single`,
+        url: `http://123.207.165.116:7001/api/user/single`,
         method: 'POST',
         data: {
           make: this.state.make,
