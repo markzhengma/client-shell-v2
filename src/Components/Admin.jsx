@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, ButtonGroup } from 'react-bootstrap';
 
 import FindUser from './FindUser';
 import NewUser from './NewUser';
@@ -30,8 +31,10 @@ class Admin extends Component {
     return (
       <div className = "admin">
         <div className = "nav-bar">
-          <div className = "nav-btn" onClick = {() => this.changeAction('find_user')}>查找老用户</div>
-          <div className = "nav-btn" onClick = {() => this.changeAction('new_user')}>创建新用户</div>
+          <ButtonGroup style = {{ width: '300px', margin: '20px' }}>
+            <Button variant = "secondary" onClick = {() => this.changeAction('find_user')}>查找老用户</Button>
+            <Button variant = "secondary" onClick = {() => this.changeAction('new_user')}>创建新用户</Button>
+          </ButtonGroup>
         </div>
         { this.state.action === 'find_user' ? <FindUser/> : '' }
         { this.state.action === 'new_user' ? <NewUser changeAction = {this.changeAction.bind(this)}/> : '' }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Form, Card, Button } from 'react-bootstrap';
 
 class UserUpdate extends Component {
   constructor(){
@@ -43,23 +43,33 @@ class UserUpdate extends Component {
 
   render() {
     return (
-      <div>
-        {/* <div>姓名：{this.props.userData.user_name || ''}</div>
-        <div>换油证号：{this.props.userData.record_num || ''}</div>
-        <div>联系方式：{this.props.userData.phone || ''}</div>
-        <div>车牌号：{this.props.userData.plate || ''}</div>
-        <div>车型：{this.props.userData.make || ''}</div>
-        <div>备注：{this.props.userData.detail || ''}</div> */}
-        <form onSubmit = {(e) => this.props.confirmUserUpdate(e, this.state.user_input)}>
-          <input value = {this.props.userData.record_num} disabled></input>
-          <input name = "user_name" defaultValue = {this.props.userData.user_name} onChange = {this.handleUserUpdateChange.bind(this)}></input>
-          <input name = "phone" defaultValue = {this.props.userData.phone} onChange = {this.handleUserUpdateChange.bind(this)}></input>
-          <input name = "plate" defaultValue = {this.props.userData.plate} onChange = {this.handleUserUpdateChange.bind(this)}></input>
-          <input name = "make" defaultValue = {this.props.userData.make} onChange = {this.handleUserUpdateChange.bind(this)}></input>
-          <input name = "detail" defaultValue = {this.props.userData.detail} onChange = {this.handleUserUpdateChange.bind(this)}></input>
-          <button type = "submit">保存</button>
-        </form>
-      </div>
+      <Form onSubmit = {(e) => this.props.confirmUserUpdate(e, this.state.user_input)}>
+        <Form.Group>
+        <Form.Label>车主姓名</Form.Label>
+          <Form.Control name = "user_name" defaultValue = {this.props.userData.user_name} onChange = {this.handleUserUpdateChange.bind(this)} />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>换油证号</Form.Label>
+          <Form.Control value = {this.props.userData.record_num} disabled></Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>联系方式</Form.Label>
+          <Form.Control name = "phone" defaultValue = {this.props.userData.phone} onChange = {this.handleUserUpdateChange.bind(this)}></Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>车牌号</Form.Label>
+          <Form.Control name = "plate" defaultValue = {this.props.userData.plate} onChange = {this.handleUserUpdateChange.bind(this)}></Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>车型</Form.Label>
+          <Form.Control name = "make" defaultValue = {this.props.userData.make} onChange = {this.handleUserUpdateChange.bind(this)}></Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>备注</Form.Label>
+          <Form.Control as="textarea" rows="3" name = "detail" defaultValue = {this.props.userData.detail} onChange = {this.handleUserUpdateChange.bind(this)}></Form.Control>
+        </Form.Group>
+        <Button variant="success" type = "submit">保存</Button>
+      </Form>
     )
   }
 }

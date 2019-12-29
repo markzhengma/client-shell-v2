@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Button } from 'react-bootstrap'; 
+import { Card, Form, Button, ButtonGroup } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
@@ -145,18 +145,24 @@ class FindUser extends Component {
           <button type = "submit">查找</button>
         </form> */}
         {this.state.userData !== '' ? this.state.isUserUpdating ? 
+        <Card className = "user-form">
           <UserUpdate 
             userData = {this.state.userData} 
             // changeUserUpdate = {this.changeUserUpdate.bind(this)}
             confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
           />
+        </Card>
         :
           <div>
-            <UserSingle userData = {this.state.userData}/>
-            <Button variant="primary" onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</Button>
-            <Button variant="danger" onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</Button>
-            {/* <button onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</button> */}
-            {/* <button onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</button> */}
+            <Card className = "user-single">
+              <UserSingle userData = {this.state.userData}/>
+              <ButtonGroup style = {{ margin: '10px' }}>
+                <Button variant="primary" onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</Button>
+                <Button variant="danger" onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</Button>
+              </ButtonGroup>
+              {/* <button onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</button> */}
+              {/* <button onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</button> */}
+            </Card>
           </div>
         : ""}
         {this.state.userData !== '' ? 

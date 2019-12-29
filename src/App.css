@@ -1,6 +1,8 @@
 .app{
   background-color: #F9D148;
   min-height: 100vh;
+  width: fit-content;
+  min-width: 100vw;
 }
 /* components */
 .header{
@@ -31,6 +33,29 @@
   margin: 20px;
 }
 /* buttons */
+
+/* box */
+.user-single{
+  width: 400px;
+  margin: 20px;
+}
+.user-form{
+  width: 400px;
+  padding: 20px;
+  margin: 20px;
+}
+.user-form button{
+  width: 200px;
+  margin: 20px;
+}
+.record-list{
+  padding: 20px 20px 200px 20px;
+}
+
+
+
+
+
 .submit-btn{
   width: 160px;
   height: 30px;

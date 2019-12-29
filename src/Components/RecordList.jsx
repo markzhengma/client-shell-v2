@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Table, Form, Row, Col } from 'react-bootstrap';
 
 class RecordList extends Component {
   constructor(props){
@@ -119,77 +120,85 @@ class RecordList extends Component {
   render() {
     const data = this.props.recordListData;
     return (
-      <div>
-        <div className = "record-single">
-          <div className = "record-column">日期</div>
-          <div className = "record-column">项目名称</div>
-          <div className = "record-column">表示里程</div>
-          <div className = "record-column">赠品情况</div>
-          <div className = "record-column">操作人</div>
-          <div className = "record-column">备注</div>
-          <div className = "record-column">操作</div>
-          {/* <div className = "record-column">换油证号</div> */}
+      <div className = "record-list">
+        <div>
+          <h5>新保养记录</h5>
+          <Form style={{ margin: '20px' }} onSubmit = {this.handleNewRecordSubmit.bind(this)}>
+            <Row>
+              <Col>
+                <Form.Control name = "date" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Control name = "product_name" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "项目名称"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Control name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Control name = "gift" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "赠品情况"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Control name = "operator" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "操作人"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Control name = "detail" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "备注"></Form.Control>
+              </Col>
+              <Col>
+                <button type = "submit">保存</button>
+              </Col>
+            </Row>
+          </Form>
         </div>
-        <form onSubmit = {this.handleNewRecordSubmit.bind(this)}>
-          <div className = "record-single">
-            <div className = "record-column">
-              <input name = "date" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></input>
-            </div>
-            <div className = "record-column">
-              <input name = "product_name" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "项目名称"></input>
-            </div>
-            <div className = "record-column">
-              <input name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></input>
-            </div>
-            <div className = "record-column">
-              <input name = "gift" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "赠品情况"></input>
-            </div>
-            <div className = "record-column">
-              <input name = "operator" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "操作人"></input>
-            </div>
-            <div className = "record-column">
-              <input name = "detail" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "备注"></input>
-            </div>
-            <div className = "record-column">
-              <button type = "submit">保存</button>
-            </div>
-          </div>
-        </form>
-        {data.map(record => {
-          return (
-            <div>
-              {this.state.selectUpdateId !== record._id ? 
-                <div className = "record-single" key = {record._id} id = {record._id}>
-                  <div className = "record-column">{record.date}</div>
-                  <div className = "record-column">{record.product_name}</div>
-                  <div className = "record-column">{record.milage}</div>
-                  <div className = "record-column">{record.gift}</div>
-                  <div className = "record-column">{record.operator}</div>
-                  <div className = "record-column">{record.detail}</div>
-                  <div className = "record-column">
-                    <button onClick = {(e) => this.selectUpdateRecord(record._id)}>编辑</button>
-                    <button onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</button>
-                  </div>
-                </div>
-              :
-              <div className = "record-single" key = {record._id} id = {record._id}>
-                <div className = "record-column"><input defaultValue = {record.date} name = "date" onChange = {this.handleUpdateRecordChange.bind(this)}/></div>
-                <div className = "record-column"><input defaultValue = {record.product_name} name = "product_name" onChange = {this.handleUpdateRecordChange.bind(this)}/></div>
-                <div className = "record-column"><input defaultValue = {record.milage} name = "milage" onChange = {this.handleUpdateRecordChange.bind(this)}/></div>
-                <div className = "record-column"><input defaultValue = {record.gift} name = "gift" onChange = {this.handleUpdateRecordChange.bind(this)}/></div>
-                <div className = "record-column"><input defaultValue = {record.operator} name = "operator" onChange = {this.handleUpdateRecordChange.bind(this)}/></div>
-                <div className = "record-column"><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></div>
-                <div className = "record-column">
-                  {/* <button onClick = {(e) => this.selectUpdateRecord(record._id)}>编辑</button>
-                  <button onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</button> */}
-                  <button onClick = {(e) => this.selectUpdateRecord('')}>保存</button>
-                </div>
-              </div>
-              }
-              
-            </div>
-          )
-        })}
+        {data ? 
+          <div>
+          <h5>保养记录历史</h5>
+          <Table striped bordered hover variant="dark">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>项目名称</th>
+                <th>表示里程</th>
+                <th>赠品情况</th>
+                <th>操作人</th>
+                <th>备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map(record => {
+                return (
+                  this.state.selectUpdateId !== record._id ? 
+                    <tr key = {record._id} id = {record._id}>
+                      <td>{record.date}</td>
+                      <td>{record.product_name}</td>
+                      <td>{record.milage}</td>
+                      <td>{record.gift}</td>
+                      <td>{record.operator}</td>
+                      <td>{record.detail}</td>
+                      <td>
+                        <button onClick = {(e) => this.selectUpdateRecord(record._id)}>编辑</button>
+                        <button onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</button>
+                      </td>
+                    </tr>
+                  :
+                  <tr key = {record._id} id = {record._id}>
+                    <td><input defaultValue = {record.date} name = "date" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                    <td><input defaultValue = {record.product_name} name = "product_name" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                    <td><input defaultValue = {record.milage} name = "milage" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                    <td><input defaultValue = {record.gift} name = "gift" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                    <td><input defaultValue = {record.operator} name = "operator" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                    <td><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                    <td>
+                      <button onClick = {(e) => this.selectUpdateRecord('')}>保存</button>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </div>
+        : ""}
+        
       </div>
     )
   }

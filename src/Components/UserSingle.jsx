@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Card } from 'react-bootstrap';
 
 class UserSingle extends Component {
   constructor(props){
@@ -22,14 +22,23 @@ class UserSingle extends Component {
 
   render() {
     return (
-      <div>
-        <div>姓名：{this.props.userData.user_name || ''}</div>
-        <div>换油证号：{this.props.userData.record_num || ''}</div>
-        <div>联系方式：{this.props.userData.phone || ''}</div>
-        <div>车牌号：{this.props.userData.plate || ''}</div>
-        <div>车型：{this.props.userData.make || ''}</div>
-        <div>备注：{this.props.userData.detail || ''}</div>
-      </div>
+          <Card.Body>
+            <Card.Title>
+              <small>车主姓名：</small>{this.props.userData.user_name || ''}
+            </Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">
+              换油证号：{this.props.userData.record_num || ''}
+            </Card.Subtitle>
+            <Card.Text>
+              联系方式：{this.props.userData.phone || ''}
+              <br/>
+              车牌号：{this.props.userData.plate || ''}
+              <br/>
+              车型：{this.props.userData.make || ''}
+              <br/>
+              备注：{this.props.userData.detail || ''}
+            </Card.Text>
+          </Card.Body>
     )
   }
 }
