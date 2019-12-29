@@ -1,3 +1,36 @@
+.app{
+  background-color: #F9D148;
+  min-height: 100vh;
+}
+/* components */
+.header{
+  background-color: grey;
+  color: white;
+}
+.footer{
+  background-color: grey;
+  color: white;
+}
+.footer-legal a{
+  text-decoration: none;
+  color: white;
+}
+.login{
+  min-height: 100vh;
+}
+.admin {
+  min-height: 100vh;
+}
+/* forms */
+.login-form{
+  width: 200px;
+  margin: 20px;
+}
+.search-form{
+  width: 200px;
+  margin: 20px;
+}
+/* buttons */
 .submit-btn{
   width: 160px;
   height: 30px;

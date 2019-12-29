@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Form, Button } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
@@ -44,7 +45,7 @@ class FindUser extends Component {
   confirmUserUpdate(e, data) {
     e.preventDefault();
     axios({
-      url: `https://www.hailarshell.cn/api/user/single/${this.state.userData.record_num}`,
+      url: `https://api.hailarshell.cn/api/user/single/${this.state.userData.record_num}`,
       method: 'PUT',
       data: {
         make: data.make,
@@ -68,7 +69,7 @@ class FindUser extends Component {
   confirmUserDelete() {
     let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
     if(confirm){
-      axios.delete(`https://www.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
+      axios.delete(`https://api.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
         .then(res => {
           if(res.data.code !== 200){
             alert(res.data.code + '\n' + JSON.stringify(res.data.data))
@@ -85,7 +86,7 @@ class FindUser extends Component {
 
   handleFindUserSubmit(e) {
     e.preventDefault();
-    axios.get(`https://www.hailarshell.cn/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
+    axios.get(`https://api.hailarshell.cn/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
         .then(user => {
           if(user.data.code !== 200){
             alert(user.data.code + '\n' + JSON.stringify(user.data.data))
@@ -94,7 +95,7 @@ class FindUser extends Component {
               userData: user.data.data
             });
             const record_num = user.data.data.record_num;
-            axios.get(`https://www.hailarshell.cn/api/record/user/${record_num}`)
+            axios.get(`https://api.hailarshell.cn/api/record/user/${record_num}`)
               .then(records => {
                 if(records.data.code !== 200){
                   alert(records.data);
@@ -119,7 +120,22 @@ class FindUser extends Component {
   render() {
     return (
       <div>
-        <form onSubmit = {this.handleFindUserSubmit.bind(this)}>
+        <Form className = "search-form" onSubmit = {this.handleFindUserSubmit.bind(this)}>
+          <Form.Group>
+            <Form.Label>查询条件</Form.Label>
+            <Form.Control as="select" name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
+              <option value = "record_num">按换油证号查找</option>
+              <option value = "phone">按手机号查找</option>
+              <option value = "plate">按车牌号查找</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>查询内容</Form.Label>
+            <Form.Control type = "text" name = "value" value = {this.state.value} onChange = {this.handleChange.bind(this)} placeholder = "内容" />
+          </Form.Group>
+          <Button variant="success" type = "submit">查找</Button>
+        </Form>
+        {/* <form onSubmit = {this.handleFindUserSubmit.bind(this)}>
           <select name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
             <option value = "record_num">按换油证号查找</option>
             <option value = "phone">按手机号查找</option>
@@ -127,7 +143,7 @@ class FindUser extends Component {
           </select>
           <input type = "text" name = "value" value = {this.state.value} onChange = {this.handleChange.bind(this)} placeholder = "内容"></input>
           <button type = "submit">查找</button>
-        </form>
+        </form> */}
         {this.state.userData !== '' ? this.state.isUserUpdating ? 
           <UserUpdate 
             userData = {this.state.userData} 
@@ -137,8 +153,10 @@ class FindUser extends Component {
         :
           <div>
             <UserSingle userData = {this.state.userData}/>
-            <button onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</button>
-            <button onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</button>
+            <Button variant="primary" onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</Button>
+            <Button variant="danger" onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</Button>
+            {/* <button onClick = {this.changeUserUpdate.bind(this)}>编辑客户信息</button> */}
+            {/* <button onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</button> */}
           </div>
         : ""}
         {this.state.userData !== '' ? 

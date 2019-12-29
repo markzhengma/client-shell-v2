@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+import Header from './Components/Header';
+import Footer from './Components/Footer';
 import Login from './Components/Login';
 import Admin from './Components/Admin';
 
@@ -9,7 +12,7 @@ class App extends Component {
     super();
     this.state = {
       admin: {},
-      page: 'login'
+      page: 'admin'
     }
   }
 
@@ -51,10 +54,8 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <h1>
-          Shell
-        </h1>
+      <div className = "app">
+        <Header/>
         {this.state.page === 'login' ? 
           <Login
             setAdmin = {this.setAdmin.bind(this)}
@@ -66,6 +67,7 @@ class App extends Component {
             handlePageChange = {this.handlePageChange.bind(this)}
           />
         : ''}
+        <Footer/>
       </div>
     )
   }

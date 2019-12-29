@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Button, Form } from 'react-bootstrap';
 
 class Login extends Component {
   constructor(props){
@@ -24,7 +25,7 @@ class Login extends Component {
     if(this.state.admin_name === "" || this.state.admin_pass === "") {
       alert('请输入管理员账号和密码');
     } else {
-      axios.get(`https://www.hailarshell.cn/api/admin/login?admin=${this.state.admin_name}&pass=${this.state.admin_pass}`)
+      axios.get(`https://api.hailarshell.cn/api/admin/login?admin=${this.state.admin_name}&pass=${this.state.admin_pass}`)
         .then(res => {
           if(res.data.code !== 200){
             if(res.data.code === 422){
@@ -45,12 +46,20 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit = {this.handleAdminLogin.bind(this)}>
-          <input type = "text" name = "admin_name" value = {this.state.admin_name} onChange = {this.handleChange.bind(this)} placeholder = "管理员账号"></input>
-          <input type = "password" name = "admin_pass" value = {this.state.admin_pass} onChange = {this.handleChange.bind(this)} placeholder = "管理员密码"></input>
-          <button type = "submit">登录</button>
-        </form>
+      <div className = "login">
+        <Form className = "login-form" onSubmit = {this.handleAdminLogin.bind(this)}>
+          <Form.Group>
+            <Form.Label>管理员账号</Form.Label>
+            <Form.Control name = "admin_name" value = {this.state.admin_name} onChange = {this.handleChange.bind(this)} type="text" placeholder="管理员账号" />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>管理员密码</Form.Label>
+            <Form.Control name = "admin_pass" value = {this.state.admin_pass} onChange = {this.handleChange.bind(this)} type="password" placeholder="管理员密码" />
+          </Form.Group>
+
+          <Button variant="success" type = "submit">登录</Button>
+        </Form>
       </div>
     )
   }

@@ -28,7 +28,7 @@ class Admin extends Component {
 
   render() {
     return (
-      <div>
+      <div className = "admin">
         <div className = "nav-bar">
           <div className = "nav-btn" onClick = {() => this.changeAction('find_user')}>查找老用户</div>
           <div className = "nav-btn" onClick = {() => this.changeAction('new_user')}>创建新用户</div>
