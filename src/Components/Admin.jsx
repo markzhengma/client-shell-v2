@@ -8,7 +8,7 @@ class Admin extends Component {
   constructor(props){
     super(props);
     this.state = {
-      action: 'find_user'
+      action: 'new_user'
     }
   };
 
@@ -37,7 +37,12 @@ class Admin extends Component {
           </ButtonGroup>
         </div>
         { this.state.action === 'find_user' ? <FindUser/> : '' }
-        { this.state.action === 'new_user' ? <NewUser changeAction = {this.changeAction.bind(this)}/> : '' }
+        { this.state.action === 'new_user' ? 
+          <NewUser 
+            changeAction = {this.changeAction.bind(this)}
+            admin = {this.props.admin}
+          /> 
+        : '' }
       </div>
     )
   }

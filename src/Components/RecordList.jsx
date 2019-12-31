@@ -22,9 +22,25 @@ class RecordList extends Component {
         operator: '',
         detail: ''
       },
-      selectUpdateId: ''
+      selectUpdateId: '',
+      currDate: ''
     }
   };
+
+  componentDidMount(){
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+    this.setState({
+      currDate: [year, month, day].join('-')
+    });
+  }
 
   resetInput(){
     this.setState({
@@ -126,7 +142,7 @@ class RecordList extends Component {
           <Form style={{ margin: '20px' }} onSubmit = {this.handleNewRecordSubmit.bind(this)}>
             <Row>
               <Col>
-                <Form.Control name = "date" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
+                <Form.Control type="date" defaultValue={this.state.currDate} name = "date" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
               </Col>
               <Col>
                 <Form.Control name = "product_name" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "项目名称"></Form.Control>

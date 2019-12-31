@@ -12,7 +12,7 @@ class App extends Component {
     super();
     this.state = {
       admin: {},
-      page: 'admin'
+      page: 'login'
     }
   }
 
@@ -65,6 +65,7 @@ class App extends Component {
         {this.state.page === 'admin' ? 
           <Admin
             handlePageChange = {this.handlePageChange.bind(this)}
+            admin = {this.state.admin}
           />
         : ''}
         <Footer/>
