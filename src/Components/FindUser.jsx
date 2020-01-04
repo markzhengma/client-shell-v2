@@ -167,6 +167,9 @@ class FindUser extends Component {
         : ""}
         {this.state.userData !== '' ? 
           <RecordList 
+            productData = {this.props.productData}
+            giftData = {this.props.giftData}
+            operatorData = {this.props.operatorData}
             recordListData = {this.state.recordListData}
             record_num = {this.state.userData.record_num}
             handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}

@@ -3,14 +3,58 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 
 import FindUser from './FindUser';
 import NewUser from './NewUser';
+import axios from 'axios';
 
 class Admin extends Component {
   constructor(props){
     super(props);
     this.state = {
-      action: 'new_user'
+      action: 'find_user',
+      giftData: [],
+      operatorData: [],
+      productData: [],
     }
   };
+
+  componentDidMount(){
+    this.getGiftData();
+    this.getOperatorData();
+    this.getProductData();
+  };
+
+  getGiftData(){
+    axios.get('https://api.hailarshell.cn/api/gift/all')
+      .then(res => {
+        this.setState({
+          giftData: res.data
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+  getOperatorData(){
+    axios.get('https://api.hailarshell.cn/api/operator/all')
+      .then(res => {
+        this.setState({
+          operatorData: res.data
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+  getProductData(){
+    axios.get('https://api.hailarshell.cn/api/product/all')
+      .then(res => {
+        this.setState({
+          productData: res.data
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   handleChange(e) {
     const target = e.target;
@@ -36,7 +80,15 @@ class Admin extends Component {
             <Button variant = "secondary" onClick = {() => this.changeAction('new_user')}>创建新用户</Button>
           </ButtonGroup>
         </div>
-        { this.state.action === 'find_user' ? <FindUser/> : '' }
+        { this.state.action === 'find_user' ? 
+          <FindUser 
+            giftData = {this.state.giftData}
+            productData = {this.state.productData}
+            operatorData = {this.state.operatorData}
+          /> 
+          : 
+          '' 
+        }
         { this.state.action === 'new_user' ? 
           <NewUser 
             changeAction = {this.changeAction.bind(this)}
