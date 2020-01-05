@@ -181,72 +181,87 @@ class RecordList extends Component {
       <div className = "record-list">
         <div>
           <h5>新保养记录</h5>
-          <Form style={{ margin: '20px' }} onSubmit = {this.handleNewRecordSubmit.bind(this)}>
+          <Form className = "new-record-form" onSubmit = {this.handleNewRecordSubmit.bind(this)}>
             <Row>
               <Col>
-                <Form.Control type="date" defaultValue={this.state.currDate} name = "date" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
+                <Form.Group>
+                  <Form.Label>日期</Form.Label>
+                  <Form.Control type="date" defaultValue={this.state.currDate} name = "date" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Control as="select" name = "product_name" onChange = {this.handleNewRecordChange.bind(this)}>
-                  <option value = "" disabled>【项目名称】</option>
-                  <option value = "" disabled>【汽机油】</option>
-                  {this.props.productData.map(product => {
-                    if(product.product_type === '汽机油')
-                    return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                  })}
-                  <option value = "" disabled>【柴机油】</option>
-                  {this.props.productData.map(product => {
-                    if(product.product_type === '柴机油')
-                    return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                  })}
-                  <option value = "" disabled>【中华产品】</option>
-                  {this.props.productData.map(product => {
-                    if(product.product_type === '中华产品')
-                    return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                  })}
-                  <option value = "" disabled>【附属品】</option>
-                  {this.props.productData.map(product => {
-                    if(product.product_type === '附属品')
-                    return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                  })}
-                  
-                </Form.Control>
+                <Form.Group>
+                  <Form.Label>项目名称</Form.Label>
+                  <Form.Control as="select" name = "product_name" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
+                    <option value = "" disabled>【汽机油】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '汽机油')
+                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                    })}
+                    <option value = "" disabled>【柴机油】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '柴机油')
+                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                    })}
+                    <option value = "" disabled>【中华产品】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '中华产品')
+                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                    })}
+                    <option value = "" disabled>【附属品】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '附属品')
+                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                    })}
+                  </Form.Control>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Control name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></Form.Control>
+                <Form.Group>
+                  <Form.Label>表示里程</Form.Label>
+                  <Form.Control name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></Form.Control>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Control as="select" name = "gift_name" onChange = {this.handleNewRecordChange.bind(this)}>
-                  <option value = "" disabled>【赠品情况】</option>
-                  {this.props.giftData.map(gift => {
-                    return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
-                  })}
-                </Form.Control>
+                <Form.Group>
+                  <Form.Label>赠品情况</Form.Label>
+                  <Form.Control as="select" name = "gift_name" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
+                    {this.props.giftData.map(gift => {
+                      return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
+                    })}
+                  </Form.Control>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Control as="select" name = "operator_name" onChange = {this.handleNewRecordChange.bind(this)}>
-                  <option value = "" disabled>【操作人】</option>
-                  <option value = "" disabled>【海拉尔】</option>
-                  {this.props.operatorData.map(operator => {
-                    if(operator.location === '海拉尔')
-                    return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
-                  })}
-                  <option value = "" disabled>【满洲里】</option>
-                  {this.props.operatorData.map(operator => {
-                    if(operator.location === '满洲里')
-                    return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
-                  })}
-                  <option value = "" disabled>【牙克石】</option>
-                  {this.props.operatorData.map(operator => {
-                    if(operator.location === '牙克石')
-                    return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
-                  })}
-                </Form.Control>
+                <Form.Group>
+                  <Form.Label>操作人</Form.Label>
+                  <Form.Control as="select" name = "operator_name" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
+                    <option value = "" disabled>【海拉尔】</option>
+                    {this.props.operatorData.map(operator => {
+                      if(operator.location === '海拉尔')
+                      return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                    })}
+                    <option value = "" disabled>【满洲里】</option>
+                    {this.props.operatorData.map(operator => {
+                      if(operator.location === '满洲里')
+                      return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                    })}
+                    <option value = "" disabled>【牙克石】</option>
+                    {this.props.operatorData.map(operator => {
+                      if(operator.location === '牙克石')
+                      return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                    })}
+                  </Form.Control>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Control name = "detail" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "备注"></Form.Control>
+                <Form.Group>
+                  <Form.Label>积分/备注</Form.Label>
+                  <Form.Control name = "detail" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "积分/备注"></Form.Control>
+                </Form.Group>
               </Col>
               <Col>
+                <div style = {{ margin: '0 0 8px 0' }}>操作</div>
                 <Button variant="primary" type = "submit">保存</Button>
               </Col>
             </Row>
@@ -263,7 +278,7 @@ class RecordList extends Component {
                 <th>表示里程</th>
                 <th>赠品情况</th>
                 <th>操作人</th>
-                <th>备注</th>
+                <th>积分/备注</th>
                 <th>操作</th>
               </tr>
             </thead>

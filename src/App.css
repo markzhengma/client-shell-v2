@@ -32,20 +32,22 @@
   width: 200px;
   margin: 20px;
 }
-/* buttons */
-
-/* box */
-.user-single{
-  width: 400px;
-  margin: 20px;
-}
 .user-form{
   width: 400px;
   padding: 20px;
   margin: 20px;
 }
-.user-form button{
-  width: 200px;
+.new-record-form {
+  background-color: #43494E;
+  border: 1px solid #95999c;
+  color: #FFF;
+  padding: 16px;
+}
+/* buttons */
+
+/* box */
+.user-single{
+  width: 400px;
   margin: 20px;
 }
 .record-list{

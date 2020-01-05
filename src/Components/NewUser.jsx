@@ -70,10 +70,10 @@ class NewUser extends Component {
         {this.state.userData !== '' ? 
         <div>
           <h3>新用户：</h3>
-          <Card className = "user-single">
+          <Card bg="dark" text="white" border="light" className = "user-single">
             <UserSingle userData = {this.state.userData}/>
           </Card>
-          <h5>请返回「查找老用户」来查找该用户，并添加保养记录。</h5>
+          <h5>请返回<Button variant = "secondary" onClick = {() => this.props.changeAction('find_user')}>查找老用户</Button>来查找该用户，并添加保养记录。</h5>
         </div>
         : 
         <Form className = "user-form">
