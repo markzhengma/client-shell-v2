@@ -176,7 +176,7 @@ class FindUser extends Component {
           <Button variant="success" type = "submit">查找</Button>
         </Form>
         {this.state.userData !== '' ? this.state.isUserUpdating ? 
-        <Card bg="dark" text="white" border="light" className = "user-form">
+        <Card bg="secondary" text="white" border="light" className = "user-form">
           <UserUpdate 
             userData = {this.state.userData} 
             cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
@@ -186,7 +186,7 @@ class FindUser extends Component {
         </Card>
         :
           <div>
-            <Card bg="dark" text="white" border="light" className = "user-single">
+            <Card bg="secondary" text="white" border="light" className = "user-single">
               <UserSingle userData = {this.state.userData}/>
               <ButtonGroup style = {{ margin: '10px' }}>
                 <Button variant="primary" onClick = {this.selectUserUpdate.bind(this)}>编辑客户信息</Button>

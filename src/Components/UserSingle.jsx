@@ -28,31 +28,31 @@ class UserSingle extends Component {
                 {this.props.userData.user_name || ''}
               </Card.Title>
             </Card.Header>
-            <Card.Text className="mb-2 text-muted">
+            <Card.Text className="mb-2">
               换油证号
             </Card.Text>
             <Card.Text>
               {this.props.userData.record_num || ''}
             </Card.Text>
-            <Card.Text className="mb-2 text-muted">
+            <Card.Text className="mb-2">
               联系方式
             </Card.Text>
             <Card.Text>
               {this.props.userData.phone || ''}
             </Card.Text>
-            <Card.Text className="mb-2 text-muted">
+            <Card.Text className="mb-2">
               车牌号
             </Card.Text>
             <Card.Text>
               {this.props.userData.plate || ''}
             </Card.Text>
-            <Card.Text className="mb-2 text-muted">
+            <Card.Text className="mb-2">
               车型
             </Card.Text>
             <Card.Text>
               {this.props.userData.make || ''}
             </Card.Text>
-            <Card.Text className="mb-2 text-muted">
+            <Card.Text className="mb-2">
               备注
             </Card.Text>
             <Card.Text>

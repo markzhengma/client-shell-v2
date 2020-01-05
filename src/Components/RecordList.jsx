@@ -300,7 +300,7 @@ class RecordList extends Component {
         {data ? 
           <div>
           <h5>保养记录历史</h5>
-          <Table striped bordered hover variant="dark">
+          <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
             <thead>
               <tr>
                 <th>日期</th>

@@ -38,7 +38,7 @@
   margin: 20px;
 }
 .new-record-form {
-  background-color: #43494E;
+  background-color: grey;
   border: 1px solid #95999c;
   color: #FFF;
   padding: 16px;
@@ -58,6 +58,10 @@
 }
 .record-list-column button{
   margin: 5px;
+}
+.record-search-box {
+  width: 200px;
+  margin: 20px;
 }
 
 /* input */
