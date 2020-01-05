@@ -38,7 +38,6 @@ class NewUser extends Component {
     let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
     if(confirmed){
       axios({
-        // url: `https://api.hailarshell.cn/api/user/single`,
         url: `https://api.hailarshell.cn/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
         method: 'POST',
         data: {
