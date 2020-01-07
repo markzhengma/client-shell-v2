@@ -13,6 +13,7 @@ class Header extends Component {
   render() {
     return (
       <Navbar sticky = "top" className = "header">
+        <div className = "logo"></div>
         <h1>壳牌润滑油</h1>
       </Navbar>
     )

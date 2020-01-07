@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Form, Button, ButtonGroup } from 'react-bootstrap'; 
+import { Card, CardGroup, Form, Button, ButtonGroup } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
@@ -12,6 +12,7 @@ class FindUser extends Component {
     this.state = {
       filter: 'record_num',
       value: '',
+      userListData: '',
       userData: '',
       recordListData: [],
       isUserUpdating: '',
@@ -52,6 +53,7 @@ class FindUser extends Component {
       value: '',
       userData: '',
       recordListData: '',
+      userListData: ''
     })
   };
 
@@ -126,35 +128,62 @@ class FindUser extends Component {
 
   handleFindUserSubmit(e) {
     e.preventDefault();
-    axios.get(`https://api.hailarshell.cn/api/user/single?filter=${this.state.filter}&value=${this.state.value}`)
-        .then(user => {
-          if(user.data.code !== 200){
-            alert(user.data.code + '\n' + JSON.stringify(user.data.data))
+    axios.get(`https://api.hailarshell.cn/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
+      .then(userList => {
+        if(userList.data.code !== 200) {
+          alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
+        } else {
+          if(userList.data.data.length === 0){
+            alert('未找到用户~');
+          } else if(userList.data.data.length > 1){
+            this.setState({
+              userData: '',
+              recordListData: '',
+              userListData: userList.data.data
+            });
           } else {
             this.setState({
-              userData: user.data.data
-            });
-            const record_num = user.data.data.record_num;
-            axios.get(`https://api.hailarshell.cn/api/record/user/${record_num}`)
-              .then(records => {
-                if(records.data.code !== 200){
-                  alert(records.data);
-                  console.log(records.data)
-                } else {
-                  this.setState({
-                    recordListData: records.data.data
-                  })
-                }
-              })
-              .catch(err => {
-                alert(err);
-                console.log(err);
-              })
+              userListData: ''
+            })
+            this.findUserRecords(userList.data.data[0].record_num);
           }
-        })
-        .catch(err => {
-          console.log(err);
-        })
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  findUserRecords(record_num) {
+    axios.get(`https://api.hailarshell.cn/api/user/single?filter=record_num&value=${record_num}`)
+      .then(user => {
+        if(user.data.code !== 200){
+          alert(user.data.code + '\n' + JSON.stringify(user.data.data))
+        } else {
+          this.setState({
+            userData: user.data.data
+          });
+          const record_num = user.data.data.record_num;
+          axios.get(`https://api.hailarshell.cn/api/record/user/${record_num}`)
+            .then(records => {
+              if(records.data.code !== 200){
+                alert(records.data);
+                console.log(records.data)
+              } else {
+                this.setState({
+                  recordListData: records.data.data
+                })
+              }
+            })
+            .catch(err => {
+              alert(err);
+              console.log(err);
+            })
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   render() {
@@ -175,15 +204,35 @@ class FindUser extends Component {
           </Form.Group>
           <Button variant="success" type = "submit">查找</Button>
         </Form>
+        {this.state.userListData !== '' ? 
+          <div style = {{ margin: '20px' }}>
+            <h5>找到多个用户，请选择要查看的用户。</h5>
+            <div className = "user-list">
+              { this.state.userListData.map(user => {
+                return (
+                  <Card className = "user-list-single" bg="secondary" text="white"  key = {user._id}>
+                    <Card.Title className="mb-2 text-warning">
+                      {user.user_name}
+                    </Card.Title>
+                    <Card.Text>
+                      换油证号: {user.record_num || ''}
+                    </Card.Text>
+                    <Button variant="primary" style = {{ margin: '10px' }} onClick = {() => this.findUserRecords(user.record_num)}>查看</Button>
+                  </Card>
+                )
+              })}
+            </div>
+          </div>
+        : ""}
         {this.state.userData !== '' ? this.state.isUserUpdating ? 
-        <Card bg="secondary" text="white" border="light" className = "user-form">
-          <UserUpdate 
-            userData = {this.state.userData} 
-            cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
-            confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
-            handleUserUpdateChange = {this.handleUserUpdateChange.bind(this)}
-          />
-        </Card>
+          <Card bg="secondary" text="white" border="light" className = "user-form">
+            <UserUpdate 
+              userData = {this.state.userData} 
+              cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
+              confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
+              handleUserUpdateChange = {this.handleUserUpdateChange.bind(this)}
+            />
+          </Card>
         :
           <div>
             <Card bg="secondary" text="white" border="light" className = "user-single">

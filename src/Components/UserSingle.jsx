@@ -24,35 +24,35 @@ class UserSingle extends Component {
     return (
           <Card.Body>
             <Card.Header>
-              <Card.Title>
+              <Card.Title className = "text-warning">
                 {this.props.userData.user_name || ''}
               </Card.Title>
             </Card.Header>
-            <Card.Text className="mb-2">
+            <Card.Text className="mb-2 text-warning">
               换油证号
             </Card.Text>
             <Card.Text>
               {this.props.userData.record_num || ''}
             </Card.Text>
-            <Card.Text className="mb-2">
+            <Card.Text className="mb-2 text-warning">
               联系方式
             </Card.Text>
             <Card.Text>
               {this.props.userData.phone || ''}
             </Card.Text>
-            <Card.Text className="mb-2">
+            <Card.Text className="mb-2 text-warning">
               车牌号
             </Card.Text>
             <Card.Text>
               {this.props.userData.plate || ''}
             </Card.Text>
-            <Card.Text className="mb-2">
+            <Card.Text className="mb-2 text-warning">
               车型
             </Card.Text>
             <Card.Text>
               {this.props.userData.make || ''}
             </Card.Text>
-            <Card.Text className="mb-2">
+            <Card.Text className="mb-2 text-warning">
               备注
             </Card.Text>
             <Card.Text>

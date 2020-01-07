@@ -201,7 +201,7 @@ class RecordList extends Component {
           <h5>新保养记录</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewRecordSubmit.bind(this)} key={this.state.randomKey}>
             <Row>
-              <Col>
+              <Col style = {{ maxWidth: '200px' }}>
                 <Form.Group>
                   <Form.Label>日期</Form.Label>
                   <Form.Control type="date" name = "date" value = {this.state.newRecord.date} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
@@ -291,7 +291,7 @@ class RecordList extends Component {
               </Col>
               <Col>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
-                <Button variant="primary" style = {{ margin: '5px' }} type = "submit">保存</Button>
+                <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
                 <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>
               </Col>
             </Row>
