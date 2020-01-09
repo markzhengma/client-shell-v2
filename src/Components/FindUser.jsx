@@ -14,7 +14,7 @@ class FindUser extends Component {
       value: '',
       userListData: '',
       userData: '',
-      recordListData: [],
+      recordListData: '',
       isUserUpdating: '',
       updateUser: {
         user_name: '',

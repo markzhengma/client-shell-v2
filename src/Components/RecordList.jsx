@@ -297,7 +297,7 @@ class RecordList extends Component {
             </Row>
           </Form>
         </div>
-        {data ? 
+        {data.length > 0 ? 
           <div>
           <h5>保养记录历史</h5>
           <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
