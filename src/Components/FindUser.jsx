@@ -26,6 +26,12 @@ class FindUser extends Component {
     }
   };
 
+  componentDidMount(){
+    this.setState({
+      value: this.props.selectedRecordNum
+    })
+  }
+
   handleChange(e) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;

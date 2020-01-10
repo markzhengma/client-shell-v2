@@ -8,8 +8,12 @@ class RecordBrowser extends Component {
     }
   };
 
-  goToTargetRecord() {
-    alert('跳转功能敬请期待~')
+  goToTargetRecord(record_num) {
+    let confirmed = window.confirm(`查看这条保养记录，换油证号：${record_num}`);
+    if(confirmed){
+      this.props.selectRecordNum(record_num);
+      this.props.changeAction('find_user');
+    }
   }
 
   render() {
@@ -43,7 +47,7 @@ class RecordBrowser extends Component {
                     <td className = "record-list-column">{record.reminder}</td>
                     <td className = "record-list-column">{record.record_num}</td>
                     <td className = "record-list-column">
-                      <Button variant = "primary" onClick = {this.goToTargetRecord.bind(this)}>查看</Button>
+                      <Button variant = "primary" onClick = {() => this.goToTargetRecord(record.record_num)}>查看</Button>
                     </td>
                   </tr>
               )

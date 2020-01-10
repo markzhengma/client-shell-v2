@@ -91,7 +91,11 @@ class RecentRecord extends Component {
           <Button variant = "success" onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end)}>查看</Button>
         </div>
         {this.state.recordListData !== '' ? 
-          <RecordBrowser recordListData = {this.state.recordListData}/>
+          <RecordBrowser 
+            recordListData = {this.state.recordListData}
+            selectRecordNum = {this.props.selectRecordNum}
+            changeAction = {this.props.changeAction}
+          />
         : ""}
       </div>
     )

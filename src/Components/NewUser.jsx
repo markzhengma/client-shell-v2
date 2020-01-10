@@ -52,9 +52,12 @@ class NewUser extends Component {
           if(res.data.code !== 200){
             alert(res.data.code + '\n' + JSON.stringify(res.data.data))
           } else {
-            this.setState({
-              userData: res.data.data
-            });
+            // this.setState({
+            //   userData: res.data.data
+            // });
+            alert('创建成功！新用户换油证号为：' + res.data.data.record_num);
+            this.props.selectRecordNum(res.data.data.record_num);
+            this.props.changeAction('find_user');
           }
         })
         .catch(err => {

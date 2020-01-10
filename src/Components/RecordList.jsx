@@ -115,7 +115,6 @@ class RecordList extends Component {
             alert(res.data.code + '\n' + JSON.stringify(res.data.data));
             console.log(res.data.data);
           } else {
-            console.log(res)
             this.resetNewRecordForm();
             this.resetInput();
             this.props.handleFindUserSubmit(e)
@@ -129,20 +128,23 @@ class RecordList extends Component {
   };
 
   handleDeleteRecord(e, id){
-    axios.delete(`https://api.hailarshell.cn/api/record/single/${id}`)
-      .then(res => {
-        if(res.data.code !== 200){
-          alert(res.data.code + '\n' + JSON.stringify(res.data.data));
-          console.log(res.data.data);
-        } else {
-          console.log(res)
-          this.props.handleFindUserSubmit(e)
-        }
-      })
-      .catch(err => {
-        alert(err);
-        console.log(err);
-      })
+    let confirmed = window.confirm('亲，您确认删除这条保养记录吗？')
+    if(confirmed){
+      axios.delete(`https://api.hailarshell.cn/api/record/single/${id}`)
+        .then(res => {
+          if(res.data.code !== 200){
+            alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+            console.log(res.data.data);
+          } else {
+            console.log(res)
+            this.props.handleFindUserSubmit(e)
+          }
+        })
+        .catch(err => {
+          alert(err);
+          console.log(err);
+        })
+    }
   };
 
   selectUpdateRecord(data){

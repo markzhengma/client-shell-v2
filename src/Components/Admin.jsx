@@ -14,6 +14,7 @@ class Admin extends Component {
       giftData: [],
       operatorData: [],
       productData: [],
+      selectedRecordNum: ''
     }
   };
 
@@ -70,7 +71,13 @@ class Admin extends Component {
     this.setState({
       action: action
     })
-  }
+  };
+
+  selectRecordNum(record_num){
+    this.setState({
+      selectedRecordNum: record_num
+    })
+  };
 
   render() {
     return (
@@ -87,6 +94,7 @@ class Admin extends Component {
             giftData = {this.state.giftData}
             productData = {this.state.productData}
             operatorData = {this.state.operatorData}
+            selectedRecordNum = {this.state.selectedRecordNum}
           /> 
           : 
           '' 
@@ -95,11 +103,14 @@ class Admin extends Component {
           <NewUser 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
+            selectRecordNum = {this.selectRecordNum.bind(this)}
           /> 
         : '' }
         { this.state.action === 'recent_record' ? 
           <RecentRecord 
+            changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
+            selectRecordNum = {this.selectRecordNum.bind(this)}
           /> 
         : '' }
       </div>
