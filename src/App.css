@@ -6,16 +6,16 @@
 }
 /* components */
 .header{
-  background-color: grey;
+  background-color: #656565;
   color: white;
 }
 .footer{
-  background-color: grey;
+  background-color: #656565;
   color: white;
 }
-.footer-legal a{
-  text-decoration: none;
-  color: white;
+.footer-info{
+  display: flex;
+  flex-direction: row;
 }
 .login{
   min-height: 100vh;
