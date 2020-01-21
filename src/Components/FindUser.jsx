@@ -115,20 +115,24 @@ class FindUser extends Component {
   };
 
   confirmUserDelete() {
-    let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
-    if(confirm){
-      axios.delete(`https://api.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
-        .then(res => {
-          if(res.data.code !== 200){
-            alert(res.data.code + '\n' + JSON.stringify(res.data.data))
-          } else {
-            this.resetStates();
-          }
-        })
-        .catch(err => {
-          alert(err);
-          console.log(err)
-        })
+    if (this.state.recordListData.length > 0){
+      alert('亲，要『清除』该用户『全部保养记录』之后才能『删除用户』哟！')
+    } else {
+      let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
+      if(confirm){
+        axios.delete(`https://api.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
+          .then(res => {
+            if(res.data.code !== 200){
+              alert(res.data.code + '\n' + JSON.stringify(res.data.data))
+            } else {
+              this.resetStates();
+            }
+          })
+          .catch(err => {
+            alert(err);
+            console.log(err)
+          })
+      }
     }
   }
 
