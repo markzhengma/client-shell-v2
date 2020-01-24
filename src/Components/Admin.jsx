@@ -10,7 +10,7 @@ class Admin extends Component {
   constructor(props){
     super(props);
     this.state = {
-      action: 'recent_record',
+      action: '',
       giftData: [],
       operatorData: [],
       productData: [],
@@ -19,9 +19,16 @@ class Admin extends Component {
   };
 
   componentDidMount(){
-    this.getGiftData();
-    this.getOperatorData();
-    this.getProductData();
+    if(this.props.admin === ''){
+      this.props.handlePageChange('login');
+    }else {
+      this.getGiftData();
+      this.getOperatorData();
+      this.getProductData();
+      this.setState({
+        action: 'recent_record'
+      })
+    }
   };
 
   getGiftData(){

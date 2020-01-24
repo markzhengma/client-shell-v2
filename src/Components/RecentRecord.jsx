@@ -73,9 +73,11 @@ class RecentRecord extends Component {
             <Form.Control as = "select" name = "location_char" defaultValue = "" onChange = {this.handleChange.bind(this)}>
               <option value = "" disabled>【请选择】</option>
               <option value = "HD">海拉尔河东</option>
-              <option value = "H">海拉尔河西</option>
-              <option value = "M">满洲里</option>
-              <option value = "Y">牙克石</option>
+              <option value = "HX">海拉尔河西</option>
+              <option value = "MA">满洲里</option>
+              <option value = "MB">满洲里二店</option>
+              <option value = "YA">牙克石</option>
+              <option value = "YB">牙克石二店</option>
             </Form.Control>
           </Form.Group>
           <Form.Group>
