@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/client-shell-v2/static/css/main.41c74a72.chunk.css",
-    "main.js": "/client-shell-v2/static/js/main.ddca8ec3.chunk.js",
-    "main.js.map": "/client-shell-v2/static/js/main.ddca8ec3.chunk.js.map",
+    "main.css": "/client-shell-v2/static/css/main.1f258e4a.chunk.css",
+    "main.js": "/client-shell-v2/static/js/main.4fe942a1.chunk.js",
+    "main.js.map": "/client-shell-v2/static/js/main.4fe942a1.chunk.js.map",
     "runtime-main.js": "/client-shell-v2/static/js/runtime-main.c6be63d8.js",
     "runtime-main.js.map": "/client-shell-v2/static/js/runtime-main.c6be63d8.js.map",
     "static/css/2.17e5ed98.chunk.css": "/client-shell-v2/static/css/2.17e5ed98.chunk.css",
-    "static/js/2.5c1b073d.chunk.js": "/client-shell-v2/static/js/2.5c1b073d.chunk.js",
-    "static/js/2.5c1b073d.chunk.js.map": "/client-shell-v2/static/js/2.5c1b073d.chunk.js.map",
+    "static/js/2.16e39051.chunk.js": "/client-shell-v2/static/js/2.16e39051.chunk.js",
+    "static/js/2.16e39051.chunk.js.map": "/client-shell-v2/static/js/2.16e39051.chunk.js.map",
     "index.html": "/client-shell-v2/index.html",
-    "precache-manifest.c250c3da1f6d0e97e32595d19e47c287.js": "/client-shell-v2/precache-manifest.c250c3da1f6d0e97e32595d19e47c287.js",
+    "precache-manifest.6c411d3102ef2f951a9c74ca7cf4e6c1.js": "/client-shell-v2/precache-manifest.6c411d3102ef2f951a9c74ca7cf4e6c1.js",
     "service-worker.js": "/client-shell-v2/service-worker.js",
     "static/css/2.17e5ed98.chunk.css.map": "/client-shell-v2/static/css/2.17e5ed98.chunk.css.map",
-    "static/css/main.41c74a72.chunk.css.map": "/client-shell-v2/static/css/main.41c74a72.chunk.css.map",
-    "static/js/2.5c1b073d.chunk.js.LICENSE": "/client-shell-v2/static/js/2.5c1b073d.chunk.js.LICENSE",
+    "static/css/main.1f258e4a.chunk.css.map": "/client-shell-v2/static/css/main.1f258e4a.chunk.css.map",
+    "static/js/2.16e39051.chunk.js.LICENSE": "/client-shell-v2/static/js/2.16e39051.chunk.js.LICENSE",
     "static/media/beian_2.png": "/client-shell-v2/static/media/beian_2.d0289dc0.png",
     "static/media/App.css": "/client-shell-v2/static/media/logo.02213411.png"
   },
   "entrypoints": [
     "static/js/runtime-main.c6be63d8.js",
     "static/css/2.17e5ed98.chunk.css",
-    "static/js/2.5c1b073d.chunk.js",
-    "static/css/main.41c74a72.chunk.css",
-    "static/js/main.ddca8ec3.chunk.js"
+    "static/js/2.16e39051.chunk.js",
+    "static/css/main.1f258e4a.chunk.css",
+    "static/js/main.4fe942a1.chunk.js"
   ]
 }
