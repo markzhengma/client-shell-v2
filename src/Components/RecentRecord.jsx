@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Pagination } from 'react-bootstrap';
 import RecordBrowser from './RecordBrowser';
 
 class RecentRecord extends Component {
@@ -10,7 +10,10 @@ class RecentRecord extends Component {
       location_char: '',
       start: '',
       end: '',
-      recordListData: ''
+      recordListData: '',
+      pn: 1,
+      totalPn: 1,
+      totalRecordList: ''
     }
   };
 
@@ -27,7 +30,7 @@ class RecentRecord extends Component {
     
     const date = [currYear, currMonth, currDay].join('-');
 
-    this.findRecordListBetweenDates(this.props.admin.location_char, '2020-01-01', date);
+    this.findRecordListBetweenDates(this.props.admin.location_char, '2020-01-01', date, 1, 20);
 
     this.setState({
       start: '2020-01-01',
@@ -36,15 +39,17 @@ class RecentRecord extends Component {
     });
   };
 
-  findRecordListBetweenDates(location_char, start, end){
-    axios.get(`https://api.hailarshell.cn/api/record/period/${location_char}?start=${start}&end=${end}`)
+  findRecordListBetweenDates(location_char, start, end, pn, rn){
+    axios.get(`https://api.hailarshell.cn/api/record/all/${location_char}?start=${start}&end=${end}&pn=${pn}&rn=${rn}`)
       .then(res => {
         if(res.data.code !== 200) {
           console.log(res.data);
           alert(res.data.code + '\n' + JSON.stringify(res.data.data));
         } else {
           this.setState({
-            recordListData: res.data.data
+            recordListData: res.data.data.list,
+            pn: pn,
+            totalPn: Math.floor(res.data.data.count / 20) || 1,
           })
         }
       })
@@ -90,7 +95,16 @@ class RecentRecord extends Component {
             <Form.Control type = "date" value = {this.state.end} name = "end" onChange = {this.handleChange.bind(this)}>
             </Form.Control>
           </Form.Group>
-          <Button variant = "success" onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end)}>查看</Button>
+          <Button variant = "success" onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}>查看</Button>
+          <Pagination style = {{ margin: '20px 0' }}>
+            <Pagination.First onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}/>
+            <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
+            {/* <Pagination.Item>{1}</Pagination.Item> */}
+            <Pagination.Item active>{this.state.pn}</Pagination.Item>
+            {/* <Pagination.Item>{this.state.totalPn}</Pagination.Item> */}
+            <Pagination.Next disabled = {this.state.pn === this.state.totalPn} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
+            <Pagination.Last onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.totalPn, 20)}/>
+          </Pagination>
         </div>
         {this.state.recordListData !== '' ? 
           <RecordBrowser 
@@ -99,6 +113,15 @@ class RecentRecord extends Component {
             changeAction = {this.props.changeAction}
           />
         : ""}
+        <Pagination style = {{ margin: '20px' }}>
+          <Pagination.First onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}/>
+          <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
+          {/* <Pagination.Item>{1}</Pagination.Item> */}
+          <Pagination.Item active>{this.state.pn}</Pagination.Item>
+          {/* <Pagination.Item>{this.state.totalPn}</Pagination.Item> */}
+          <Pagination.Next disabled = {this.state.pn === this.state.totalPn} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
+          <Pagination.Last onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.totalPn, 20)}/>
+        </Pagination>
       </div>
     )
   }

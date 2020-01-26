@@ -71,11 +71,11 @@ class RecentUser extends Component {
           <Button variant = "success" onClick = {() => this.findUserList(this.state.location_char, 1, 20)}>查看</Button>
           <Pagination style = {{ margin: '20px 0' }}>
             <Pagination.First onClick = {() => this.findUserList(this.state.location_char, 1, 20)}/>
-            <Pagination.Prev onClick = {() => this.findUserList(this.state.location_char, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
+            <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findUserList(this.state.location_char, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
             {/* <Pagination.Item>{1}</Pagination.Item> */}
             <Pagination.Item active>{this.state.pn}</Pagination.Item>
             {/* <Pagination.Item>{this.state.totalPn}</Pagination.Item> */}
-            <Pagination.Next onClick = {() => this.findUserList(this.state.location_char, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
+            <Pagination.Next disabled = {this.state.pn === this.state.totalPn} onClick = {() => this.findUserList(this.state.location_char, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
             <Pagination.Last onClick = {() => this.findUserList(this.state.location_char, this.state.totalPn, 20)}/>
           </Pagination>
         </div>
@@ -88,11 +88,11 @@ class RecentUser extends Component {
         : ""}
         <Pagination style = {{ margin: '20px' }}>
           <Pagination.First onClick = {() => this.findUserList(this.state.location_char, 1, 20)}/>
-          <Pagination.Prev onClick = {() => this.findUserList(this.state.location_char, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
+          <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findUserList(this.state.location_char, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
           {/* <Pagination.Item>{1}</Pagination.Item> */}
           <Pagination.Item active>{this.state.pn}</Pagination.Item>
           {/* <Pagination.Item>{this.state.totalPn}</Pagination.Item> */}
-          <Pagination.Next onClick = {() => this.findUserList(this.state.location_char, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
+          <Pagination.Next disabled = {this.state.pn === this.state.totalPn} onClick = {() => this.findUserList(this.state.location_char, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
           <Pagination.Last onClick = {() => this.findUserList(this.state.location_char, this.state.totalPn, 20)}/>
         </Pagination>
       </div>
