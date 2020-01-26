@@ -69,6 +69,7 @@ class NewUser extends Component {
   render() {
     return (
       <div>
+        <h3 style = {{ margin: '20px' }}>创建用户</h3>
         {this.state.userData !== '' ? 
         <div>
           <h3>新用户：</h3>

@@ -55,7 +55,7 @@
   padding: 16px;
 }
 .record-list{
-  padding: 20px 20px 200px 20px;
+  padding: 20px 20px 20px 20px;
 }
 .record-list-column{
   min-width: 150px;
@@ -116,18 +116,23 @@
 
 .nav-bar{
   width: 100%;
+  background-color: #656565;
+}
+.nav-btn-group{
   display: flex;
   flex-direction: row;
 }
 .nav-btn{
   height: 40px;
-  width: 100px;
-  color: grey;
-  background-color: #F9D148;
+  width: 120px;
+  color: #F9D148;
+  background-color: rgba(101, 101, 101, 0);
+  cursor: pointer;
+  text-align: center;
+  line-height: 40px;
 }
 .nav-btn:hover{
-  background-color: grey;
-  color: white;
+  background-color: rgb(71, 71, 71);
 }
 
 .record-single{

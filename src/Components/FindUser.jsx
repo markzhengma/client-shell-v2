@@ -199,6 +199,7 @@ class FindUser extends Component {
   render() {
     return (
       <div>
+        <h3 style = {{ margin: '20px' }}>查找用户</h3>
         <Form className = "search-form" onSubmit = {this.handleFindUserSubmit.bind(this)}>
           <Form.Group>
             <Form.Label>查询条件</Form.Label>

@@ -67,7 +67,7 @@ class RecentRecord extends Component {
     return (
       <div>
         <div className = "record-search-box">
-          <h5>浏览保养记录</h5>
+          <h3>浏览保养记录</h3>
           <Form.Group>
             <Form.Label>门店</Form.Label>
             <Form.Control as = "select" name = "location_char" defaultValue = "" onChange = {this.handleChange.bind(this)}>
