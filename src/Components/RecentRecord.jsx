@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Form, Pagination } from 'react-bootstrap';
+import { Button, Form, Pagination, Spinner } from 'react-bootstrap';
+import { CSVLink } from 'react-csv';
 import RecordBrowser from './RecordBrowser';
 
 class RecentRecord extends Component {
@@ -13,7 +14,9 @@ class RecentRecord extends Component {
       recordListData: '',
       pn: 1,
       totalPn: 1,
-      totalRecordList: ''
+      isFetching: false,
+      totalData: '',
+      isFetchingTotal: false
     }
   };
 
@@ -40,8 +43,14 @@ class RecentRecord extends Component {
   };
 
   findRecordListBetweenDates(location_char, start, end, pn, rn){
+    this.setState({
+      isFetching: true
+    })
     axios.get(`https://api.hailarshell.cn/api/record/all/${location_char}?start=${start}&end=${end}&pn=${pn}&rn=${rn}`)
       .then(res => {
+        this.setState({
+          isFetching: false
+        })
         if(res.data.code !== 200) {
           console.log(res.data);
           alert(res.data.code + '\n' + JSON.stringify(res.data.data));
@@ -57,18 +66,57 @@ class RecentRecord extends Component {
         alert(err);
         console.log(err);
       })
+  };
+
+  getTotalData() {
+    this.setState({
+      isFetchingTotal: true
+    });
+    axios.get(`https://api.hailarshell.cn/api/record/all/${this.state.location_char}?start=${this.state.start}&end=${this.state.end}`)
+      .then(res => {
+        this.setState({
+          isFetchingTotal: false
+        })
+        if(res.data.code !== 200) {
+          console.log(res.data);
+          alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+        } else {
+          this.setState({
+            totalData: res.data.data.list
+          })
+        }
+      })
+      .catch(err => {
+        alert(err);
+        console.log(err);
+      })
   }
 
   handleChange(e) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
+    if(name === "location_char" || "start" || "end"){
+      this.setState({
+        totalData: ''
+      })
+    };
     this.setState({
       [name]: value
     })
   };
 
   render() {
+    const headers = [
+      {label: 'date', key: 'date'},
+      {label: 'product_name', key: 'product_name'},
+      {label: 'milage', key: 'milage'},
+      {label: 'gift', key: 'gift'},
+      {label: 'operator', key: 'operator'},
+      {label: 'detail', key: 'detail'},
+      {label: 'reminder', key: 'reminder'},
+      {label: 'record_num', key: 'record_num'},
+    ];
     return (
       <div>
         <div className = "record-search-box">
@@ -95,7 +143,37 @@ class RecentRecord extends Component {
             <Form.Control type = "date" value = {this.state.end} name = "end" onChange = {this.handleChange.bind(this)}>
             </Form.Control>
           </Form.Group>
-          <Button variant = "success" onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}>查看</Button>
+          <div className="search-btn-group">
+            <Button variant = "success" style = {{ margin: '10px', display: 'block' }} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}>
+              {this.state.isFetching ? 
+                <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                />
+              : ''}
+              查看选中门店记录
+            </Button>
+            {this.props.admin.super_admin ? 
+              this.state.totalData === '' ?
+                <Button variant = "primary" style = {{ margin: '10px', display: 'block' }} disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
+                  {this.state.isFetchingTotal ? 
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  : ''}
+                  获取选中门店全部
+                </Button>
+              :
+                <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
+            : ''}
+          </div>          
           <Pagination style = {{ margin: '20px 0' }}>
             <Pagination.First onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}/>
             <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>

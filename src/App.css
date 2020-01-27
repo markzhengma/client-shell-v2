@@ -45,9 +45,27 @@
 }
 
 /* box */
+.nav-bar{
+  width: 100%;
+  background-color: #656565;
+}
 .user-single{
   width: 400px;
   margin: 20px;
+}
+.user-list-scroller{
+  margin: 20px;
+  padding: 20px;
+  width: fit-content;
+  max-width: 95vw;
+  overflow: scroll;
+  color: white;
+  background-color: #6565654b;
+}
+.user-list{
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
 }
 .user-list-single{
   width: 200px;
@@ -66,13 +84,6 @@
 .record-search-box {
   width: 200px;
   margin: 20px;
-}
-.user-list{
-  padding: 20px;
-  width: 100vw;
-  display: flex;
-  flex-direction: row;
-  overflow: scroll;
 }
 
 /* input */
@@ -96,6 +107,24 @@
   margin: 0 10px 8px 0;
 }
 
+/* button */
+.nav-btn-group{
+  display: flex;
+  flex-direction: row;
+}
+.nav-btn{
+  height: 40px;
+  width: 120px;
+  color: #F9D148;
+  background-color: rgba(101, 101, 101, 0);
+  cursor: pointer;
+  text-align: center;
+  line-height: 40px;
+}
+.nav-btn:hover{
+  background-color: rgb(71, 71, 71);
+}
+
 
 
 
@@ -112,27 +141,6 @@
   width: 200px;
   height: 20px;
   margin: 10px;
-}
-
-.nav-bar{
-  width: 100%;
-  background-color: #656565;
-}
-.nav-btn-group{
-  display: flex;
-  flex-direction: row;
-}
-.nav-btn{
-  height: 40px;
-  width: 120px;
-  color: #F9D148;
-  background-color: rgba(101, 101, 101, 0);
-  cursor: pointer;
-  text-align: center;
-  line-height: 40px;
-}
-.nav-btn:hover{
-  background-color: rgb(71, 71, 71);
 }
 
 .record-single{

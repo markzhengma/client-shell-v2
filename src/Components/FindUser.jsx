@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, CardGroup, Form, Button, ButtonGroup } from 'react-bootstrap'; 
+import { Card, Form, Button, ButtonGroup, Spinner } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
@@ -22,7 +22,8 @@ class FindUser extends Component {
         plate: '',
         make: '',
         detail: '',
-      }
+      },
+      isFetching: false,
     }
   };
 
@@ -138,30 +139,40 @@ class FindUser extends Component {
 
   handleFindUserSubmit(e) {
     e.preventDefault();
-    axios.get(`https://api.hailarshell.cn/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
-      .then(userList => {
-        if(userList.data.code !== 200) {
-          alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
-        } else {
-          if(userList.data.data.length === 0){
-            alert('未找到用户~');
-          } else if(userList.data.data.length > 1){
-            this.setState({
-              userData: '',
-              recordListData: '',
-              userListData: userList.data.data
-            });
+    if(this.state.filter === 'record_num' && this.state.value.length < 7) {
+      alert('亲，换油证号格式错误，请检查一下哟！')
+    } else {
+      this.setState({
+        isFetching: true,
+      });
+      axios.get(`https://api.hailarshell.cn/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
+        .then(userList => {
+          this.setState({
+            isFetching: false,
+          });
+          if(userList.data.code !== 200) {
+            alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
           } else {
-            this.setState({
-              userListData: ''
-            })
-            this.findUserRecords(userList.data.data[0].record_num);
+            if(userList.data.data.length === 0){
+              alert('未找到用户~');
+            } else if(userList.data.data.length > 1){
+              this.setState({
+                userData: '',
+                recordListData: '',
+                userListData: userList.data.data
+              });
+            } else {
+              this.setState({
+                userListData: ''
+              })
+              this.findUserRecords(userList.data.data[0].record_num);
+            }
           }
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }
   }
 
   findUserRecords(record_num) {
@@ -213,15 +224,26 @@ class FindUser extends Component {
             <Form.Label>查询内容</Form.Label>
             <Form.Control type = "text" name = "value" value = {this.state.value} onChange = {this.handleChange.bind(this)} placeholder = "内容" />
           </Form.Group>
-          <Button variant="success" type = "submit">查找</Button>
+          <Button variant="success" type = "submit" disabled = {this.state.isFetching}>
+            {this.state.isFetching ? 
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            : ''}
+            查找
+          </Button>
         </Form>
         {this.state.userListData !== '' ? 
-          <div style = {{ margin: '20px' }}>
-            <h5>找到多个用户，请选择要查看的用户。</h5>
+          <div className="user-list-scroller">
+          <h5>找到多个用户，请选择要查看的用户。</h5>
             <div className = "user-list">
               { this.state.userListData.map(user => {
                 return (
-                  <Card className = "user-list-single" bg="secondary" text="white"  key = {user._id}>
+                  <Card className = "user-list-single" bg="secondary" text="white" style={{ minWidth: '200px'}} key = {user._id}>
                     <Card.Title className="mb-2 text-warning">
                       {user.user_name}
                     </Card.Title>
