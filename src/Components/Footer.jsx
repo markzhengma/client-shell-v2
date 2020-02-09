@@ -29,7 +29,7 @@ class Footer extends Component {
             <a target="_blank" href="http://beian.miit.gov.cn" style={{display:'inline-block',textDecoration: 'none', height:'20px', lineHeight:'20px'}}>
               <img src="" style={{float:'left'}}/>
               <p style={{float:'left',height:'20px',lineHeight:'20px',margin: '0px 0px 0px 5px', color:'#939393'}}>
-                蒙ICP备19005903号-1
+                蒙ICP备19005903号-2
               </p>
             </a>
         </div>
