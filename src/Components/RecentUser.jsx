@@ -30,7 +30,7 @@ class RecentUser extends Component {
     this.setState({
       isFetching: true
     })
-    axios.get(`https://api.hailarshell.cn/api/user/all/${location_char}?pn=${pn}&rn=${rn}`)
+    axios.get(`https://api.hulunbuirshell.com/api/user/all/${location_char}?pn=${pn}&rn=${rn}`)
       .then(res => {
         this.setState({
           isFetching: false
@@ -56,7 +56,7 @@ class RecentUser extends Component {
     this.setState({
       isFetchingTotal: true
     });
-    axios.get(`https://api.hailarshell.cn/api/user/all/${this.state.location_char}`)
+    axios.get(`https://api.hulunbuirshell.com/api/user/all/${this.state.location_char}`)
       .then(res => {
         this.setState({
           isFetchingTotal: false

@@ -21,23 +21,29 @@ class RecentRecord extends Component {
   };
 
   componentDidMount(){
-    let currDate = new Date(),
-        currMonth = '' + (currDate.getMonth() + 1),
-        currDay = '' + currDate.getDate(),
-        currYear = currDate.getFullYear();
-
-    if (currMonth.length < 2) 
-        currMonth = '0' + currMonth;
-    if (currDay.length < 2) 
-        currDay = '0' + currDay;
+    let formatDate = (date) => {
+      let paramsDate = new Date(date),
+      month = '' + (paramsDate.getMonth() + 1),
+      day = '' + paramsDate.getDate(),
+      year = paramsDate.getFullYear();
+      
+      if (month.length < 2) 
+      month = '0' + month;
+      if (day.length < 2) 
+      day = '0' + day;
+      
+      return [year, month, day].join('-');
+    }
     
-    const date = [currYear, currMonth, currDay].join('-');
+    let defaultDate = new Date();
+    const currDate = formatDate(defaultDate);
+    const startDate = formatDate(new Date(defaultDate.setDate(defaultDate.getDate() - 13)))
 
-    this.findRecordListBetweenDates(this.props.admin.location_char, '2020-01-01', date, 1, 20);
+    this.findRecordListBetweenDates(this.props.admin.location_char, startDate, currDate, 1, 20);
 
     this.setState({
-      start: '2020-01-01',
-      end: date,
+      start: startDate,
+      end: currDate,
       location_char: this.props.admin.location_char
     });
   };
@@ -46,7 +52,7 @@ class RecentRecord extends Component {
     this.setState({
       isFetching: true
     })
-    axios.get(`https://api.hailarshell.cn/api/record/all/${location_char}?start=${start}&end=${end}&pn=${pn}&rn=${rn}`)
+    axios.get(`https://api.hulunbuirshell.com/api/record/all/${location_char}?start=${start}&end=${end}&pn=${pn}&rn=${rn}`)
       .then(res => {
         this.setState({
           isFetching: false
@@ -72,7 +78,7 @@ class RecentRecord extends Component {
     this.setState({
       isFetchingTotal: true
     });
-    axios.get(`https://api.hailarshell.cn/api/record/all/${this.state.location_char}?start=${this.state.start}&end=${this.state.end}`)
+    axios.get(`https://api.hulunbuirshell.com/api/record/all/${this.state.location_char}?start=${this.state.start}&end=${this.state.end}`)
       .then(res => {
         this.setState({
           isFetchingTotal: false

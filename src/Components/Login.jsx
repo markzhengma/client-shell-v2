@@ -25,7 +25,7 @@ class Login extends Component {
     if(this.state.admin_name === "" || this.state.admin_pass === "") {
       alert('请输入管理员账号和密码');
     } else {
-      axios.get(`https://api.hailarshell.cn/api/admin/login?admin=${this.state.admin_name}&pass=${this.state.admin_pass}`)
+      axios.get(`https://api.hulunbuirshell.com/api/admin/login?admin=${this.state.admin_name}&pass=${this.state.admin_pass}`)
         .then(res => {
           if(res.data.code !== 200){
             if(res.data.code === 422){

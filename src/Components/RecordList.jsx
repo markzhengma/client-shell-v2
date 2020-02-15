@@ -98,7 +98,7 @@ class RecordList extends Component {
     } else {
       const record_num = this.props.record_num;
       axios({
-        url: `https://api.hailarshell.cn/api/record/user/${record_num}`,
+        url: `https://api.hulunbuirshell.com/api/record/user/${record_num}`,
         method: 'POST',
         data: {
           date: this.state.newRecord.date,
@@ -130,7 +130,7 @@ class RecordList extends Component {
   handleDeleteRecord(e, id){
     let confirmed = window.confirm('亲，您确认删除这条保养记录吗？')
     if(confirmed){
-      axios.delete(`https://api.hailarshell.cn/api/record/single/${id}`)
+      axios.delete(`https://api.hulunbuirshell.com/api/record/single/${id}`)
         .then(res => {
           if(res.data.code !== 200){
             alert(res.data.code + '\n' + JSON.stringify(res.data.data));
@@ -165,7 +165,7 @@ class RecordList extends Component {
   confirmUpdateRecord(e){
     e.preventDefault();
     axios({
-      url: `https://api.hailarshell.cn/api/record/single/${this.state.selectUpdateId}`,
+      url: `https://api.hulunbuirshell.com/api/record/single/${this.state.selectUpdateId}`,
       method: 'PUT',
       data: this.state.updateRecord
     })

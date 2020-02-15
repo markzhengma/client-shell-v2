@@ -34,7 +34,7 @@ class Admin extends Component {
   };
 
   getGiftData(){
-    axios.get('https://api.hailarshell.cn/api/gift/all')
+    axios.get('https://api.hulunbuirshell.com/api/gift/all')
       .then(res => {
         this.setState({
           giftData: res.data
@@ -45,7 +45,7 @@ class Admin extends Component {
       })
   }
   getOperatorData(){
-    axios.get('https://api.hailarshell.cn/api/operator/all')
+    axios.get('https://api.hulunbuirshell.com/api/operator/all')
       .then(res => {
         this.setState({
           operatorData: res.data
@@ -56,7 +56,7 @@ class Admin extends Component {
       })
   }
   getProductData(){
-    axios.get('https://api.hailarshell.cn/api/product/all')
+    axios.get('https://api.hulunbuirshell.com/api/product/all')
       .then(res => {
         this.setState({
           productData: res.data

@@ -94,7 +94,7 @@ class FindUser extends Component {
     e.preventDefault();
     console.log(this.state.updateUser);
     axios({
-      url: `https://api.hailarshell.cn/api/user/single/${this.state.userData.record_num}`,
+      url: `https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`,
       method: 'PUT',
       data: {
         make: this.state.updateUser.make,
@@ -121,7 +121,7 @@ class FindUser extends Component {
     } else {
       let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
       if(confirm){
-        axios.delete(`https://api.hailarshell.cn/api/user/single/${this.state.userData.record_num}`)
+        axios.delete(`https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`)
           .then(res => {
             if(res.data.code !== 200){
               alert(res.data.code + '\n' + JSON.stringify(res.data.data))
@@ -145,7 +145,7 @@ class FindUser extends Component {
       this.setState({
         isFetching: true,
       });
-      axios.get(`https://api.hailarshell.cn/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
+      axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
         .then(userList => {
           this.setState({
             isFetching: false,
@@ -176,7 +176,7 @@ class FindUser extends Component {
   }
 
   findUserRecords(record_num) {
-    axios.get(`https://api.hailarshell.cn/api/user/single?filter=record_num&value=${record_num}`)
+    axios.get(`https://api.hulunbuirshell.com/api/user/single?filter=record_num&value=${record_num}`)
       .then(user => {
         if(user.data.code !== 200){
           alert(user.data.code + '\n' + JSON.stringify(user.data.data))
@@ -185,7 +185,7 @@ class FindUser extends Component {
             userData: user.data.data
           });
           const record_num = user.data.data.record_num;
-          axios.get(`https://api.hailarshell.cn/api/record/user/${record_num}`)
+          axios.get(`https://api.hulunbuirshell.com/api/record/user/${record_num}`)
             .then(records => {
               if(records.data.code !== 200){
                 alert(records.data);
