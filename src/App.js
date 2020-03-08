@@ -49,7 +49,7 @@ class App extends Component {
       //   // 登录失败
       //   console.log(err)
       // })
-      console.log('client initiated')
+      // console.log('client initiated')
   }
 
   render() {
