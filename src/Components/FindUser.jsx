@@ -11,6 +11,7 @@ class FindUser extends Component {
     super(props);
     this.state = {
       filter: 'record_num',
+      placeholder: '请输入换油证号',
       value: '',
       userListData: '',
       userData: '',
@@ -40,6 +41,30 @@ class FindUser extends Component {
     this.setState({
       [name]: value
     })
+    if(name === 'filter') {
+      this.setState({
+        value: ''
+      });
+      switch(value) {
+        case 'record_num':
+          this.setState({
+            placeholder: '请输入换油证号',
+          });
+          break;
+        case 'phone':
+          this.setState({
+            placeholder: '请输入手机号',
+          });
+          break;
+        case 'plate':
+          this.setState({
+            placeholder: '请输入车牌号',
+          });
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   handleUserUpdateChange(e) {
@@ -222,7 +247,13 @@ class FindUser extends Component {
           </Form.Group>
           <Form.Group>
             <Form.Label>查询内容</Form.Label>
-            <Form.Control type = "text" name = "value" value = {this.state.value} onChange = {this.handleChange.bind(this)} placeholder = "内容" />
+            <Form.Control 
+              type = "text" 
+              name = "value" 
+              value = {this.state.value} 
+              onChange = {this.handleChange.bind(this)} 
+              placeholder = {this.state.placeholder} 
+            />
           </Form.Group>
           <Button variant="success" type = "submit" disabled = {this.state.isFetching}>
             {this.state.isFetching ? 

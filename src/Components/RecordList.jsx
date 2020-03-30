@@ -12,8 +12,8 @@ class RecordList extends Component {
         milage: '',
         gift: '',
         operator: '',
-        detail: '无',
-        reminder: '无'
+        detail: '',
+        reminder: ''
       },
       updateRecord: {
         date: '',
@@ -57,8 +57,8 @@ class RecordList extends Component {
         milage: '',
         gift: '',
         operator: '',
-        detail: '无',
-        reminder: '无'
+        detail: '',
+        reminder: ''
       }
     })
   };
