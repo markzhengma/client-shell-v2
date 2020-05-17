@@ -117,7 +117,6 @@ class FindUser extends Component {
 
   confirmUserUpdate(e) {
     e.preventDefault();
-    console.log(this.state.updateUser);
     axios({
       url: `https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`,
       method: 'PUT',
@@ -126,7 +125,7 @@ class FindUser extends Component {
         phone: this.state.updateUser.phone,
         plate: this.state.updateUser.plate,
         user_name: this.state.updateUser.user_name,
-        detail: this.state.updateUser.detail,
+        detail: this.state.updateUser.detail !== '' ? this.state.updateUser.detail : '无备注',
       }
     })
       .then(res => {

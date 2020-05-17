@@ -216,23 +216,35 @@ class RecordList extends Component {
                     <option value = "" disabled>【请选择】</option>
                     <option value = "" disabled>【汽机油】</option>
                     {this.props.productData.map(product => {
-                      if(product.product_type === '汽机油')
-                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      if(product.product_type === '汽机油'){
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                     <option value = "" disabled>【柴机油】</option>
                     {this.props.productData.map(product => {
-                      if(product.product_type === '柴机油')
-                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      if(product.product_type === '柴机油'){
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                     <option value = "" disabled>【中华产品】</option>
                     {this.props.productData.map(product => {
-                      if(product.product_type === '中华产品')
-                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      if(product.product_type === '中华产品'){
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                     <option value = "" disabled>【附属品】</option>
                     {this.props.productData.map(product => {
-                      if(product.product_type === '附属品')
-                      return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      if(product.product_type === '附属品') {
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                   </Form.Control>
                 </Form.Group>
@@ -250,8 +262,11 @@ class RecordList extends Component {
                     <option value = "" disabled>【请选择】</option>
                     <option value = "(赠品未领)">(赠品未领)</option>
                     {this.props.giftData.map(gift => {
-                      if(gift.gift_name !== "(赠品未领)")
-                      return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
+                      if(gift.gift_name !== "(赠品未领)") {
+                        return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                   </Form.Control>
                 </Form.Group>
@@ -263,18 +278,27 @@ class RecordList extends Component {
                     <option value = "" disabled>【请选择】</option>
                     <option value = "" disabled>【海拉尔】</option>
                     {this.props.operatorData.map(operator => {
-                      if(operator.location === '海拉尔')
-                      return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                      if(operator.location === '海拉尔') {
+                        return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                     <option value = "" disabled>【满洲里】</option>
                     {this.props.operatorData.map(operator => {
-                      if(operator.location === '满洲里')
-                      return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                      if(operator.location === '满洲里') {
+                        return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                     <option value = "" disabled>【牙克石】</option>
                     {this.props.operatorData.map(operator => {
-                      if(operator.location === '牙克石')
-                      return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                      if(operator.location === '牙克石') {
+                        return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                      } else {
+                        return '';
+                      }
                     })}
                   </Form.Control>
                 </Form.Group>
@@ -342,23 +366,35 @@ class RecordList extends Component {
                         <option value = "" disabled>【项目名称】</option>
                         <option value = "" disabled>【汽机油】</option>
                         {this.props.productData.map(product => {
-                          if(product.product_type === '汽机油')
-                          return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          if(product.product_type === '汽机油'){
+                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                         <option value = "" disabled>【柴机油】</option>
                         {this.props.productData.map(product => {
-                          if(product.product_type === '柴机油')
-                          return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          if(product.product_type === '柴机油'){
+                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                         <option value = "" disabled>【中华产品】</option>
                         {this.props.productData.map(product => {
-                          if(product.product_type === '中华产品')
-                          return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          if(product.product_type === '中华产品'){
+                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                         <option value = "" disabled>【附属品】</option>
                         {this.props.productData.map(product => {
-                          if(product.product_type === '附属品')
-                          return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          if(product.product_type === '附属品'){
+                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                         
                       </select>
@@ -371,8 +407,11 @@ class RecordList extends Component {
                         <option value = "" disabled>【赠品情况】</option>
                         <option value = "(赠品未领)">(赠品未领)</option>
                         {this.props.giftData.map(gift => {
-                          if(gift.gift_name !== "(赠品未领)")
-                          return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
+                          if(gift.gift_name !== "(赠品未领)") {
+                            return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                       </select>
                     </td>
@@ -383,18 +422,27 @@ class RecordList extends Component {
                         <option value = "" disabled>【操作人】</option>
                         <option value = "" disabled>【海拉尔】</option>
                         {this.props.operatorData.map(operator => {
-                          if(operator.location === '海拉尔')
-                          return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                          if(operator.location === '海拉尔'){
+                            return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                         <option value = "" disabled>【满洲里】</option>
                         {this.props.operatorData.map(operator => {
-                          if(operator.location === '满洲里')
-                          return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                          if(operator.location === '满洲里'){
+                            return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                         <option value = "" disabled>【牙克石】</option>
                         {this.props.operatorData.map(operator => {
-                          if(operator.location === '牙克石')
-                          return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                          if(operator.location === '牙克石'){
+                            return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                          } else {
+                            return '';
+                          }
                         })}
                       </select>
                     </td>

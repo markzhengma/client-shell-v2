@@ -100,7 +100,7 @@ class DataList extends Component {
                     <input 
                       placeholder = "新的赠品" 
                       name = "gift_name" 
-                      value = {this.state.newData && this.state.newData.gift_name || ''} 
+                      value = {this.state.newData ? this.state.newData.gift_name : ''} 
                       onChange = {this.handleNewDataChange.bind(this)}
                     />
                   </td>
@@ -142,7 +142,7 @@ class DataList extends Component {
                       <input 
                         placeholder = "新操作人" 
                         name = "op_name" 
-                        value = {this.state.newData && this.state.newData.op_name || ''} 
+                        value = {this.state.newData ? this.state.newData.op_name : ''} 
                         onChange = {this.handleNewDataChange.bind(this)}
                       />
                     </td>
@@ -150,7 +150,7 @@ class DataList extends Component {
                       <select 
                         name = "location" 
                         defaultValue = ""
-                        value = {this.state.newData && this.state.newData.location || ''}
+                        value = {this.state.newData ? this.state.newData.location : ''}
                         onChange = {this.handleNewDataChange.bind(this)}
                       >
                         <option value = "" disabled>【请选择门店地区】</option>
@@ -199,7 +199,7 @@ class DataList extends Component {
                       <input 
                         placeholder = "新产品" 
                         name = "product_name" 
-                        value = {this.state.newData && this.state.newData.product_name || ''} 
+                        value = {this.state.newData ? this.state.newData.product_name : ''} 
                         onChange = {this.handleNewDataChange.bind(this)}
                       />
                     </td>
@@ -207,7 +207,7 @@ class DataList extends Component {
                       <select 
                         name = "product_type" 
                         defaultValue = ""
-                        value = {this.state.newData && this.state.newData.product_type || ''}
+                        value = {this.state.newData ? this.state.newData.product_type : ''}
                         onChange = {this.handleNewDataChange.bind(this)}
                       >
                         <option value = "" disabled>【请选择产品类别】</option>

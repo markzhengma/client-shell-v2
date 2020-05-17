@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
 
 import FindUser from './FindUser';
 import NewUser from './NewUser';
