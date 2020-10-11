@@ -23,6 +23,7 @@ class FindUser extends Component {
         plate: '',
         make: '',
         detail: '',
+        union_id: ''
       },
       isFetching: false,
     }
@@ -111,6 +112,7 @@ class FindUser extends Component {
         plate: '',
         make: '',
         detail: '',
+        union_id: ''
       }
     })
   }
@@ -126,6 +128,7 @@ class FindUser extends Component {
         plate: this.state.updateUser.plate,
         user_name: this.state.updateUser.user_name,
         detail: this.state.updateUser.detail !== '' ? this.state.updateUser.detail : '无备注',
+        union_id: this.state.updateUser.union_id
       }
     })
       .then(res => {
