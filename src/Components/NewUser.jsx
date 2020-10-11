@@ -35,35 +35,52 @@ class NewUser extends Component {
 
   handleNewUserSubmit(e) {
     e.preventDefault();
-    let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
-    if(confirmed){
-      axios({
-        url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
-        method: 'POST',
-        data: {
-          make: this.state.make,
-          phone: this.state.phone,
-          plate: this.state.plate,
-          record_num: this.state.record_num,
-          user_name: this.state.user_name,
-        }
-      })
-        .then(res => {
-          if(res.data.code !== 200){
-            alert(res.data.code + '\n' + JSON.stringify(res.data.data))
-          } else {
-            // this.setState({
-            //   userData: res.data.data
-            // });
-            alert('创建成功！新用户换油证号为：' + res.data.data.record_num);
-            this.props.selectRecordNum(res.data.data.record_num);
-            this.props.changeAction('find_user');
+
+    const { make, phone, plate, record_num, user_name } = this.state;
+    const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
+
+    if(!user_name.match(REGEX_CHINESE)) {
+      alert('请重新检查输入的姓名');
+    } else if((phone.length !== 7 && phone.length !== 11) || !phone.match(/^\d+$/)) {
+      alert('请重新检查输入的联系方式');
+    } else if(!make.match(REGEX_CHINESE)) {
+      alert('请重新检查输入的车型');
+    } else if(plate.length !== 7 || !plate.match(REGEX_CHINESE)) {
+      alert('请重新检查输入的车牌号');
+    } else if(this.state.isManual && (record_num.length !== 7 || !record_num.match(/^[A-Z]/) || !record_num.match(/[0-9]$/))) {
+      alert('请重新检查输入的换油证号');
+    } else {
+      let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
+      if(confirmed){
+        axios({
+          url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
+          method: 'POST',
+          data: {
+            make,
+            phone,
+            plate,
+            record_num,
+            user_name: user_name.length === 1 ? user_name + '先生/女士' : user_name,
           }
         })
-        .catch(err => {
-          alert(err);
-        })
+          .then(res => {
+            if(res.data.code !== 200){
+              alert(res.data.code + '\n' + JSON.stringify(res.data.data))
+            } else {
+              // this.setState({
+              //   userData: res.data.data
+              // });
+              alert('创建成功！新用户换油证号为：' + res.data.data.record_num);
+              this.props.selectRecordNum(res.data.data.record_num);
+              this.props.changeAction('find_user');
+            }
+          })
+          .catch(err => {
+            alert(err);
+          })
+      }
     }
+
   }
 
   render() {
@@ -101,7 +118,7 @@ class NewUser extends Component {
             车型：
           </Form.Label>
           <Form.Control type = "text" name = "make" onChange = {this.handleChange.bind(this)} value = {this.state.make}></Form.Control>
-          <Button variant = "info" onClick = {this.handleNewUserSubmit.bind(this)}>创建</Button>
+          <Button className = "admin-btn" variant = "info" onClick = {this.handleNewUserSubmit.bind(this)}>创建</Button>
         </Form>
         }
         

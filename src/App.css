@@ -166,3 +166,7 @@
   flex-direction: column;
   width: 400px;
 }
+
+.admin-btn {
+  margin: 10px 0;
+}
