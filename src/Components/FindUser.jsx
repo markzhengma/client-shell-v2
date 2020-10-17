@@ -134,7 +134,42 @@ class FindUser extends Component {
       .then(res => {
         if(res.data.code === 200){
           this.cancelUserUpdate();
-          this.handleFindUserSubmit(e);
+          // this.handleFindUserSubmit(e);
+
+          this.setState({
+            isFetching: true,
+          });
+          axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=record_num&value=${res.data.data.record_num}`)
+            .then(userList => {
+              this.setState({
+                isFetching: false,
+              });
+              if(userList.data.code !== 200) {
+                alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
+              } else {
+                if(userList.data.data.length === 0){
+                  alert('未找到用户~');
+                } else if(userList.data.data.length > 1){
+                  this.setState({
+                    userData: '',
+                    recordListData: '',
+                    userListData: userList.data.data
+                  });
+                } else {
+                  this.setState({
+                    userListData: ''
+                  })
+                  this.findUserRecords(userList.data.data[0].record_num);
+                }
+              }
+            })
+            .catch(err => {
+              this.setState({
+                isFetching: false,
+              });
+              console.log(err);
+            })
+
         }
       })
       .catch(err => {
@@ -197,6 +232,9 @@ class FindUser extends Component {
           }
         })
         .catch(err => {
+          this.setState({
+            isFetching: false,
+          });
           console.log(err);
         })
     }
