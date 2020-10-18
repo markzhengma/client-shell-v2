@@ -119,62 +119,77 @@ class FindUser extends Component {
 
   confirmUserUpdate(e) {
     e.preventDefault();
-    axios({
-      url: `https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`,
-      method: 'PUT',
-      data: {
-        make: this.state.updateUser.make,
-        phone: this.state.updateUser.phone,
-        plate: this.state.updateUser.plate,
-        user_name: this.state.updateUser.user_name,
-        detail: this.state.updateUser.detail !== '' ? this.state.updateUser.detail : '无备注',
-        union_id: this.state.updateUser.union_id
-      }
-    })
-      .then(res => {
-        if(res.data.code === 200){
-          this.cancelUserUpdate();
-          // this.handleFindUserSubmit(e);
 
-          this.setState({
-            isFetching: true,
-          });
-          axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=record_num&value=${res.data.data.record_num}`)
-            .then(userList => {
-              this.setState({
-                isFetching: false,
-              });
-              if(userList.data.code !== 200) {
-                alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
-              } else {
-                if(userList.data.data.length === 0){
-                  alert('未找到用户~');
-                } else if(userList.data.data.length > 1){
-                  this.setState({
-                    userData: '',
-                    recordListData: '',
-                    userListData: userList.data.data
-                  });
-                } else {
-                  this.setState({
-                    userListData: ''
-                  })
-                  this.findUserRecords(userList.data.data[0].record_num);
-                }
-              }
-            })
-            .catch(err => {
-              this.setState({
-                isFetching: false,
-              });
-              console.log(err);
-            })
+    const { make, phone, plate, user_name, union_id } = this.state.updateUser;
+    const detail = this.state.updateUser.detail !== '' ? this.state.updateUser.detail : '无备注';
+    const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
 
+    if(!user_name.match(REGEX_CHINESE)) {
+      alert('请重新检查输入的姓名');
+    } else if((phone.length !== 7 && phone.length !== 11) || !phone.match(/^\d+$/)) {
+      alert('请重新检查输入的联系方式');
+    } else if(!make.match(REGEX_CHINESE) && !make.match(/[0-9]/)) {
+      alert('请重新检查输入的车型');
+    } else if(plate.length !== 7 || !plate.match(REGEX_CHINESE)) {
+      alert('请重新检查输入的车牌号');
+    } else {
+      axios({
+        url: `https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`,
+        method: 'PUT',
+        data: {
+          make,
+          phone,
+          plate,
+          user_name,
+          detail,
+          union_id,
         }
       })
-      .catch(err => {
-        console.log(err)
-      })
+        .then(res => {
+          if(res.data.code === 200){
+            this.cancelUserUpdate();
+            // this.handleFindUserSubmit(e);
+  
+            this.setState({
+              isFetching: true,
+            });
+            axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=record_num&value=${res.data.data.record_num}`)
+              .then(userList => {
+                this.setState({
+                  isFetching: false,
+                });
+                if(userList.data.code !== 200) {
+                  alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
+                } else {
+                  if(userList.data.data.length === 0){
+                    alert('未找到用户~');
+                  } else if(userList.data.data.length > 1){
+                    this.setState({
+                      userData: '',
+                      recordListData: '',
+                      userListData: userList.data.data
+                    });
+                  } else {
+                    this.setState({
+                      userListData: ''
+                    })
+                    this.findUserRecords(userList.data.data[0].record_num);
+                  }
+                }
+              })
+              .catch(err => {
+                this.setState({
+                  isFetching: false,
+                });
+                console.log(err);
+              })
+  
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   };
 
   confirmUserDelete() {
