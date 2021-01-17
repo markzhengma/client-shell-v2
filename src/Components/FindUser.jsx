@@ -16,6 +16,7 @@ class FindUser extends Component {
       userListData: '',
       userData: '',
       recordListData: '',
+      reminderListData: '',
       isUserUpdating: '',
       updateUser: {
         user_name: '',
@@ -86,6 +87,7 @@ class FindUser extends Component {
       value: '',
       userData: '',
       recordListData: '',
+      reminderListData: '',
       userListData: ''
     })
   };
@@ -167,6 +169,7 @@ class FindUser extends Component {
                     this.setState({
                       userData: '',
                       recordListData: '',
+                      reminderListData: '',
                       userListData: userList.data.data
                     });
                   } else {
@@ -194,7 +197,9 @@ class FindUser extends Component {
 
   confirmUserDelete() {
     if (this.state.recordListData.length > 0){
-      alert('亲，要『清除』该用户『全部保养记录』之后才能『删除用户』哟！')
+      alert('亲，要『清除』该用户『全部保养记录』之后才能『删除用户』哟！');
+    } else if (this.state.reminderListData.length > 0){
+      alert('亲，要『清除』该用户『全部提醒记录』之后才能『删除用户』哟！');
     } else {
       let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
       if(confirm){
@@ -236,6 +241,7 @@ class FindUser extends Component {
               this.setState({
                 userData: '',
                 recordListData: '',
+                reminderListData: '',
                 userListData: userList.data.data
               });
             } else {
@@ -273,7 +279,23 @@ class FindUser extends Component {
               } else {
                 this.setState({
                   recordListData: records.data.data
-                })
+                });
+
+                axios.get(`https://api.hulunbuirshell.com/api/reminder/user/${record_num}`)
+                  .then(reminder => {
+                    if(reminder.data.code !== 200){
+                      alert(reminder.data);
+                      console.log(reminder.data)
+                    } else {
+                      this.setState({
+                        reminderListData: reminder.data.data
+                      })
+                    }
+                  })
+                  .catch(err => {
+                    alert(err);
+                    console.log(err);
+                  })
               }
             })
             .catch(err => {
