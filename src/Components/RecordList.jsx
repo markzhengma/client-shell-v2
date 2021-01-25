@@ -26,7 +26,8 @@ class RecordList extends Component {
       },
       selectUpdateId: '',
       currDate: '',
-      randomKey: 0
+      randomKey: 0,
+      isShowRecordList: true
     }
   };
 
@@ -117,7 +118,8 @@ class RecordList extends Component {
           } else {
             this.resetNewRecordForm();
             this.resetInput();
-            this.props.handleFindUserSubmit(e)
+            this.props.handleFindUserSubmit(e);
+            alert("保养记录创建成功");
           }
         })
         .catch(err => {
@@ -192,6 +194,12 @@ class RecordList extends Component {
         reminder: ''
       },
       selectUpdateId: ''
+    })
+  };
+
+  changeRecordListShow() {
+    this.setState({
+      isShowRecordList: !this.state.isShowRecordList
     })
   };
 
@@ -325,138 +333,171 @@ class RecordList extends Component {
         </div>
         {data.length > 0 ? 
           <div>
-          <h5>保养记录历史</h5>
-          <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
-            <thead>
-              <tr>
-                <th>日期</th>
-                <th>项目名称</th>
-                <th>表示里程</th>
-                <th>赠品情况</th>
-                <th>操作人</th>
-                <th>积分/备注</th>
-                <th>保养提醒</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map(record => {
-                return (
-                  this.state.selectUpdateId !== record._id ? 
+          <h5>
+            保养记录历史  
+            {
+              this.state.isShowRecordList 
+              ? <Button
+                  variant="dark"
+                  onClick={this.changeRecordListShow.bind(this)}
+                >
+                  收起
+                </Button>
+              : <Button
+                  variant="success"
+                  onClick={this.changeRecordListShow.bind(this)}
+                >
+                  展开
+                </Button>
+            }
+          </h5>
+          <div
+            className="record-list-table-wrapper"
+            style = {
+              this.state.isShowRecordList
+              ? { height: 'fit-content' }
+              : { height: '0' }
+            }
+          >
+            <Table 
+              className="record-list-table" 
+              striped 
+              bordered 
+              hover 
+              style = {{ backgroundColor: 'grey', color: 'white' }}
+            >
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>项目名称</th>
+                  <th>表示里程</th>
+                  <th>赠品情况</th>
+                  <th>操作人</th>
+                  <th>积分/备注</th>
+                  <th>保养提醒</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map(record => {
+                  return (
+                    this.state.selectUpdateId !== record._id ? 
+                      <tr key = {record._id} id = {record._id}>
+                        <td className = "record-list-column">{record.date}</td>
+                        <td className = "record-list-column">{record.product_name}</td>
+                        <td className = "record-list-column">{record.milage}</td>
+                        <td className = "record-list-column">{record.gift}</td>
+                        <td className = "record-list-column">{record.operator}</td>
+                        <td className = "record-list-column">{record.detail}</td>
+                        <td className = "record-list-column">{record.reminder}</td>
+                        <td className = "record-list-column">
+                          <Button variant = "primary" onClick = {(e) => this.selectUpdateRecord(record)}>编辑</Button>
+                          <Button variant = "danger" onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</Button>
+                        </td>
+                      </tr>
+                    :
                     <tr key = {record._id} id = {record._id}>
-                      <td className = "record-list-column">{record.date}</td>
-                      <td className = "record-list-column">{record.product_name}</td>
-                      <td className = "record-list-column">{record.milage}</td>
-                      <td className = "record-list-column">{record.gift}</td>
-                      <td className = "record-list-column">{record.operator}</td>
-                      <td className = "record-list-column">{record.detail}</td>
-                      <td className = "record-list-column">{record.reminder}</td>
+                      <td className = "record-list-column"><input className = "edit-input" type = "date" defaultValue = {record.date} name = "date" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                      {/* <td className = "record-list-column"><input defaultValue = {record.product_name} name = "product_name" onChange = {this.handleUpdateRecordChange.bind(this)}/></td> */}
                       <td className = "record-list-column">
-                        <Button variant = "primary" onClick = {(e) => this.selectUpdateRecord(record)}>编辑</Button>
-                        <Button variant = "danger" onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</Button>
+                        <select className = "edit-select" name = "product_name" defaultValue = {record.product_name} onChange = {this.handleUpdateRecordChange.bind(this)}>
+                          {/* <option value = {record.product_name} selected>{record.product_name}</option> */}
+                          <option value = "" disabled>【项目名称】</option>
+                          <option value = "" disabled>【汽机油】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '汽机油'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          <option value = "" disabled>【柴机油】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '柴机油'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          <option value = "" disabled>【中华产品】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '中华产品'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          <option value = "" disabled>【附属品】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '附属品'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          
+                        </select>
+                      </td>
+                      <td className = "record-list-column"><input className = "edit-input" defaultValue = {record.milage} name = "milage" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                      {/* <td className = "record-list-column"><input defaultValue = {record.gift} name = "gift" onChange = {this.handleUpdateRecordChange.bind(this)}/></td> */}
+                      <td className = "record-list-column">
+                        <select className = "edit-select" name = "gift" defaultValue = {record.gift} onChange = {this.handleUpdateRecordChange.bind(this)}>
+                          {/* <option value = {record.gift} selected>{record.gift}</option> */}
+                          <option value = "" disabled>【赠品情况】</option>
+                          <option value = "(赠品未领)">(赠品未领)</option>
+                          {this.props.giftData.map(gift => {
+                            if(gift.gift_name !== "(赠品未领)") {
+                              return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                        </select>
+                      </td>
+                      {/* <td className = "record-list-column"><input defaultValue = {record.operator} name = "operator" onChange = {this.handleUpdateRecordChange.bind(this)}/></td> */}
+                      <td className = "record-list-column">
+                        <select className = "edit-select" name = "operator" defaultValue = {record.operator} onChange = {this.handleUpdateRecordChange.bind(this)}>
+                          {/* <option value = {record.operator} selected>{record.operator}</option> */}
+                          <option value = "" disabled>【操作人】</option>
+                          <option value = "" disabled>【海拉尔】</option>
+                          {this.props.operatorData.map(operator => {
+                            if(operator.location === '海拉尔'){
+                              return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          <option value = "" disabled>【满洲里】</option>
+                          {this.props.operatorData.map(operator => {
+                            if(operator.location === '满洲里'){
+                              return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          <option value = "" disabled>【牙克石】</option>
+                          {this.props.operatorData.map(operator => {
+                            if(operator.location === '牙克石'){
+                              return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                        </select>
+                      </td>
+                      <td className = "record-list-column"><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                      <td className = "record-list-column"><input defaultValue = {record.reminder} name = "reminder" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
+                      <td className = "record-list-column">
+                        <Button variant = "success" onClick = {(e) => this.confirmUpdateRecord(e)}>保存</Button>
+                        <Button variant = "warning" onClick = {this.resetUpdateRecord.bind(this)}>取消</Button>
                       </td>
                     </tr>
-                  :
-                  <tr key = {record._id} id = {record._id}>
-                    <td className = "record-list-column"><input className = "edit-input" type = "date" defaultValue = {record.date} name = "date" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
-                    {/* <td className = "record-list-column"><input defaultValue = {record.product_name} name = "product_name" onChange = {this.handleUpdateRecordChange.bind(this)}/></td> */}
-                    <td className = "record-list-column">
-                      <select className = "edit-select" name = "product_name" defaultValue = {record.product_name} onChange = {this.handleUpdateRecordChange.bind(this)}>
-                        {/* <option value = {record.product_name} selected>{record.product_name}</option> */}
-                        <option value = "" disabled>【项目名称】</option>
-                        <option value = "" disabled>【汽机油】</option>
-                        {this.props.productData.map(product => {
-                          if(product.product_type === '汽机油'){
-                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                        <option value = "" disabled>【柴机油】</option>
-                        {this.props.productData.map(product => {
-                          if(product.product_type === '柴机油'){
-                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                        <option value = "" disabled>【中华产品】</option>
-                        {this.props.productData.map(product => {
-                          if(product.product_type === '中华产品'){
-                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                        <option value = "" disabled>【附属品】</option>
-                        {this.props.productData.map(product => {
-                          if(product.product_type === '附属品'){
-                            return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                        
-                      </select>
-                    </td>
-                    <td className = "record-list-column"><input className = "edit-input" defaultValue = {record.milage} name = "milage" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
-                    {/* <td className = "record-list-column"><input defaultValue = {record.gift} name = "gift" onChange = {this.handleUpdateRecordChange.bind(this)}/></td> */}
-                    <td className = "record-list-column">
-                      <select className = "edit-select" name = "gift" defaultValue = {record.gift} onChange = {this.handleUpdateRecordChange.bind(this)}>
-                        {/* <option value = {record.gift} selected>{record.gift}</option> */}
-                        <option value = "" disabled>【赠品情况】</option>
-                        <option value = "(赠品未领)">(赠品未领)</option>
-                        {this.props.giftData.map(gift => {
-                          if(gift.gift_name !== "(赠品未领)") {
-                            return <option value = {gift.gift_name} key = {gift._id}>{gift.gift_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                      </select>
-                    </td>
-                    {/* <td className = "record-list-column"><input defaultValue = {record.operator} name = "operator" onChange = {this.handleUpdateRecordChange.bind(this)}/></td> */}
-                    <td className = "record-list-column">
-                      <select className = "edit-select" name = "operator" defaultValue = {record.operator} onChange = {this.handleUpdateRecordChange.bind(this)}>
-                        {/* <option value = {record.operator} selected>{record.operator}</option> */}
-                        <option value = "" disabled>【操作人】</option>
-                        <option value = "" disabled>【海拉尔】</option>
-                        {this.props.operatorData.map(operator => {
-                          if(operator.location === '海拉尔'){
-                            return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                        <option value = "" disabled>【满洲里】</option>
-                        {this.props.operatorData.map(operator => {
-                          if(operator.location === '满洲里'){
-                            return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                        <option value = "" disabled>【牙克石】</option>
-                        {this.props.operatorData.map(operator => {
-                          if(operator.location === '牙克石'){
-                            return <option value = {operator.op_name} key = {operator._id}>{operator.op_name}</option>
-                          } else {
-                            return '';
-                          }
-                        })}
-                      </select>
-                    </td>
-                    <td className = "record-list-column"><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
-                    <td className = "record-list-column"><input defaultValue = {record.reminder} name = "reminder" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
-                    <td className = "record-list-column">
-                      <Button variant = "success" onClick = {(e) => this.confirmUpdateRecord(e)}>保存</Button>
-                      <Button variant = "warning" onClick = {this.resetUpdateRecord.bind(this)}>取消</Button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </div>
+          
         </div>
         : ""}
         

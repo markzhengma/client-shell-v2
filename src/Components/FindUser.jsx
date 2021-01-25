@@ -5,6 +5,7 @@ import { Card, Form, Button, ButtonGroup, Spinner } from 'react-bootstrap';
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
 import RecordList from './RecordList';
+import ReminderList from './ReminderList';
 
 class FindUser extends Component {
   constructor(props){
@@ -280,22 +281,7 @@ class FindUser extends Component {
                 this.setState({
                   recordListData: records.data.data
                 });
-
-                axios.get(`https://api.hulunbuirshell.com/api/reminder/user/${record_num}`)
-                  .then(reminder => {
-                    if(reminder.data.code !== 200){
-                      alert(reminder.data);
-                      console.log(reminder.data)
-                    } else {
-                      this.setState({
-                        reminderListData: reminder.data.data
-                      })
-                    }
-                  })
-                  .catch(err => {
-                    alert(err);
-                    console.log(err);
-                  })
+                this.findUserReminders(record_num);
               }
             })
             .catch(err => {
@@ -307,6 +293,24 @@ class FindUser extends Component {
       .catch(err => {
         console.log(err);
       })
+  }
+
+  findUserReminders (record_num) {
+    axios.get(`https://api.hulunbuirshell.com/api/reminder/user/${record_num}`)
+    .then(reminder => {
+      if(reminder.data.code !== 200){
+        alert(reminder.data);
+        console.log(reminder.data)
+      } else {
+        this.setState({
+          reminderListData: reminder.data.data
+        })
+      }
+    })
+    .catch(err => {
+      alert(err);
+      console.log(err);
+    })
   }
 
   render() {
@@ -391,6 +395,13 @@ class FindUser extends Component {
             giftData = {this.props.giftData}
             operatorData = {this.props.operatorData}
             recordListData = {this.state.recordListData}
+            record_num = {this.state.userData.record_num}
+            handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
+          />
+        : ""}
+        {this.state.userData !== '' ? 
+          <ReminderList 
+            reminderListData = {this.state.reminderListData}
             record_num = {this.state.userData.record_num}
             handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
           />

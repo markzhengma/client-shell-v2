@@ -42,6 +42,7 @@
   border: 1px solid #95999c;
   color: #FFF;
   padding: 16px;
+  margin-bottom: 20px;
 }
 
 /* box */
@@ -73,7 +74,10 @@
   padding: 16px;
 }
 .record-list{
-  padding: 20px 20px 20px 20px;
+  padding: 40px 20px 20px 20px;
+}
+.record-list-table-wrapper{
+  overflow: hidden;
 }
 .record-list-column{
   min-width: 150px;
@@ -84,6 +88,16 @@
 .record-search-box {
   width: 200px;
   margin: 20px;
+}
+.reminder-card-list {
+  width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.reminder-card {
+  width: 18rem;
+  margin: 10px;
 }
 
 /* input */
