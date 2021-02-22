@@ -90,8 +90,12 @@ class ReminderList extends Component {
           }
         })
           .then(res => {
-            if(res.data.code !== 200){
-              alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+            if(res.data.code !== 200 || res.data.data.code !== 200){
+              if(res.data.data.code === 501) {
+                alert('错误：无法创建，该用户还有一条相同类目的保养提醒未推送');
+              } else {
+                alert(res.data.data.code + '\n' + JSON.stringify(res.data.data));
+              }
               console.log(res.data.data);
             } else {
               this.resetNewReminderForm();
@@ -199,6 +203,7 @@ class ReminderList extends Component {
                     <option value="4">5.更换刹车片</option>
                     <option value="5">6.更换正时皮带</option>
                     <option value="6">7.更换变速箱油</option>
+                    <option value="7">8.更换车桥油</option>
                   </Form.Control>
                 </Form.Group>
               </Col>
@@ -214,10 +219,16 @@ class ReminderList extends Component {
                     <option value="" disabled>【请选择】</option>
                     <option value="30">1个月后</option>
                     <option value="60">2个月后</option>
-                    <option value="90">3个月后</option>
-                    <option value="120">4个月后</option>
-                    <option value="150">5个月后</option>
-                    <option value="180">6个月后</option>
+                    <option value="91">3个月后</option>
+                    <option value="121">4个月后</option>
+                    <option value="152">5个月后</option>
+                    <option value="182">6个月后</option>
+                    <option value="213">7个月后</option>
+                    <option value="243">8个月后</option>
+                    <option value="274">9个月后</option>
+                    <option value="304">10个月后</option>
+                    <option value="335">11个月后</option>
+                    <option value="365">12个月后</option>
                   </Form.Control>
                 </Form.Group>
               </Col>

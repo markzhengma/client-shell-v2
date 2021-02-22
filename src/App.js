@@ -12,7 +12,7 @@ class App extends Component {
     super();
     this.state = {
       admin: '',
-      page: 'login'
+      page: 'admin'
     }
   }
 

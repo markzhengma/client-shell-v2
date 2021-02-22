@@ -13,7 +13,6 @@ class RecordList extends Component {
         gift: '',
         operator: '',
         detail: '',
-        reminder: ''
       },
       updateRecord: {
         date: '',
@@ -22,7 +21,7 @@ class RecordList extends Component {
         gift: '',
         operator: '',
         detail: '',
-        reminder: ''
+        reminder: 'reminder'
       },
       selectUpdateId: '',
       currDate: '',
@@ -59,7 +58,6 @@ class RecordList extends Component {
         gift: '',
         operator: '',
         detail: '',
-        reminder: ''
       }
     })
   };
@@ -94,7 +92,7 @@ class RecordList extends Component {
 
   handleNewRecordSubmit(e){
     e.preventDefault();
-    if(this.state.newRecord.date === "" || this.state.newRecord.gift === "" || this.state.newRecord.milage === "" || this.state.newRecord.operator === "" || this.state.newRecord.product_name === "" || this.state.newRecord.detail === "" || this.state.newRecord.reminder === "") {
+    if(this.state.newRecord.date === "" || this.state.newRecord.gift === "" || this.state.newRecord.milage === "" || this.state.newRecord.operator === "" || this.state.newRecord.product_name === "" || this.state.newRecord.detail === "") {
       alert("亲，请将保养记录填写完整哟~");
     } else {
       const record_num = this.props.record_num;
@@ -108,7 +106,7 @@ class RecordList extends Component {
           operator: this.state.newRecord.operator,
           product_name: this.state.newRecord.product_name,
           detail: this.state.newRecord.detail,
-          reminder: this.state.newRecord.reminder
+          reminder: 'reminder'
         }
       })
         .then(res => {
@@ -158,7 +156,7 @@ class RecordList extends Component {
         gift: data.gift,
         operator: data.operator,
         detail: data.detail,
-        reminder: data.reminder
+        reminder: 'reminder'
       },
       selectUpdateId: data._id
     })
@@ -191,7 +189,7 @@ class RecordList extends Component {
         gift: '',
         operator: '',
         detail: '',
-        reminder: ''
+        reminder: 'reminder'
       },
       selectUpdateId: ''
     })
@@ -230,6 +228,14 @@ class RecordList extends Component {
                         return '';
                       }
                     })}
+                    <option value = "" disabled>【中华汽机油】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '中华汽机油'){
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
+                    })}
                     <option value = "" disabled>【柴机油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '柴机油'){
@@ -238,17 +244,33 @@ class RecordList extends Component {
                         return '';
                       }
                     })}
-                    <option value = "" disabled>【中华产品】</option>
+                    <option value = "" disabled>【中华柴机油】</option>
                     {this.props.productData.map(product => {
-                      if(product.product_type === '中华产品'){
+                      if(product.product_type === '中华柴机油'){
                         return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
                     })}
-                    <option value = "" disabled>【附属品】</option>
+                    <option value = "" disabled>【防冻液】</option>
                     {this.props.productData.map(product => {
-                      if(product.product_type === '附属品') {
+                      if(product.product_type === '防冻液'){
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
+                    })}
+                    <option value = "" disabled>【刹车油】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '刹车油') {
+                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                      } else {
+                        return '';
+                      }
+                    })}
+                    <option value = "" disabled>【变速箱油】</option>
+                    {this.props.productData.map(product => {
+                      if(product.product_type === '变速箱油') {
                         return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
@@ -318,12 +340,6 @@ class RecordList extends Component {
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Group>
-                  <Form.Label>保养提醒</Form.Label>
-                  <Form.Control name = "reminder" value = {this.state.newRecord.reminder} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "保养提醒"></Form.Control>
-                </Form.Group>
-              </Col>
-              <Col>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
                 <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
                 <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>
@@ -374,7 +390,6 @@ class RecordList extends Component {
                   <th>赠品情况</th>
                   <th>操作人</th>
                   <th>积分/备注</th>
-                  <th>保养提醒</th>
                   <th>操作</th>
                 </tr>
               </thead>
@@ -389,7 +404,6 @@ class RecordList extends Component {
                         <td className = "record-list-column">{record.gift}</td>
                         <td className = "record-list-column">{record.operator}</td>
                         <td className = "record-list-column">{record.detail}</td>
-                        <td className = "record-list-column">{record.reminder}</td>
                         <td className = "record-list-column">
                           <Button variant = "primary" onClick = {(e) => this.selectUpdateRecord(record)}>编辑</Button>
                           <Button variant = "danger" onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</Button>
@@ -411,6 +425,14 @@ class RecordList extends Component {
                               return '';
                             }
                           })}
+                          <option value = "" disabled>【中华汽机油】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '中华汽机油'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
                           <option value = "" disabled>【柴机油】</option>
                           {this.props.productData.map(product => {
                             if(product.product_type === '柴机油'){
@@ -419,23 +441,38 @@ class RecordList extends Component {
                               return '';
                             }
                           })}
-                          <option value = "" disabled>【中华产品】</option>
+                          <option value = "" disabled>【中华柴机油】</option>
                           {this.props.productData.map(product => {
-                            if(product.product_type === '中华产品'){
+                            if(product.product_type === '中华柴机油'){
                               return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
                             } else {
                               return '';
                             }
                           })}
-                          <option value = "" disabled>【附属品】</option>
+                          <option value = "" disabled>【防冻液】</option>
                           {this.props.productData.map(product => {
-                            if(product.product_type === '附属品'){
+                            if(product.product_type === '防冻液'){
                               return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
                             } else {
                               return '';
                             }
                           })}
-                          
+                          <option value = "" disabled>【刹车油】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '刹车油'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
+                          <option value = "" disabled>【变速箱油】</option>
+                          {this.props.productData.map(product => {
+                            if(product.product_type === '变速箱油'){
+                              return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                            } else {
+                              return '';
+                            }
+                          })}
                         </select>
                       </td>
                       <td className = "record-list-column"><input className = "edit-input" defaultValue = {record.milage} name = "milage" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
@@ -485,9 +522,7 @@ class RecordList extends Component {
                           })}
                         </select>
                       </td>
-                      <td className = "record-list-column"><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
-                      <td className = "record-list-column"><input defaultValue = {record.reminder} name = "reminder" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>
-                      <td className = "record-list-column">
+                      <td className = "record-list-column"><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>                      <td className = "record-list-column">
                         <Button variant = "success" onClick = {(e) => this.confirmUpdateRecord(e)}>保存</Button>
                         <Button variant = "warning" onClick = {this.resetUpdateRecord.bind(this)}>取消</Button>
                       </td>

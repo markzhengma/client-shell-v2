@@ -212,9 +212,14 @@ class DataList extends Component {
                       >
                         <option value = "" disabled>【请选择产品类别】</option>
                         <option value = "汽机油">汽机油</option>
+                        <option value = "中华汽机油">中华汽机油</option>
                         <option value = "柴机油">柴机油</option>
-                        <option value = "附属品">附属品</option>
-                        <option value = "中华产品">中华产品</option>
+                        <option value = "中华柴机油">中华柴机油</option>
+                        <option value = "防冻液">防冻液</option>
+                        <option value = "刹车油">刹车油</option>
+                        <option value = "变速箱油">变速箱油</option>
+                        {/* <option value = "附属品">附属品</option>
+                        <option value = "中华产品">中华产品</option> */}
                       </select>
                     </td>
                     <td className = "record-list-column">

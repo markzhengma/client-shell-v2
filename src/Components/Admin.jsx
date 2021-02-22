@@ -20,16 +20,16 @@ class Admin extends Component {
   };
 
   componentDidMount(){
-    if(this.props.admin === ''){
-      this.props.handlePageChange('login');
-    }else {
+    // if(this.props.admin === ''){
+    //   this.props.handlePageChange('login');
+    // }else {
       this.getGiftData();
       this.getOperatorData();
       this.getProductData();
       this.setState({
-        action: 'recent_record'
+        action: 'find_user'
       })
-    }
+    // }
   };
 
   getGiftData(){

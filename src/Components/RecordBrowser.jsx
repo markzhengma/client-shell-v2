@@ -29,7 +29,7 @@ class RecordBrowser extends Component {
               <th>赠品情况</th>
               <th>操作人</th>
               <th>积分/备注</th>
-              <th>保养提醒</th>
+              {/* <th>保养提醒</th> */}
               <th>换油证号</th>
               <th>操作</th>
             </tr>
@@ -44,7 +44,7 @@ class RecordBrowser extends Component {
                     <td className = "record-list-column">{record.gift}</td>
                     <td className = "record-list-column">{record.operator}</td>
                     <td className = "record-list-column">{record.detail}</td>
-                    <td className = "record-list-column">{record.reminder}</td>
+                    {/* <td className = "record-list-column">{record.reminder}</td> */}
                     <td className = "record-list-column">{record.record_num}</td>
                     <td className = "record-list-column">
                       <Button variant = "primary" onClick = {() => this.goToTargetRecord(record.record_num)}>查看</Button>

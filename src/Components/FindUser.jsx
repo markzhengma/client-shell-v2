@@ -11,8 +11,8 @@ class FindUser extends Component {
   constructor(props){
     super(props);
     this.state = {
-      filter: 'record_num',
-      placeholder: '请输入换油证号',
+      filter: 'phone',
+      placeholder: '请输入车牌号',
       value: '',
       userListData: '',
       userData: '',
