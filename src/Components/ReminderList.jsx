@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Table, Form, Row, Col, Button, Card, Badge } from 'react-bootstrap';
+import { Form, Row, Col, Button, Card, Badge } from 'react-bootstrap';
 
 class ReminderList extends Component {
   constructor(props){
@@ -38,7 +38,7 @@ class ReminderList extends Component {
 
   resetInput(){
     this.setState({
-      newRecord: {
+      newReminder: {
         reminder_cat: "",
         time_span: 0
       }
@@ -182,64 +182,6 @@ class ReminderList extends Component {
     const data = this.props.reminderListData;
     return (
       <div className = "record-list">
-        <div>
-          <h5>新保养提醒</h5>
-          <Form className = "new-record-form" onSubmit = {this.handleNewReminderSubmit.bind(this)} key={this.state.randomKey}>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>保养类目</Form.Label>
-                  <Form.Control 
-                    as = "select" 
-                    name = "reminder_cat" 
-                    defaultValue = "" 
-                    onChange = {this.handleNewReminderChange.bind(this)}
-                  >
-                    <option value="" disabled>【请选择】</option>
-                    <option value="0">1.更换机油</option>
-                    <option value="1">2.更换防冻液</option>
-                    <option value="2">3.更换刹车油</option>
-                    <option value="3">4.更换火花塞</option>
-                    <option value="4">5.更换刹车片</option>
-                    <option value="5">6.更换正时皮带</option>
-                    <option value="6">7.更换变速箱油</option>
-                    <option value="7">8.更换车桥油</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>提醒时间</Form.Label>
-                  <Form.Control 
-                    as = "select" 
-                    name = "time_span" 
-                    defaultValue = "" 
-                    onChange = {this.handleNewReminderChange.bind(this)}
-                  >
-                    <option value="" disabled>【请选择】</option>
-                    <option value="30">1个月后</option>
-                    <option value="60">2个月后</option>
-                    <option value="91">3个月后</option>
-                    <option value="121">4个月后</option>
-                    <option value="152">5个月后</option>
-                    <option value="182">6个月后</option>
-                    <option value="213">7个月后</option>
-                    <option value="243">8个月后</option>
-                    <option value="274">9个月后</option>
-                    <option value="304">10个月后</option>
-                    <option value="335">11个月后</option>
-                    <option value="365">12个月后</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col>
-                <div style = {{ margin: '0 0 8px 0' }}>操作</div>
-                <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
-                <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewReminderForm.bind(this)}>重置</Button>
-              </Col>
-            </Row>
-          </Form>
-        </div>
         {data ? 
           data.length > 0 ? 
             <div>
@@ -304,6 +246,66 @@ class ReminderList extends Component {
             </div>
           : ""
         : ""}
+                <div>
+          <h5>新保养提醒</h5>
+          <Form className = "new-record-form" onSubmit = {this.handleNewReminderSubmit.bind(this)} key={this.state.randomKey}>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label>保养类目</Form.Label>
+                  <Form.Control 
+                    as = "select" 
+                    name = "reminder_cat" 
+                    defaultValue = "" 
+                    onChange = {this.handleNewReminderChange.bind(this)}
+                  >
+                    <option value="" disabled>【请选择】</option>
+                    <option value="0">1.更换机油</option>
+                    <option value="1">2.更换防冻液</option>
+                    <option value="2">3.更换刹车油</option>
+                    <option value="3">4.更换火花塞</option>
+                    <option value="4">5.更换刹车片</option>
+                    <option value="5">6.更换正时皮带</option>
+                    <option value="6">7.更换变速箱油</option>
+                    <option value="7">8.更换车桥油</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label>提醒时间</Form.Label>
+                  <Form.Control 
+                    as = "select" 
+                    name = "time_span" 
+                    defaultValue = "" 
+                    onChange = {this.handleNewReminderChange.bind(this)}
+                  >
+                    <option value="" disabled>【请选择】</option>
+                    <option value="10">10天后</option>
+                    <option value="20">20天后</option>
+                    <option value="30">1个月后</option>
+                    <option value="60">2个月后</option>
+                    <option value="91">3个月后</option>
+                    <option value="121">4个月后</option>
+                    <option value="152">5个月后</option>
+                    <option value="182">6个月后</option>
+                    <option value="213">7个月后</option>
+                    <option value="243">8个月后</option>
+                    <option value="274">9个月后</option>
+                    <option value="304">10个月后</option>
+                    <option value="335">11个月后</option>
+                    <option value="365">12个月后</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col>
+                <div style = {{ margin: '0 0 8px 0' }}>操作</div>
+                <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
+                <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewReminderForm.bind(this)}>重置</Button>
+              </Col>
+            </Row>
+          </Form>
+        </div>
       </div>
     )
   }

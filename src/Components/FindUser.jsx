@@ -11,7 +11,7 @@ class FindUser extends Component {
   constructor(props){
     super(props);
     this.state = {
-      filter: 'phone',
+      filter: 'plate',
       placeholder: '请输入车牌号',
       value: '',
       userListData: '',
@@ -321,9 +321,9 @@ class FindUser extends Component {
           <Form.Group>
             <Form.Label>查询条件</Form.Label>
             <Form.Control as="select" name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
+              <option value = "plate">按车牌号查找</option>
               <option value = "record_num">按换油证号查找</option>
               <option value = "phone">按手机号查找</option>
-              <option value = "plate">按车牌号查找</option>
             </Form.Control>
           </Form.Group>
           <Form.Group>

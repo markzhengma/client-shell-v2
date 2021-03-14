@@ -14,6 +14,10 @@ class RecordList extends Component {
         operator: '',
         detail: '',
       },
+      newReminder: {
+        reminder_cat: "",
+        time_span: "",
+      },
       updateRecord: {
         date: '',
         product_name: '',
@@ -51,6 +55,10 @@ class RecordList extends Component {
 
   resetInput(){
     this.setState({
+      newReminder: {
+        reminder_cat: "",
+        time_span: "",
+      },
       newRecord: {
         date: this.state.currDate,
         product_name: '',
@@ -64,11 +72,42 @@ class RecordList extends Component {
 
   handleNewRecordChange(e) {
     const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    if(name !== "product_name") {
+      this.setState({
+        newRecord: {
+          ...this.state.newRecord,
+          [name]: target.value
+        }
+      })
+    } else {
+      let productObj = JSON.parse(target.value);
+      this.setState({
+        newRecord: {
+          ...this.state.newRecord,
+          [name]: productObj.product_name
+        },
+        newReminder: {
+          ...this.state.newReminder,
+          reminder_cat: productObj.reminder_cat
+        }
+      })
+    }
+    // this.setState({
+    //   newRecord: {
+    //     ...this.state.newRecord,
+    //     [name]: value
+    //   }
+    // })
+  };
+
+  handleNewReminderChange(e) {
+    const target = e.target;
+    const value = target.name === 'time_span' ? parseInt(target.value) : target.value;
     const name = target.name;
     this.setState({
-      newRecord: {
-        ...this.state.newRecord,
+      newReminder: {
+        ...this.state.newReminder,
         [name]: value
       }
     })
@@ -92,11 +131,12 @@ class RecordList extends Component {
 
   handleNewRecordSubmit(e){
     e.preventDefault();
-    if(this.state.newRecord.date === "" || this.state.newRecord.gift === "" || this.state.newRecord.milage === "" || this.state.newRecord.operator === "" || this.state.newRecord.product_name === "" || this.state.newRecord.detail === "") {
+    if(this.state.newRecord.date === "" || this.state.newRecord.gift === "" || this.state.newRecord.milage === "" || this.state.newRecord.operator === "" || this.state.newRecord.product_name === "" || this.state.newRecord.detail === "" || this.state.newReminder.time_span === "" || this.state.newReminder.reminder_cat === "" ) {
       alert("亲，请将保养记录填写完整哟~");
     } else {
       const record_num = this.props.record_num;
-      axios({
+
+      const newRecordRequest = axios({
         url: `https://api.hulunbuirshell.com/api/record/user/${record_num}`,
         method: 'POST',
         data: {
@@ -108,11 +148,29 @@ class RecordList extends Component {
           detail: this.state.newRecord.detail,
           reminder: 'reminder'
         }
-      })
+      });
+
+      const newReminderRequest = axios({
+        url: `https://api.hulunbuirshell.com/api/reminder/user/${record_num}`,
+        method: 'POST',
+        data: {
+          reminder_cat: this.state.newReminder.reminder_cat,
+          time_span: this.state.newReminder.time_span
+        }
+      });
+
+      axios.all([newRecordRequest, newReminderRequest])
         .then(res => {
-          if(res.data.code !== 200){
-            alert(res.data.code + '\n' + JSON.stringify(res.data.data));
-            console.log(res.data.data);
+          if(res[0].data.code !== 200){
+            alert(res[0].data.code + '\n' + JSON.stringify(res[0].data.data));
+            console.log(res[0].data.data);
+          } else if(res[1].data.code !== 200 || res[1].data.data.code !== 200){
+            if(res[1].data.data.code === 501) {
+              alert('错误：无法创建保养提醒，该用户还有一条相同类目的保养提醒未推送');
+            } else {
+              alert(res[1].data.data.code + '\n' + JSON.stringify(res[1].data.data));
+            }
+            console.log(res[1].data.data);
           } else {
             this.resetNewRecordForm();
             this.resetInput();
@@ -124,6 +182,35 @@ class RecordList extends Component {
           alert(err);
           console.log(err);
         })
+
+      // axios({
+      //   url: `https://api.hulunbuirshell.com/api/record/user/${record_num}`,
+      //   method: 'POST',
+      //   data: {
+      //     date: this.state.newRecord.date,
+      //     gift: this.state.newRecord.gift,
+      //     milage: this.state.newRecord.milage,
+      //     operator: this.state.newRecord.operator,
+      //     product_name: this.state.newRecord.product_name,
+      //     detail: this.state.newRecord.detail,
+      //     reminder: 'reminder'
+      //   }
+      // })
+      //   .then(res => {
+      //     if(res.data.code !== 200){
+      //       alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+      //       console.log(res.data.data);
+      //     } else {
+      //       this.resetNewRecordForm();
+      //       this.resetInput();
+      //       this.props.handleFindUserSubmit(e);
+      //       alert("保养记录创建成功");
+      //     }
+      //   })
+      //   .catch(err => {
+      //     alert(err);
+      //     console.log(err);
+      //   })
     }
   };
 
@@ -223,7 +310,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【汽机油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '汽机油'){
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "0"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -231,7 +318,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【中华汽机油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '中华汽机油'){
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "0"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -239,7 +326,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【柴机油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '柴机油'){
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "0"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -247,7 +334,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【中华柴机油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '中华柴机油'){
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "0"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -255,7 +342,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【防冻液】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '防冻液'){
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "1"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -263,7 +350,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【刹车油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '刹车油') {
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "2"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -271,7 +358,7 @@ class RecordList extends Component {
                     <option value = "" disabled>【变速箱油】</option>
                     {this.props.productData.map(product => {
                       if(product.product_type === '变速箱油') {
-                        return <option value = {product.product_name} key = {product._id}>{product.product_name}</option>
+                        return <option value = {JSON.stringify({product_name: product.product_name, reminder_cat: "6"})} key = {product._id}>{product.product_name}</option>
                       } else {
                         return '';
                       }
@@ -337,6 +424,33 @@ class RecordList extends Component {
                 <Form.Group>
                   <Form.Label>积分/备注</Form.Label>
                   <Form.Control name = "detail" value = {this.state.newRecord.detail} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "积分/备注"></Form.Control>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label>提醒时间</Form.Label>
+                  <Form.Control 
+                    as = "select" 
+                    name = "time_span" 
+                    defaultValue = "" 
+                    onChange = {this.handleNewReminderChange.bind(this)}
+                  >
+                    <option value="" disabled>【请选择】</option>
+                    <option value="10">10天后</option>
+                    <option value="20">20天后</option>
+                    <option value="30">1个月后</option>
+                    <option value="60">2个月后</option>
+                    <option value="91">3个月后</option>
+                    <option value="121">4个月后</option>
+                    <option value="152">5个月后</option>
+                    <option value="182">6个月后</option>
+                    <option value="213">7个月后</option>
+                    <option value="243">8个月后</option>
+                    <option value="274">9个月后</option>
+                    <option value="304">10个月后</option>
+                    <option value="335">11个月后</option>
+                    <option value="365">12个月后</option>
+                  </Form.Control>
                 </Form.Group>
               </Col>
               <Col>
