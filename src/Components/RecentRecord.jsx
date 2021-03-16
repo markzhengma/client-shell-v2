@@ -193,7 +193,7 @@ class RecentRecord extends Component {
         {this.state.recordListData !== '' ? 
           <RecordBrowser 
             recordListData = {this.state.recordListData}
-            selectRecordNum = {this.props.selectRecordNum}
+            selectFindUserValue = {this.props.selectFindUserValue}
             changeAction = {this.props.changeAction}
           />
         : ""}

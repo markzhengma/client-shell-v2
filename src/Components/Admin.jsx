@@ -15,7 +15,8 @@ class Admin extends Component {
       giftData: [],
       operatorData: [],
       productData: [],
-      selectedRecordNum: ''
+      selectedValue: '',
+      selectedFilter: ''
     }
   };
 
@@ -159,9 +160,10 @@ class Admin extends Component {
     })
   };
 
-  selectRecordNum(record_num){
+  selectFindUserValue(filter, value){
     this.setState({
-      selectedRecordNum: record_num
+      selectedFilter: filter,
+      selectedValue: value
     })
   };
 
@@ -191,7 +193,8 @@ class Admin extends Component {
             giftData = {this.state.giftData}
             productData = {this.state.productData}
             operatorData = {this.state.operatorData}
-            selectedRecordNum = {this.state.selectedRecordNum}
+            selectedValue = {this.state.selectedValue}
+            selectedFilter = {this.state.selectedFilter}
           /> 
           : 
           '' 
@@ -200,21 +203,21 @@ class Admin extends Component {
           <NewUser 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
-            selectRecordNum = {this.selectRecordNum.bind(this)}
+            selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
         { this.state.action === 'recent_record' ? 
           <RecentRecord 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
-            selectRecordNum = {this.selectRecordNum.bind(this)}
+            selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
         { this.state.action === 'recent_user' ? 
           <RecentUser 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
-            selectRecordNum = {this.selectRecordNum.bind(this)}
+            selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
         { this.state.action === 'manage_data' ? 

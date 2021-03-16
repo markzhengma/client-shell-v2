@@ -157,7 +157,7 @@ class RecentUser extends Component {
         {this.state.userListData !== '' ? 
           <UserBrowser 
             userListData = {this.state.userListData}
-            selectRecordNum = {this.props.selectRecordNum}
+            selectFindUserValue = {this.props.selectFindUserValue}
             changeAction = {this.props.changeAction}
           />
         : ""}

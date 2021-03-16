@@ -11,7 +11,7 @@ class RecordBrowser extends Component {
   goToTargetRecord(record_num) {
     let confirmed = window.confirm(`查看这条保养记录，换油证号：${record_num}`);
     if(confirmed){
-      this.props.selectRecordNum(record_num);
+      this.props.selectFindUserValue('record_num', record_num);
       this.props.changeAction('find_user');
     }
   }

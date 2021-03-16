@@ -33,8 +33,28 @@ class FindUser extends Component {
 
   componentDidMount(){
     this.setState({
-      value: this.props.selectedRecordNum
-    })
+      filter: this.props.selectedFilter,
+      value: this.props.selectedValue
+    });
+    switch(this.props.selectedFilter) {
+      case 'record_num':
+        this.setState({
+          placeholder: '请输入换油证号',
+        });
+        break;
+      case 'phone':
+        this.setState({
+          placeholder: '请输入手机号',
+        });
+        break;
+      case 'plate':
+        this.setState({
+          placeholder: '请输入车牌号',
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   handleChange(e) {
