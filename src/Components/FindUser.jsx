@@ -33,7 +33,7 @@ class FindUser extends Component {
 
   componentDidMount(){
     this.setState({
-      filter: this.props.selectedFilter,
+      filter: this.props.selectedFilter === '' ? 'plate' : this.props.selectedFilter,
       value: this.props.selectedValue
     });
     switch(this.props.selectedFilter) {
