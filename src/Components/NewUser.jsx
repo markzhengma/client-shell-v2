@@ -45,7 +45,7 @@ class NewUser extends Component {
       alert('请重新检查输入的联系方式');
     } else if(!make.match(REGEX_CHINESE)) {
       alert('请重新检查输入的车型');
-    } else if(plate.length !== 7 || !plate.match(REGEX_CHINESE)) {
+    } else if((plate.length !== 7 && plate.length !== 8) || !plate.match(REGEX_CHINESE)) {
       alert('请重新检查输入的车牌号');
     } else if(this.state.isManual && (record_num.length !== 7 || !record_num.match(/^[A-Z]/) || !record_num.match(/[0-9]$/))) {
       alert('请重新检查输入的换油证号');

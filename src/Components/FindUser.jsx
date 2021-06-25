@@ -153,7 +153,7 @@ class FindUser extends Component {
       alert('请重新检查输入的联系方式');
     } else if(!make.match(REGEX_CHINESE) && !make.match(/[0-9]/)) {
       alert('请重新检查输入的车型');
-    } else if(plate.length !== 7 || !plate.match(REGEX_CHINESE)) {
+    } else if((plate.length !== 7 && plate.length !== 8) || !plate.match(REGEX_CHINESE)) {
       alert('请重新检查输入的车牌号');
     } else {
       axios({
