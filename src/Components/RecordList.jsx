@@ -422,7 +422,7 @@ class RecordList extends Component {
               </Col>
               <Col>
                 <Form.Group>
-                  <Form.Label>积分/备注</Form.Label>
+                  <Form.Label>累计积分/备注</Form.Label>
                   <Form.Control name = "detail" value = {this.state.newRecord.detail} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "积分/备注"></Form.Control>
                 </Form.Group>
               </Col>
@@ -450,6 +450,9 @@ class RecordList extends Component {
                     <option value="304">10个月后</option>
                     <option value="335">11个月后</option>
                     <option value="365">12个月后</option>
+                    <option value="730">24个月后</option>
+                    <option value="1095">36个月后</option>
+                    <option value="1460">48个月后</option>
                   </Form.Control>
                 </Form.Group>
               </Col>
