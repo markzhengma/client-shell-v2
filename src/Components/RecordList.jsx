@@ -423,7 +423,7 @@ class RecordList extends Component {
               <Col>
                 <Form.Group>
                   <Form.Label>累计积分/备注</Form.Label>
-                  <Form.Control name = "detail" value = {this.state.newRecord.detail} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "积分/备注"></Form.Control>
+                  <Form.Control name = "detail" value = {this.state.newRecord.detail} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "累计积分/备注"></Form.Control>
                 </Form.Group>
               </Col>
               <Col>
