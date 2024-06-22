@@ -20,10 +20,14 @@ class RecentUser extends Component {
   };
 
   componentDidMount(){
-    this.findUserList(this.props.admin.location_char, 1, 20);
+    this.findUserList(this.props.adminwx.location_char, 1, 20);
+    // this.findUserList(this.props.admin.location_char, 1, 20);
     this.setState({
-      location_char: this.props.admin.location_char
+      location_char: this.props.adminwx.location_char
     });
+    // this.setState({
+    //   location_char: this.props.admin.location_char
+    // });
   };
 
   findUserList(location_char, pn, rn){
@@ -128,7 +132,7 @@ class RecentUser extends Component {
               : ''}
               查看选中门店用户
             </Button>
-            {this.props.admin.super_admin ? 
+            {this.props.adminwx.super_admin ? 
               this.state.totalData === '' ?
                 <Button variant = "primary" style = {{ margin: '10px', display: 'block' }} disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
                   {this.state.isFetchingTotal ? 
@@ -145,6 +149,23 @@ class RecentUser extends Component {
               :
                 <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
             : ''}
+            {/* {this.props.admin.super_admin ? 
+              this.state.totalData === '' ?
+                <Button variant = "primary" style = {{ margin: '10px', display: 'block' }} disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
+                  {this.state.isFetchingTotal ? 
+                    <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    />
+                  : ''}
+                  获取选中门店全部
+                </Button>
+              :
+                <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
+            : ''} */}
           </div>
           <Pagination style = {{ margin: '20px 0' }}>
             <Pagination.First onClick = {() => this.findUserList(this.state.location_char, 1, 20)}/>

@@ -50,10 +50,12 @@ class NewUser extends Component {
     } else if(this.state.isManual && (record_num.length !== 7 || !record_num.match(/^[A-Z]/) || !record_num.match(/[0-9]$/))) {
       alert('请重新检查输入的换油证号');
     } else {
-      let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
+      let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.adminwx.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
+      // let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
       if(confirmed){
         axios({
-          url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
+          url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.adminwx.location_char}`,
+          // url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
           method: 'POST',
           data: {
             make,
@@ -102,7 +104,8 @@ class NewUser extends Component {
           </Form.Label>
           <Form.Control type = "text" name = "user_name" onChange = {this.handleChange.bind(this)} value = {this.state.user_name}></Form.Control>
           <Form.Label>
-            换油证号：{this.props.admin.location}门店
+            换油证号：{this.props.adminwx.location}门店
+            {/* 换油证号：{this.props.admin.location}门店 */}
           </Form.Label>
           <Form.Check onChange = {this.changeManualState.bind(this)} type="checkbox" label="手动输入门店换油证号" />
           <Form.Control type = "text" name = "record_num" onChange = {this.handleChange.bind(this)} value = {this.state.record_num} disabled = {this.state.isManual ? "" : "disabled"}></Form.Control>

@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Login from './Components/Login';
+import Auth from './Components/Auth';
 import Admin from './Components/Admin';
 
 class App extends Component {
@@ -12,7 +13,8 @@ class App extends Component {
     super();
     this.state = {
       admin: '',
-      page: 'login'
+      adminwx: '',
+      page: 'auth'
     }
   }
 
@@ -21,6 +23,12 @@ class App extends Component {
       admin: data
     })
   };
+
+  setAdminWx(data) {
+    this.setState({
+      adminwx: data
+    })
+  }
 
   handlePageChange(page){
     this.setState({
@@ -56,6 +64,12 @@ class App extends Component {
     return (
       <div className = "app">
         <Header/>
+        {this.state.page === 'auth' ? 
+          <Auth
+            setAdminWx = {this.setAdminWx.bind(this)}
+            handlePageChange = {this.handlePageChange.bind(this)}
+          />
+        : ''}
         {this.state.page === 'login' ? 
           <Login
             setAdmin = {this.setAdmin.bind(this)}
@@ -66,6 +80,7 @@ class App extends Component {
           <Admin
             handlePageChange = {this.handlePageChange.bind(this)}
             admin = {this.state.admin}
+            adminwx = {this.state.adminwx}
           />
         : ''}
         <Footer/>

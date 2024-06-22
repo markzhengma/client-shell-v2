@@ -21,16 +21,16 @@ class Admin extends Component {
   };
 
   componentDidMount(){
-    if(this.props.admin === ''){
-      this.props.handlePageChange('login');
-    }else {
+    // if(this.props.admin === ''){
+    //   this.props.handlePageChange('login');
+    // }else {
       this.getGiftData();
       this.getOperatorData();
       this.getProductData();
       this.setState({
         action: 'recent_record'
       })
-    }
+    // }
   };
 
   getGiftData(){
@@ -183,9 +183,12 @@ class Admin extends Component {
             <div className="nav-btn" onClick = {() => this.changeAction('new_user')}>创建用户</div>
             <div className="nav-btn" onClick = {() => this.changeAction('recent_record')}>浏览记录</div>
             <div className="nav-btn" onClick = {() => this.changeAction('recent_user')}>浏览用户</div>
-            {this.props.admin.super_admin ? 
+            {this.props.adminwx.super_admin ? 
               <div className="nav-btn" onClick = {() => this.changeAction('manage_data')}>编辑基本信息</div>
             : ''}
+            {/* {this.props.admin.super_admin ? 
+              <div className="nav-btn" onClick = {() => this.changeAction('manage_data')}>编辑基本信息</div>
+            : ''} */}
           </div>
         </div>
         { this.state.action === 'find_user' ? 
@@ -203,6 +206,7 @@ class Admin extends Component {
           <NewUser 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
+            adminwx = {this.props.adminwx}
             selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
@@ -210,6 +214,7 @@ class Admin extends Component {
           <RecentRecord 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
+            adminwx = {this.props.adminwx}
             selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
@@ -217,6 +222,7 @@ class Admin extends Component {
           <RecentUser 
             changeAction = {this.changeAction.bind(this)}
             admin = {this.props.admin}
+            adminwx = {this.props.adminwx}
             selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
