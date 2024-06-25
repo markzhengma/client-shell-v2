@@ -153,7 +153,7 @@ class Auth extends Component {
   }
 
   openWxLoginQRCode() {
-    const redirectUri = encodeURIComponent('https://fat.hulunbuirshell.com');
+    const redirectUri = encodeURIComponent('https://www.hulunbuirshell.com');
     const appid = 'wx6d0fa508298a731d';
 
     this.resetAuthStatus();
