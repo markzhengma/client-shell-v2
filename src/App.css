@@ -53,6 +53,15 @@
   width: 100%;
   background-color: #656565;
 }
+.header-admin-box {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+.header-admin-box b{
+  color: #F9D148;
+  margin-right: 10px;
+}
 .user-single{
   width: 400px;
   margin: 20px;

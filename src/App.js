@@ -63,7 +63,11 @@ class App extends Component {
   render() {
     return (
       <div className = "app">
-        <Header/>
+        <Header
+          adminwx = {this.state.adminwx}
+          setAdminWx = {this.setAdminWx.bind(this)}
+          handlePageChange = {this.handlePageChange.bind(this)}
+        />
         {this.state.page === 'auth' ? 
           <Auth
             setAdminWx = {this.setAdminWx.bind(this)}

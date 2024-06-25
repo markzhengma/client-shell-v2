@@ -39,6 +39,7 @@ class Auth extends Component {
       isAdmin: false,
       code: ''
     })
+    this.props.setAdminWx('');
     Cookies.set('union_id', '');
   }
 
@@ -70,13 +71,11 @@ class Auth extends Component {
       isFetching: true
     })
 
-    const res = await axios.get(`http://127.0.0.1:7001/api/admin/auth/unionid?unionid=${unionId}`);
+    const res = await axios.get(`https://api.hulunbuirshell.com/api/admin/auth/unionid?unionid=${unionId}`);
 
     this.setState({
       isFetching: false
     });
-
-    console.log(res);
 
     try{
       if(res.data) {
@@ -115,7 +114,7 @@ class Auth extends Component {
     if(code) {
       this.setState({ code });
   
-      const res = await axios.get(`http://127.0.0.1:7001/api/admin/auth/code?code=${code}`);
+      const res = await axios.get(`https://api.hulunbuirshell.com/api/admin/auth/code?code=${code}`);
       
       this.setState({
         isFetching: false,
@@ -143,7 +142,7 @@ class Auth extends Component {
           }
   
         } else {
-          alert(res.data.msg);
+          alert("已退出登录");
           console.log(res.data);
         }
       } catch(err) {
@@ -154,7 +153,7 @@ class Auth extends Component {
   }
 
   openWxLoginQRCode() {
-    const redirectUri = encodeURIComponent('http://fat.hulunbuirshell.com');
+    const redirectUri = encodeURIComponent('https://fat.hulunbuirshell.com');
     const appid = 'wx6d0fa508298a731d';
 
     this.resetAuthStatus();
@@ -166,11 +165,6 @@ class Auth extends Component {
     return (
       <div className='auth auth-box'>
         <h3>门店及客户管理系统</h3>
-        {/* {this.state.userInfo.admin_name !== "" ?
-          <h2>{this.state.userInfo.admin_name}</h2>
-        :
-          <h2>{this.state.userInfo.nickname}</h2>
-        } */}
         {!this.state.hasInfo ? 
           <div className='wxlogin-box flex-column-center'>
             <b>请登录</b>

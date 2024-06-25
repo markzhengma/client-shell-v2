@@ -11,10 +11,23 @@ class NewUser extends Component {
       isManual: false,
       userData: '',
       user_name: '',
+      location_char:'',
       record_num: '',
       phone: '',
       plate: '',
       make: ''
+    }
+  };
+
+  componentDidMount() {
+    if(this.props.adminwx.location_char !== '') {
+      this.setState({
+        location_char: this.props.adminwx.location_char
+      })
+    } else {
+      this.setState({
+        location_char: 'HD'
+      })
     }
   };
 
@@ -50,11 +63,20 @@ class NewUser extends Component {
     } else if(this.state.isManual && (record_num.length !== 7 || !record_num.match(/^[A-Z]/) || !record_num.match(/[0-9]$/))) {
       alert('请重新检查输入的换油证号');
     } else {
-      let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.adminwx.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
+      let confirmed = window.confirm(
+        `请核对新用户信息：
+        \n客户姓名：${this.state.user_name}
+        \n换油证号：${this.state.isManual ? 
+          this.state.record_num : 
+          '自动生成 - ' + this.state.location_char}
+          \n联系方式：${this.state.phone}
+          \n车型：${this.state.make}
+          \n车牌号：${this.state.plate}`
+        );
       // let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
       if(confirmed){
         axios({
-          url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.adminwx.location_char}`,
+          url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.state.location_char}`,
           // url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
           method: 'POST',
           data: {
@@ -103,12 +125,39 @@ class NewUser extends Component {
             客户姓名：
           </Form.Label>
           <Form.Control type = "text" name = "user_name" onChange = {this.handleChange.bind(this)} value = {this.state.user_name}></Form.Control>
-          <Form.Label>
-            换油证号：{this.props.adminwx.location}门店
-            {/* 换油证号：{this.props.admin.location}门店 */}
-          </Form.Label>
+          
+          { !this.state.isManual ? 
+            <div>
+              <Form.Label>
+                所属门店：
+              </Form.Label>
+          
+              <Form.Control as = "select" name = "location_char" defaultValue = {this.props.adminwx.location_char} onChange = {this.handleChange.bind(this)} disabled = {this.state.isManual}>
+                <option value = "" disabled>【请选择】</option>
+                <option value = "HD">海拉尔河东</option>
+                <option value = "HX">海拉尔河西</option>
+                <option value = "MA">满洲里</option>
+                <option value = "MB">满洲里二店</option>
+                <option value = "YA">牙克石</option>
+                <option value = "YB">牙克石二店</option>
+              </Form.Control>
+            </div>
+            : ''
+          }
+          
+          {/* <Form.Label>
+            所属门店：{this.props.adminwx.location}门店
+          </Form.Label> */}
           <Form.Check onChange = {this.changeManualState.bind(this)} type="checkbox" label="手动输入门店换油证号" />
-          <Form.Control type = "text" name = "record_num" onChange = {this.handleChange.bind(this)} value = {this.state.record_num} disabled = {this.state.isManual ? "" : "disabled"}></Form.Control>
+          { this.state.isManual ? 
+            <Form.Control type = "text" name = "record_num" 
+              onChange = {this.handleChange.bind(this)} 
+              value = {this.state.record_num} 
+              disabled = {this.state.isManual ? "" : "disabled"}
+            >
+            </Form.Control>
+            : ''
+          }
           <Form.Label>
             联系方式：
           </Form.Label>
