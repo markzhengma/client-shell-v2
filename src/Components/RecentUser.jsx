@@ -41,7 +41,7 @@ class RecentUser extends Component {
         })
         if(res.data.code !== 200) {
           console.log(res.data);
-          alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+          this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
         } else {
           this.setState({
             userListData: res.data.data.list,
@@ -51,7 +51,7 @@ class RecentUser extends Component {
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.showAlert('出错了', err, false);
         console.log(err);
       })
   };
@@ -67,7 +67,7 @@ class RecentUser extends Component {
         });
         if(res.data.code !== 200) {
           console.log(res.data);
-          alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+          this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
         } else {
           this.setState({
             totalData: res.data.data.list
@@ -75,7 +75,7 @@ class RecentUser extends Component {
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.showAlert('出错了', err, false);
         console.log(err);
       })
   }

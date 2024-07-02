@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Modal } from 'react-bootstrap';
 
 import Header from './Components/Header';
 import Footer from './Components/Footer';
@@ -14,7 +15,11 @@ class App extends Component {
     this.state = {
       admin: '',
       adminwx: '',
-      page: 'auth'
+      page: 'auth',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+      isAlertSuccess: false
     }
   }
 
@@ -33,6 +38,24 @@ class App extends Component {
   handlePageChange(page){
     this.setState({
       page: page
+    })
+  }
+
+  showAlert(title, msg, isSuccess) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+      isAlertSuccess: isSuccess
+    })
+  };
+
+  closeAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+      isAlertSuccess: false
     })
   }
 
@@ -70,6 +93,7 @@ class App extends Component {
         />
         {this.state.page === 'auth' ? 
           <Auth
+            showAlert = {this.showAlert.bind(this)}
             setAdminWx = {this.setAdminWx.bind(this)}
             handlePageChange = {this.handlePageChange.bind(this)}
           />
@@ -82,11 +106,30 @@ class App extends Component {
         : ''}
         {this.state.page === 'admin' ? 
           <Admin
+            showAlert = {this.showAlert.bind(this)}
             handlePageChange = {this.handlePageChange.bind(this)}
             admin = {this.state.admin}
             adminwx = {this.state.adminwx}
           />
         : ''}
+        <Modal
+          show={this.state.showAlert}
+          onHide={() => this.closeAlert()}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{this.state.alertTitle}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {this.state.alertMsg}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant={this.state.isAlertSuccess ? "success" : "danger"} onClick={() => this.closeAlert()}>
+              {this.state.isAlertSuccess ? "确认" : "关闭"}
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <Footer/>
       </div>
     )

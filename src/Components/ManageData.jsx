@@ -33,6 +33,7 @@ class ManageData extends Component {
         </div>
         { this.state.dataPage === 'gift' ? 
           <DataList
+            showAlert = {this.props.showAlert}
             page = {this.state.dataPage} 
             dataList = {this.props.giftData}
             createGiftData = {this.props.createGiftData}
@@ -41,6 +42,7 @@ class ManageData extends Component {
         : '' }
         { this.state.dataPage === 'operator' ? 
           <DataList
+            showAlert = {this.props.showAlert}
             page = {this.state.dataPage} 
             dataList = {this.props.operatorData}
             createOperatorData = {this.props.createOperatorData}
@@ -49,6 +51,7 @@ class ManageData extends Component {
         : '' }
         { this.state.dataPage === 'product' ? 
           <DataList
+            showAlert = {this.props.showAlert}
             page = {this.state.dataPage} 
             dataList = {this.props.productData}
             createProductData = {this.props.createProductData}

@@ -37,7 +37,7 @@
 }
 .user-form{
   width: 400px;
-  padding: 20px;
+  /* padding: 20px; */
   margin: 20px;
 }
 .new-record-form {
@@ -165,6 +165,7 @@
 .nav-btn:hover{
   background-color: rgb(71, 71, 71);
 }
+
 
 
 

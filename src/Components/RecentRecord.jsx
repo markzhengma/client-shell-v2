@@ -61,7 +61,7 @@ class RecentRecord extends Component {
         })
         if(res.data.code !== 200) {
           console.log(res.data);
-          alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+          this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
         } else {
           this.setState({
             recordListData: res.data.data.list,
@@ -71,7 +71,7 @@ class RecentRecord extends Component {
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.showAlert('出错了', err, false);
         console.log(err);
       })
   };
@@ -87,7 +87,7 @@ class RecentRecord extends Component {
         })
         if(res.data.code !== 200) {
           console.log(res.data);
-          alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+          this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
         } else {
           this.setState({
             totalData: res.data.data.list
@@ -95,7 +95,7 @@ class RecentRecord extends Component {
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.showAlert('出错了', err, false);
         console.log(err);
       })
   }
@@ -181,30 +181,11 @@ class RecentRecord extends Component {
               :
                 <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
             : ''}
-            {/* {this.props.admin.super_admin ? 
-              this.state.totalData === '' ?
-                <Button variant = "primary" style = {{ margin: '10px', display: 'block' }} disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
-                  {this.state.isFetchingTotal ? 
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />
-                  : ''}
-                  获取选中门店全部
-                </Button>
-              :
-                <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
-            : ''} */}
           </div>          
           <Pagination style = {{ margin: '20px 0' }}>
             <Pagination.First onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}/>
             <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
-            {/* <Pagination.Item>{1}</Pagination.Item> */}
             <Pagination.Item active>{this.state.pn}</Pagination.Item>
-            {/* <Pagination.Item>{this.state.totalPn}</Pagination.Item> */}
             <Pagination.Next disabled = {this.state.pn === this.state.totalPn} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
             <Pagination.Last onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.totalPn, 20)}/>
           </Pagination>
@@ -219,9 +200,7 @@ class RecentRecord extends Component {
         <Pagination style = {{ margin: '20px' }}>
           <Pagination.First onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, 1, 20)}/>
           <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>
-          {/* <Pagination.Item>{1}</Pagination.Item> */}
           <Pagination.Item active>{this.state.pn}</Pagination.Item>
-          {/* <Pagination.Item>{this.state.totalPn}</Pagination.Item> */}
           <Pagination.Next disabled = {this.state.pn === this.state.totalPn} onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.pn + 1 > 0 ? this.state.pn + 1 : 1, 20)}/>
           <Pagination.Last onClick = {() => this.findRecordListBetweenDates(this.state.location_char, this.state.start, this.state.end, this.state.totalPn, 20)}/>
         </Pagination>

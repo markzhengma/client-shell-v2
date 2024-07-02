@@ -132,7 +132,7 @@ class RecordList extends Component {
   handleNewRecordSubmit(e){
     e.preventDefault();
     if(this.state.newRecord.date === "" || this.state.newRecord.gift === "" || this.state.newRecord.milage === "" || this.state.newRecord.operator === "" || this.state.newRecord.product_name === "" || this.state.newRecord.detail === "" || this.state.newReminder.time_span === "" || this.state.newReminder.reminder_cat === "" ) {
-      alert("亲，请将保养记录填写完整哟~");
+      this.props.showAlert('出错了', '亲，请将保养记录填写完整哟~', false);
     } else {
       const record_num = this.props.record_num;
 
@@ -162,55 +162,26 @@ class RecordList extends Component {
       axios.all([newRecordRequest, newReminderRequest])
         .then(res => {
           if(res[0].data.code !== 200){
-            alert(res[0].data.code + '\n' + JSON.stringify(res[0].data.data));
+            this.props.showAlert('出错了', res[0].data.code + '\n' + JSON.stringify(res[0].data.data), false);
             console.log(res[0].data.data);
           } else if(res[1].data.code !== 200 || res[1].data.data.code !== 200){
             if(res[1].data.data.code === 501) {
-              alert('错误：无法创建保养提醒，该用户还有一条相同类目的保养提醒未推送');
+              this.props.showAlert('出错了', '错误：无法创建保养提醒，该用户还有一条相同类目的保养提醒未推送', false);
             } else {
-              alert(res[1].data.data.code + '\n' + JSON.stringify(res[1].data.data));
+              this.props.showAlert('出错了', res[1].data.data.code + '\n' + JSON.stringify(res[1].data.data), false);
             }
             console.log(res[1].data.data);
           } else {
             this.resetNewRecordForm();
             this.resetInput();
             this.props.handleFindUserSubmit(e);
-            alert("保养记录创建成功");
+            this.props.showAlert('操作成功', '保养记录创建成功~', true);
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.showAlert('出错了', err, false);
           console.log(err);
         })
-
-      // axios({
-      //   url: `https://api.hulunbuirshell.com/api/record/user/${record_num}`,
-      //   method: 'POST',
-      //   data: {
-      //     date: this.state.newRecord.date,
-      //     gift: this.state.newRecord.gift,
-      //     milage: this.state.newRecord.milage,
-      //     operator: this.state.newRecord.operator,
-      //     product_name: this.state.newRecord.product_name,
-      //     detail: this.state.newRecord.detail,
-      //     reminder: 'reminder'
-      //   }
-      // })
-      //   .then(res => {
-      //     if(res.data.code !== 200){
-      //       alert(res.data.code + '\n' + JSON.stringify(res.data.data));
-      //       console.log(res.data.data);
-      //     } else {
-      //       this.resetNewRecordForm();
-      //       this.resetInput();
-      //       this.props.handleFindUserSubmit(e);
-      //       alert("保养记录创建成功");
-      //     }
-      //   })
-      //   .catch(err => {
-      //     alert(err);
-      //     console.log(err);
-      //   })
     }
   };
 
@@ -220,7 +191,7 @@ class RecordList extends Component {
       axios.delete(`https://api.hulunbuirshell.com/api/record/single/${id}`)
         .then(res => {
           if(res.data.code !== 200){
-            alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+            this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             console.log(res.data.data);
           } else {
             console.log(res)
@@ -228,7 +199,7 @@ class RecordList extends Component {
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.showAlert('出错了', err, false);
           console.log(err);
         })
     }

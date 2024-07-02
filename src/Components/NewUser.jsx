@@ -53,15 +53,15 @@ class NewUser extends Component {
     const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
 
     if(!user_name.match(REGEX_CHINESE)) {
-      alert('请重新检查输入的姓名');
+      this.props.showAlert('出错了', '请重新检查输入的姓名', false);
     } else if((phone.length !== 7 && phone.length !== 11) || !phone.match(/^\d+$/)) {
-      alert('请重新检查输入的联系方式');
+      this.props.showAlert('出错了', '请重新检查输入的联系方式', false);
     } else if(!make.match(REGEX_CHINESE)) {
-      alert('请重新检查输入的车型');
+      this.props.showAlert('出错了', '请重新检查输入的车型', false);
     } else if((plate.length !== 7 && plate.length !== 8) || !plate.match(REGEX_CHINESE)) {
-      alert('请重新检查输入的车牌号');
+      this.props.showAlert('出错了', '请重新检查输入的车牌号', false);
     } else if(this.state.isManual && (record_num.length !== 7 || !record_num.match(/^[A-Z]/) || !record_num.match(/[0-9]$/))) {
-      alert('请重新检查输入的换油证号');
+      this.props.showAlert('出错了', '请重新检查输入的换油证号', false);
     } else {
       let confirmed = window.confirm(
         `请核对新用户信息：
@@ -89,18 +89,18 @@ class NewUser extends Component {
         })
           .then(res => {
             if(res.data.code !== 200){
-              alert(res.data.code + '\n' + JSON.stringify(res.data.data))
+              this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             } else {
               // this.setState({
               //   userData: res.data.data
               // });
-              alert('创建成功！新用户换油证号为：' + res.data.data.record_num);
+              this.props.showAlert('操作成功', '创建成功！新用户换油证号为：' + res.data.data.record_num, true);
               this.props.selectFindUserValue('record_num', res.data.data.record_num);
               this.props.changeAction('find_user');
             }
           })
           .catch(err => {
-            alert(err);
+            this.props.showAlert('出错了', err, false);
           })
       }
     }

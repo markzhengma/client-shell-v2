@@ -93,11 +93,11 @@ class Auth extends Component {
           this.authAndChangePage(userInfo);
         }
       } else {
-        alert('login failed');
+        this.props.showAlert('登录失败', res.data, false);
         console.log(res.data);
       }
     } catch(err) {
-        alert(err);
+        this.props.showAlert('出错了', err, false);
         console.log(err);
     }
 
@@ -142,11 +142,11 @@ class Auth extends Component {
           }
   
         } else {
-          alert("已退出登录");
+          this.props.showAlert('已退出', '请重新登陆', false);
           console.log(res.data);
         }
       } catch(err) {
-          alert(err);
+        this.props.showAlert('出错了', err, false);
           console.log(err);
       }
     }

@@ -76,7 +76,7 @@ class ReminderList extends Component {
   handleNewReminderSubmit(e){
     e.preventDefault();
     if(this.state.newReminder.reminder_cat === "" || this.state.newReminder.time_span === 0) {
-      alert("亲，请将提醒内容填写完整哟~");
+      this.props.showAlert('出错了', '亲，请将提醒内容填写完整哟~', false);
     } else {
       let confirmed = window.confirm(`亲，您确定要为换油证号${this.props.record_num}的客户创建保养提醒嘛？`);
       if (confirmed) {
@@ -92,20 +92,20 @@ class ReminderList extends Component {
           .then(res => {
             if(res.data.code !== 200 || res.data.data.code !== 200){
               if(res.data.data.code === 501) {
-                alert('错误：无法创建，该用户还有一条相同类目的保养提醒未推送');
+                this.props.showAlert('出错了', '错误：无法创建，该用户还有一条相同类目的保养提醒未推送', false);
               } else {
-                alert(res.data.data.code + '\n' + JSON.stringify(res.data.data));
+                this.props.showAlert('出错了', res.data.data.code + '\n' + JSON.stringify(res.data.data), false);
               }
               console.log(res.data.data);
             } else {
               this.resetNewReminderForm();
               this.resetInput();
               this.props.handleFindUserSubmit(e);
-              alert("保养提醒创建成功");
+              this.props.showAlert('操作成功', '保养提醒创建成功', true);
             }
           })
           .catch(err => {
-            alert(err);
+            this.props.showAlert('出错了', err, false);
             console.log(err);
           })
       }
@@ -118,16 +118,16 @@ class ReminderList extends Component {
       axios.delete(`https://api.hulunbuirshell.com/api/reminder/single/${id}`)
         .then(res => {
           if(res.data.code !== 200){
-            alert(res.data.code + '\n' + JSON.stringify(res.data.data));
+            this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             console.log(res.data.data);
           } else {
             console.log(res)
             this.props.handleFindUserSubmit(e);
-            alert('删除成功');
+            this.props.showAlert('出错了', '删除成功', false);
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.showAlert('出错了', err, false);
           console.log(err);
         })
     }

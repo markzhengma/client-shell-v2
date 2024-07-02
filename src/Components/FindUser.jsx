@@ -148,13 +148,13 @@ class FindUser extends Component {
     const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
 
     if(!user_name.match(REGEX_CHINESE)) {
-      alert('请重新检查输入的姓名');
+      this.props.showAlert('出错了', '请重新检查输入的姓名', false);
     } else if((phone.length !== 7 && phone.length !== 11) || !phone.match(/^\d+$/)) {
-      alert('请重新检查输入的联系方式');
+      this.props.showAlert('出错了', '请重新检查输入的联系方式', false);
     } else if(!make.match(REGEX_CHINESE) && !make.match(/[0-9]/)) {
-      alert('请重新检查输入的车型');
+      this.props.showAlert('出错了', '请重新检查输入的车型', false);
     } else if((plate.length !== 7 && plate.length !== 8) || !plate.match(REGEX_CHINESE)) {
-      alert('请重新检查输入的车牌号');
+      this.props.showAlert('出错了', '请重新检查输入的车牌号', false);
     } else {
       axios({
         url: `https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`,
@@ -182,10 +182,10 @@ class FindUser extends Component {
                   isFetching: false,
                 });
                 if(userList.data.code !== 200) {
-                  alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
+                  this.props.showAlert('出错了', userList.data.code + '\n' + JSON.stringify(userList.data.data), false);
                 } else {
                   if(userList.data.data.length === 0){
-                    alert('未找到用户~');
+                    this.props.showAlert('出错了', '未找到用户~', false);
                   } else if(userList.data.data.length > 1){
                     this.setState({
                       userData: '',
@@ -218,22 +218,22 @@ class FindUser extends Component {
 
   confirmUserDelete() {
     if (this.state.recordListData.length > 0){
-      alert('亲，要『清除』该用户『全部保养记录』之后才能『删除用户』哟！');
+      this.props.showAlert('出错了', '亲，要『清除』该用户『全部保养记录』之后才能『删除用户』哟！', false);
     } else if (this.state.reminderListData.length > 0){
-      alert('亲，要『清除』该用户『全部提醒记录』之后才能『删除用户』哟！');
+      this.props.showAlert('出错了', '亲，要『清除』该用户『全部提醒记录』之后才能『删除用户』哟！', false);
     } else {
       let confirm = window.confirm(`确定删除用户${this.state.userData.user_name}？`);
       if(confirm){
         axios.delete(`https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`)
           .then(res => {
             if(res.data.code !== 200){
-              alert(res.data.code + '\n' + JSON.stringify(res.data.data))
+              this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             } else {
               this.resetStates();
             }
           })
           .catch(err => {
-            alert(err);
+            this.props.showAlert('出错了', err, false);
             console.log(err)
           })
       }
@@ -242,9 +242,16 @@ class FindUser extends Component {
 
   handleFindUserSubmit(e) {
     e.preventDefault();
+
+    const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
+
     if(this.state.filter === 'record_num' && this.state.value.length < 7) {
-      alert('亲，换油证号格式错误，请检查一下哟！')
-    } else {
+      this.props.showAlert('出错了', '亲，换油证号格式错误，请检查一下哟！', false);
+    } else if(this.state.filter === 'phone' && ((this.state.value.length !== 7 && this.state.value.length !== 11) || !this.state.value.match(/^\d+$/))) {
+      this.props.showAlert('出错了', '请重新检查输入的联系方式', false);
+    } else if(this.state.filter === 'plate' && ((this.state.value.length !== 7 && this.state.value.length !== 8) || !this.state.value.match(REGEX_CHINESE))) {
+      this.props.showAlert('出错了', '请重新检查输入的车牌号', false);
+    }else {
       this.setState({
         isFetching: true,
       });
@@ -254,10 +261,14 @@ class FindUser extends Component {
             isFetching: false,
           });
           if(userList.data.code !== 200) {
-            alert(userList.data.code + '\n' + JSON.stringify(userList.data.data));
+            if(userList.data.code === 401) {
+              this.props.showAlert('出错了', '未找到用户~', false);
+            } else {
+              this.props.showAlert('出错了', userList.data.code + '\n' + JSON.stringify(userList.data.data), false);
+            }
           } else {
             if(userList.data.data.length === 0){
-              alert('未找到用户~');
+              this.props.showAlert('出错了', '未找到用户', false);
             } else if(userList.data.data.length > 1){
               this.setState({
                 userData: '',
@@ -286,7 +297,7 @@ class FindUser extends Component {
     axios.get(`https://api.hulunbuirshell.com/api/user/single?filter=record_num&value=${record_num}`)
       .then(user => {
         if(user.data.code !== 200){
-          alert(user.data.code + '\n' + JSON.stringify(user.data.data))
+          this.props.showAlert('出错了', user.data.code + '\n' + JSON.stringify(user.data.data), false);
         } else {
           this.setState({
             userData: user.data.data
@@ -295,7 +306,7 @@ class FindUser extends Component {
           axios.get(`https://api.hulunbuirshell.com/api/record/user/${record_num}`)
             .then(records => {
               if(records.data.code !== 200){
-                alert(records.data);
+                this.props.showAlert('出错了', records.data, false);
                 console.log(records.data)
               } else {
                 this.setState({
@@ -305,7 +316,7 @@ class FindUser extends Component {
               }
             })
             .catch(err => {
-              alert(err);
+              this.props.showAlert('出错了', err, false);
               console.log(err);
             })
         }
@@ -319,7 +330,7 @@ class FindUser extends Component {
     axios.get(`https://api.hulunbuirshell.com/api/reminder/user/${record_num}`)
     .then(reminder => {
       if(reminder.data.code !== 200){
-        alert(reminder.data);
+        this.props.showAlert('出错了', reminder.data, false);
         console.log(reminder.data)
       } else {
         this.setState({
@@ -328,7 +339,7 @@ class FindUser extends Component {
       }
     })
     .catch(err => {
-      alert(err);
+      this.props.showAlert('出错了', err, false);
       console.log(err);
     })
   }
@@ -417,6 +428,7 @@ class FindUser extends Component {
             recordListData = {this.state.recordListData}
             record_num = {this.state.userData.record_num}
             handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
+            showAlert = {this.props.showAlert}
           />
         : ""}
         {this.state.userData !== '' ? 
@@ -424,6 +436,7 @@ class FindUser extends Component {
             reminderListData = {this.state.reminderListData}
             record_num = {this.state.userData.record_num}
             handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
+            showAlert = {this.props.showAlert}
           />
         : ""}
       </div>

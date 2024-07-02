@@ -35,7 +35,7 @@ class DataList extends Component {
           this.resetData();
           break;
         } else {
-          alert('请输入赠品名称');
+          this.props.showAlert('出错了', '请输入赠品名称', false);
           break;
         }
       case 'product':
@@ -44,7 +44,7 @@ class DataList extends Component {
           this.resetData();
           break;
         } else {
-          alert('请输入产品名称和类别');
+          this.props.showAlert('出错了', '请输入产品名称和类别', false);
           break;
         }
       case 'operator':
@@ -53,7 +53,7 @@ class DataList extends Component {
           this.resetData();
           break;
         } else {
-          alert('请输入操作人姓名和门店地区');
+          this.props.showAlert('出错了', '请输入操作人姓名和门店地区', false);
           break;
         }
       default:
@@ -149,7 +149,6 @@ class DataList extends Component {
                     <td className = "record-list-column">
                       <select 
                         name = "location" 
-                        defaultValue = ""
                         value = {this.state.newData ? this.state.newData.location : ''}
                         onChange = {this.handleNewDataChange.bind(this)}
                       >
@@ -206,7 +205,6 @@ class DataList extends Component {
                     <td className = "record-list-column">
                       <select 
                         name = "product_type" 
-                        defaultValue = ""
                         value = {this.state.newData ? this.state.newData.product_type : ''}
                         onChange = {this.handleNewDataChange.bind(this)}
                       >
