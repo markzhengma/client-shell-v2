@@ -46,6 +46,7 @@
   color: #FFF;
   padding: 16px;
   margin-bottom: 20px;
+  max-width: 95vw;
 }
 
 /* box */
@@ -89,7 +90,8 @@
   padding: 20px 20px 20px 20px;
 }
 .record-list-table-wrapper{
-  overflow: hidden;
+  overflow: scroll;
+  max-width: 95vw;
 }
 .record-list-column{
   min-width: 150px;

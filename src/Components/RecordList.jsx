@@ -266,14 +266,14 @@ class RecordList extends Component {
         <div>
           <h5>新保养记录</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewRecordSubmit.bind(this)} key={this.state.randomKey}>
-            <Row>
-              <Col style = {{ maxWidth: '200px' }}>
+            <Row className='justify-content-md-center'>
+              <Col style = {{ minWidth: '180px' }}>
                 <Form.Group>
                   <Form.Label>日期</Form.Label>
                   <Form.Control type="date" name = "date" value = {this.state.newRecord.date} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <Form.Group>
                   <Form.Label>项目名称</Form.Label>
                   <Form.Control as="select" name = "product_name" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -337,13 +337,13 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <Form.Group>
                   <Form.Label>表示里程</Form.Label>
                   <Form.Control name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <Form.Group>
                   <Form.Label>赠品情况</Form.Label>
                   <Form.Control as="select" name = "gift" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -359,7 +359,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <Form.Group>
                   <Form.Label>操作人</Form.Label>
                   <Form.Control as="select" name = "operator" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -391,13 +391,13 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <Form.Group>
                   <Form.Label>累计积分/备注</Form.Label>
                   <Form.Control name = "detail" value = {this.state.newRecord.detail} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "累计积分/备注"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <Form.Group>
                   <Form.Label>提醒时间</Form.Label>
                   <Form.Control 
@@ -427,7 +427,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col style = {{ minWidth: '160px' }}>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
                 <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
                 <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>

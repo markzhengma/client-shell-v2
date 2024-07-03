@@ -247,11 +247,7 @@ class FindUser extends Component {
 
     if(this.state.filter === 'record_num' && this.state.value.length < 7) {
       this.props.showAlert('出错了', '亲，换油证号格式错误，请检查一下哟！', false);
-    } else if(this.state.filter === 'phone' && ((this.state.value.length !== 7 && this.state.value.length !== 11) || !this.state.value.match(/^\d+$/))) {
-      this.props.showAlert('出错了', '请重新检查输入的联系方式', false);
-    } else if(this.state.filter === 'plate' && ((this.state.value.length !== 7 && this.state.value.length !== 8) || !this.state.value.match(REGEX_CHINESE))) {
-      this.props.showAlert('出错了', '请重新检查输入的车牌号', false);
-    }else {
+    } else {
       this.setState({
         isFetching: true,
       });
