@@ -161,21 +161,21 @@ class RecordList extends Component {
 
       axios.all([newRecordRequest, newReminderRequest])
         .then(res => {
+          console.log(res)
           if(res[0].data.code !== 200){
             this.props.showAlert('出错了', res[0].data.code + '\n' + JSON.stringify(res[0].data.data), false);
             console.log(res[0].data.data);
-          } else if(res[1].data.code !== 200 || res[1].data.data.code !== 200){
-            // TODO alert according to code
-            if(res[1].data.data.code === 401) {
+          } else if(res[1].data.code !== 200){
+            if(res[1].data.code === 401) {
               this.props.showAlert('出错了', `未找到换油证号为${record_num}的用户`, false);
-            } else if (res[1].data.data.code === 403){
+            } else if (res[1].data.code === 403){
               this.props.showAlert('出错了', `该用户（${record_num}）未关注公众号，无法发送提醒`, false);
-            }else if (res[1].data.data.code === 404){
+            }else if (res[1].data.code === 404){
               this.props.showAlert('出错了', '还有相同的保养提醒未发送，无法创建', false);
             } else {
-              this.props.showAlert('出错了', res[1].data.data.code + '\n' + JSON.stringify(res[1].data.data), false);
+              this.props.showAlert('出错了', res[1].data.code + '\n' + JSON.stringify(res[1].data.data), false);
             }
-            console.log(res[1].data.data);
+            console.log(res[1].data);
           } else {
             this.resetNewRecordForm();
             this.resetInput();

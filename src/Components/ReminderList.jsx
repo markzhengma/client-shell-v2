@@ -90,17 +90,17 @@ class ReminderList extends Component {
           }
         })
           .then(res => {
-            if(res.data.code !== 200 || res.data.data.code !== 200){
-              if(res.data.data.code === 401) {
+            if(res.data.code !== 200 ){
+              if(res.data.code === 401) {
                 this.props.showAlert('出错了', `未找到换油证号为${record_num}的用户`, false);
-              } else if (res.data.data.code === 403){
+              } else if (res.data.code === 403){
                 this.props.showAlert('出错了', `该用户（${record_num}）未关注公众号，无法发送提醒`, false);
-              }else if (res.data.data.code === 404){
+              }else if (res.data.code === 404){
                 this.props.showAlert('出错了', '还有相同的保养提醒未发送，无法创建', false);
               } else {
-                this.props.showAlert('出错了', res.data.data.code + '\n' + JSON.stringify(res.data.data), false);
+                this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
               }
-              console.log(res.data.data);
+              console.log(res.data);
             } else {
               this.resetNewReminderForm();
               this.resetInput();
