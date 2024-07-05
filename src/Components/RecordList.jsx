@@ -163,24 +163,27 @@ class RecordList extends Component {
         .then(res => {
           console.log(res)
           if(res[0].data.code !== 200){
-            this.props.showAlert('出错了', res[0].data.code + '\n' + JSON.stringify(res[0].data.data), false);
+            this.props.showAlert('出错了', '保养记录创建失败' + res[0].data.code + '\n' + JSON.stringify(res[0].data.data), false);
             console.log(res[0].data.data);
-          } else if(res[1].data.code !== 200){
-            if(res[1].data.code === 401) {
-              this.props.showAlert('出错了', `未找到换油证号为${record_num}的用户`, false);
-            } else if (res[1].data.code === 403){
-              this.props.showAlert('出错了', `该用户（${record_num}）未关注公众号，无法发送提醒`, false);
-            }else if (res[1].data.code === 404){
-              this.props.showAlert('出错了', '还有相同的保养提醒未发送，无法创建', false);
-            } else {
-              this.props.showAlert('出错了', res[1].data.code + '\n' + JSON.stringify(res[1].data.data), false);
-            }
-            console.log(res[1].data);
           } else {
             this.resetNewRecordForm();
             this.resetInput();
             this.props.handleFindUserSubmit(e);
-            this.props.showAlert('操作成功', '保养记录创建成功~', true);
+
+            if(res[1].data.code !== 200){
+              if(res[1].data.code === 401) {
+                this.props.showAlert('操作成功', `保养记录创建成功，但未找到换油证号为${record_num}的用户，无法创建提醒`, true);
+              } else if (res[1].data.code === 403){
+                this.props.showAlert('操作成功', `保养记录创建成功，但该用户（${record_num}）未关注公众号，无法发送提醒`, true);
+              }else if (res[1].data.code === 404){
+                this.props.showAlert('操作成功', '保养记录创建成功，但还有相同的保养提醒未发送，无法创建提醒', true);
+              } else {
+                this.props.showAlert('操作成功', '保养记录创建成功，但发现以下错误：'+ res[1].data.code + '\n' + JSON.stringify(res[1].data.data), true);
+              }
+              console.log(res[1].data);
+            } else {
+              this.props.showAlert('操作成功', '保养记录和提醒创建成功~', true);
+            }
           }
         })
         .catch(err => {
