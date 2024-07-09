@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DataList from './DataList';
+import AdminList from './AdminList';
 
 class ManageData extends Component {
   constructor(props){
@@ -29,6 +30,7 @@ class ManageData extends Component {
             <div className="nav-btn" onClick = {() => this.changeDataPage('gift')}>赠品列表</div>
             <div className="nav-btn" onClick = {() => this.changeDataPage('operator')}>操作人列表</div>
             <div className="nav-btn" onClick = {() => this.changeDataPage('product')}>产品列表</div>
+            <div className="nav-btn" onClick = {() => this.changeDataPage('admin')}>管理员列表</div>
           </div>
         </div>
         { this.state.dataPage === 'gift' ? 
@@ -57,6 +59,11 @@ class ManageData extends Component {
             createProductData = {this.props.createProductData}
             deleteProductData = {this.props.deleteProductData}
             />
+        : '' }
+        { this.state.dataPage === 'admin' ? 
+          <AdminList
+            showAlert = {this.props.showAlert}
+          />
         : '' }
       </div>
     )

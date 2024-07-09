@@ -113,6 +113,9 @@ class App extends Component {
           />
         : ''}
         <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
           show={this.state.showAlert}
           onHide={() => this.closeAlert()}
           backdrop="static"
