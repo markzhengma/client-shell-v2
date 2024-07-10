@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Button, Badge, Modal, Form, ListGroup, Col, Row, Container, Image } from 'react-bootstrap';
+import { Card, Button, Badge, Modal, Form, ListGroup, Col, Row, Container, Image, Nav, Navbar, Accordion } from 'react-bootstrap';
 
 class AdminList extends Component {
   constructor(props){
@@ -11,9 +11,11 @@ class AdminList extends Component {
       adminwxInfoEditing: '',
       newAdminInfoEditing: '',
       editingFormShow: false,
-      newAdminFormShow: true
+      newAdminFormShow: false,
+      isShowDelAlert: false
     }
     this.updateAdminInfo = this.updateAdminInfo.bind(this);
+    this.addNewAdmin = this.addNewAdmin.bind(this);
   };
 
   componentDidMount(){
@@ -74,6 +76,11 @@ class AdminList extends Component {
     this.setState({
       newAdminFormShow: isStarting
     })
+    if(!isStarting) {
+      this.setState({
+        newAdminInfoEditing: ""
+      })
+    }
   }
 
   async updateAdminInfo() {
@@ -81,41 +88,6 @@ class AdminList extends Component {
     if(!this.state.adminwxInfoEditing) {
       this.props.showAlert("出错了", "没有要更新的管理员信息", false);
     } else {
-      switch(this.state.adminwxInfoEditing.location_char) {
-        case("HD"):
-          this.setState({
-            ...this.state.adminwxInfoEditing,
-            location: "河东"
-          });
-          break;
-        case("HX"):
-          this.setState({
-            ...this.state.adminwxInfoEditing,
-            location: "河西"
-          });
-          break;
-        case("MA"):
-          this.setState({
-            ...this.state.adminwxInfoEditing,
-            location: "满洲里"
-          });
-          break;
-        case("MB"):
-          this.setState({
-            ...this.state.adminwxInfoEditing,
-            location: "满洲里二店"
-          });
-          break;
-        case("YA"):
-          this.setState({
-            ...this.state.adminwxInfoEditing,
-            location: "牙克石"
-          });
-          break;
-        default:
-          break;
-      }
-
       let adminInfo = this.state.adminwxInfoEditing;
 
       const domain = 'http://localhost:7001';
@@ -140,6 +112,62 @@ class AdminList extends Component {
       }
     }
   }
+
+  async addNewAdmin() {
+    if(!this.state.newAdminInfoEditing) {
+      this.props.showAlert("出错了", "没有要更新的管理员信息", false);
+    } else {
+      let adminInfo = this.state.newAdminInfoEditing;
+
+      const domain = 'http://localhost:7001';
+      const res = await axios({
+        url: `${domain}/api/admin/role/new`,
+        method: 'PUT',
+        data: {
+          unionid: adminInfo.union_id,
+          admin_name: adminInfo.admin_name,
+          location: adminInfo.location,
+          location_char: adminInfo.location_char
+        }
+      });
+
+      if(res.data.status !== 200) {
+        console.log(res);
+        this.props.showAlert('出错了', res.data.msg, false);
+      } else {
+        this.props.showAlert("操作成功", `${adminInfo.admin_name}已成为新的管理员`, true);
+        await this.findAdminwxList();
+        await this.findAdminwxWaitList();
+        this.startAddingNewAdmin(false);
+      }
+    }
+  }
+
+  showDelAlert(bool) {
+    this.setState({
+      isShowDelAlert: bool
+    })
+  }
+
+  async removeAdmin(id, adminName) {
+    const domain = 'http://localhost:7001';
+    const res = await axios({
+      url: `${domain}/api/admin/role/del`,
+      method: "PUT",
+      data: {
+        unionid: id
+      }
+    });
+
+    if(res.data.status !== 200) {
+      console.log(res);
+      this.props.showAlert('出错了', res.data.msg, false);
+    } else {
+      this.props.showAlert("操作成功", `「${adminName}」已从管理员中移除`, true);
+      await this.findAdminwxList();
+      await this.findAdminwxWaitList();
+    }
+  }
   
   handleAdminInfoValueChange(e) {
     const target = e.target;
@@ -151,29 +179,239 @@ class AdminList extends Component {
         [name]: value
       }
     })
+    if(name === "location_char") {
+      switch(value) {
+        case("HD"):
+          this.setState({
+            adminwxInfoEditing: {
+              ...this.state.adminwxInfoEditing,
+              location: "河东",
+              [name]: value
+            }
+          });
+          break;
+        case("HX"):
+          this.setState({
+            adminwxInfoEditing: {
+              ...this.state.adminwxInfoEditing,
+              location: "河西",
+              [name]: value
+            }
+          });
+          break;
+        case("MA"):
+          this.setState({
+            adminwxInfoEditing: {
+              ...this.state.adminwxInfoEditing,
+              location: "满洲里",
+              [name]: value
+            }
+          });
+          break;
+        case("MB"):
+          this.setState({
+            adminwxInfoEditing: {
+              ...this.state.adminwxInfoEditing,
+              location: "满洲里二店",
+              [name]: value
+            }
+          });
+          break;
+        case("YA"):
+          this.setState({
+            adminwxInfoEditing: {
+              ...this.state.adminwxInfoEditing,
+              location: "牙克石",
+              [name]: value
+            }
+          });
+          break;
+        default:
+          break;
+      }
+    } else {
+      this.setState({
+        adminwxInfoEditing: {
+          ...this.state.adminwxInfoEditing,
+          [name]: value
+        }
+      })
+    }
   }
   handleNewAdminValueChange(e) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
-    this.setState({
-      newAdminInfoEditing: {
-        ...this.state.newAdminInfoEditing,
-        [name]: value
+    if(name === "location_char") {
+      switch(value) {
+        case("HD"):
+          this.setState({
+            newAdminInfoEditing: {
+              ...this.state.newAdminInfoEditing,
+              location: "河东",
+              [name]: value
+            }
+          });
+          break;
+        case("HX"):
+          this.setState({
+            newAdminInfoEditing: {
+              ...this.state.newAdminInfoEditing,
+              location: "河西",
+              [name]: value
+            }
+          });
+          break;
+        case("MA"):
+          this.setState({
+            newAdminInfoEditing: {
+              ...this.state.newAdminInfoEditing,
+              location: "满洲里",
+              [name]: value
+            }
+          });
+          break;
+        case("MB"):
+          this.setState({
+            newAdminInfoEditing: {
+              ...this.state.newAdminInfoEditing,
+              location: "满洲里二店",
+              [name]: value
+            }
+          });
+          break;
+        case("YA"):
+          this.setState({
+            newAdminInfoEditing: {
+              ...this.state.newAdminInfoEditing,
+              location: "牙克石",
+              [name]: value
+            }
+          });
+          break;
+        default:
+          break;
       }
-    })
-  }
+    } else {
+      this.setState({
+        newAdminInfoEditing: {
+          ...this.state.newAdminInfoEditing,
+          [name]: value
+        }
+      })
+    }
+  };
 
   render() {
+    // const DelAlert = (props) => {
+    //   const {e} = props;
+    //   return (
+    //     <Modal
+    //       size="lg"
+    //       aria-labelledby="contained-modal-title-vcenter"
+    //       centered
+    //       show={this.state.isShowDelAlert}
+    //       onHide={() => this.showDelAlert(false)}
+    //     >
+    //       <Modal.Header closeButton>
+    //         <Modal.Title id="contained-modal-title-vcenter">
+    //           删除管理员
+    //         </Modal.Title>
+    //       </Modal.Header>
+    //       <Modal.Body>
+    //         确认要删除管理员{e.admin_name}？
+    //       </Modal.Body>
+    //       <Modal.Footer>
+    //         <Button 
+    //           onClick={() => this.removeAdmin(e.union_id)}
+    //           variant="danger"
+    //         >
+    //           确认
+    //         </Button>
+    //         <Button 
+    //           onClick={() => this.showDelAlert(false)}
+    //           variant="secondary"
+    //         >
+    //           取消
+    //         </Button>
+    //       </Modal.Footer>
+    //     </Modal>
+    //   )
+    // }
+    const AdminCard = (props) => {
+      const {e, location_char} = props;
+      if(e.location_char === location_char) {
+        let wxInfo = this.state.adminwxWaitList.find(data => data.union_id === e.union_id);
+        return(
+          <Card 
+            key={e.open_id}
+            bg="secondary"
+            style={{ width:'18rem', color: '#FFFFFF', margin: "10px" }}
+            className="mb-2"
+          >
+            <Card.Body>
+              <Card.Title>{e.admin_name}</Card.Title>
+                <Card.Text style={{fontSize: '14px', textJustify: "center"}}>
+                  <Badge variant="warning" style={{fontSize:'12px', marginRight: '4px', lineHeight: '18px'}}>门店</Badge>
+                  {e.location}
+                </Card.Text>
+
+                <Card.Text style={{fontSize: '14px', textJustify: "center"}}>
+                  <Badge variant="success" style={{fontSize: '12px', marginRight: '4px', lineHeight: '18px'}}>微信</Badge>
+                  {wxInfo && wxInfo.nickname !== '' ? wxInfo.nickname : '无微信昵称' }
+                </Card.Text>
+
+            </Card.Body>
+            <Card.Footer>
+              <Button 
+                variant="primary" 
+                style = {{marginRight: '4px'}}
+                onClick={() => this.selectAdminToEdit(true, e.union_id)}
+              >
+                编辑信息
+              </Button>
+              <Button 
+                variant="outline-danger" 
+                style={{marginBottom: "-1px"}}
+                onClick={() => this.removeAdmin(e.union_id, e.admin_name)}
+              >
+                删除
+              </Button>
+            </Card.Footer>
+          </Card>
+        )
+      } else {
+        return ""
+      }
+    }
+
     return (
       <div className = "record-list">
-        <h3>管理员列表</h3>
+        <Navbar style={{padding: "0", marginBottom: "12px"}}>
+          <Container style={{justifyContent: "left", margin: "0"}}>
+            <Navbar.Brand>
+              <h3 style={{margin: "0"}}>管理员列表</h3>
+            </Navbar.Brand>
+            <Nav>
+              <Nav.Item>
+                <Button 
+                  variant="success"
+                  onClick={() => this.startAddingNewAdmin(true)}
+                >
+                  添加新管理员
+                </Button>
+              </Nav.Item>
+            </Nav>
+          </Container>
+        </Navbar>
+
         {this.state.adminwxWaitList.length !== 0 ? 
           <Modal
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
             show={this.state.newAdminFormShow}
+            onHide={() => this.startAddingNewAdmin(false)}
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
@@ -183,7 +421,7 @@ class AdminList extends Component {
             <Modal.Body>
               <Container>
                 <Row>
-                  <Col style={{ maxHeight: "50vh", overflow: "scroll" }}>
+                  <Col style={{ maxHeight: "530px", overflow: "scroll" }}>
                     <ListGroup>
                       {this.state.adminwxWaitList.map(e => {
                         return(
@@ -208,7 +446,7 @@ class AdminList extends Component {
                   </Col>
                   {this.state.newAdminInfoEditing !== "" ? 
                     <Col>
-                      <Card style={{marginBottom: "20px"}}>
+                      <Card style={{marginBottom: "10px"}}>
                         <Card.Body>
                           <Container>
                             <Row>
@@ -219,7 +457,7 @@ class AdminList extends Component {
                                   <Badge variant="secondary" style={{fontSize: '14px', marginBottom: '4px', lineHeight: '20px'}}>未授权</Badge>
                                 }
                                 <Card.Text
-                                  style={{height: "80px", overflow: "hidden"}}
+                                  style={{height: "50px", overflow: "hidden"}}
                                 >
                                   微信昵称：<br/>{this.state.newAdminInfoEditing !== "" ? this.state.newAdminInfoEditing.nickname : ""}
                                 </Card.Text>
@@ -227,7 +465,7 @@ class AdminList extends Component {
                               <Col>
                                 <Image 
                                   src={this.state.newAdminInfoEditing !== "" ? this.state.newAdminInfoEditing.headimgurl : ""}
-                                  style={{minWidth: "100px", marginTop: "10px"}}
+                                  style={{minWidth: "80px", marginTop: "10px"}}
                                   thumbnail 
                                 />
                               </Col>
@@ -249,7 +487,7 @@ class AdminList extends Component {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                        <Form.Label>门店</Form.Label>
+                          <Form.Label>门店</Form.Label>
                           <Form.Control 
                             as="select" 
                             name="location_char"
@@ -272,12 +510,23 @@ class AdminList extends Component {
                           variant='success' 
                           style={{width: "100%"}}
                           disabled = {!this.state.newAdminInfoEditing.is_admin ? false : true}
+                          onClick={this.addNewAdmin}
                         >
                           确认
                         </Button>
                       </Form>
                     </Col>
-                  : ""}
+                  :
+                    <Col>
+                       <Card style={{height: "100%"}}>
+                        <Card.Body>
+                          <Card.Text>
+                            请从列表选择待授权的管理员
+                          </Card.Text>
+                        </Card.Body>
+                       </Card>
+                    </Col>
+                  }
                 </Row>
               </Container>
             </Modal.Body>
@@ -289,6 +538,7 @@ class AdminList extends Component {
           aria-labelledby="contained-modal-title-vcenter"
           centered
           show={this.state.editingFormShow}
+          onHide={() => this.selectAdminToEdit(false)}
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
@@ -336,42 +586,79 @@ class AdminList extends Component {
             <Button variant='secondary' onClick={() => this.selectAdminToEdit(false)}>取消</Button>
           </Modal.Footer>
         </Modal>
-        
         {this.state.adminwxList.length !== 0 && this.state.adminwxWaitList.length !== 0 ? 
-          <div>
-            {this.state.adminwxList.map(e => {
-              let wxInfo = this.state.adminwxWaitList.find(data => data.union_id === e.union_id);
-              return(
-                <Card 
-                  key={e.open_id}
-                  bg="secondary"
-                  style={{ width:'18rem', color: '#FFFFFF' }}
-                  className="mb-2"
-                >
-                  <Card.Header>
-                    <Badge variant="warning" style={{fontSize:'16px', marginRight: '4px'}}>门店</Badge>
-                    {e.location}
-                  </Card.Header>
-                  <Card.Body>
-                    <Card.Title>{e.admin_name}</Card.Title>
-                    <Badge variant="success" style={{fontSize: '14px', marginBottom: '4px', lineHeight: '20px'}}>微信昵称</Badge>
-                    <Card.Text style={{fontSize: '12px'}}>
-                      {wxInfo && wxInfo.nickname !== '' ? wxInfo.nickname : '无微信昵称' }
-                    </Card.Text>
-                  </Card.Body>
-                  <Card.Footer>
-                    <Button 
-                      variant="primary" 
-                      style = {{marginRight: '4px'}}
-                      onClick={() => this.selectAdminToEdit(true, e.union_id)}
-                    >
-                      编辑信息
-                    </Button>
-                    <Button variant="outline-danger" style={{marginBottom: "-2px"}}>删除</Button>
-                  </Card.Footer>
-                </Card>)
-            })}
-          </div>
+          <Accordion defaultActiveKey="0">
+            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
+              <Accordion.Toggle as={Card.Header} eventKey="0" style={{cursor: "pointer"}}>
+                <b>河东门店</b>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="0">
+                <Card.Body>
+                  <Row>
+                    {this.state.adminwxList.map(e => {
+                      return <AdminCard e = {e} location_char = "HD" key={e.union_id} />
+                    })}
+                  </Row>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
+              <Accordion.Toggle as={Card.Header} eventKey="1" style={{cursor: "pointer"}}>
+                <b>河西门店</b>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  <Row>
+                    {this.state.adminwxList.map(e => {
+                      return <AdminCard e = {e} location_char = "HX" key={e.union_id}  />
+                    })}
+                  </Row>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
+              <Accordion.Toggle as={Card.Header} eventKey="2" style={{cursor: "pointer"}}>
+                <b>满洲里</b>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="2">
+                <Card.Body>
+                  <Row>
+                    {this.state.adminwxList.map(e => {
+                      return <AdminCard e = {e} location_char = "MA" key={e.union_id}  />
+                    })}
+                  </Row>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
+              <Accordion.Toggle as={Card.Header} eventKey="3" style={{cursor: "pointer"}}>
+                <b>满洲里二店</b>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="3">
+                <Card.Body>
+                  <Row>
+                    {this.state.adminwxList.map(e => {
+                      return <AdminCard e = {e} location_char = "MB" key={e.union_id}  />
+                    })}
+                  </Row>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
+              <Accordion.Toggle as={Card.Header} eventKey="4" style={{cursor: "pointer"}}>
+                <b>牙克石</b>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="4">
+                <Card.Body>
+                  <Row>
+                    {this.state.adminwxList.map(e => {
+                      return <AdminCard e = {e} location_char = "YA" key={e.union_id}  />
+                    })}
+                  </Row>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
           : ''
         }
       </div>
