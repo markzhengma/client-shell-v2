@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Button, Badge, Modal, Form, ListGroup, Col, Row, Container, Image, Nav, Navbar, Accordion } from 'react-bootstrap';
+import { Card, Button, Badge, Modal, Form, ListGroup, Col, Row, Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
 class AdminList extends Component {
   constructor(props){
@@ -12,10 +12,15 @@ class AdminList extends Component {
       newAdminInfoEditing: '',
       editingFormShow: false,
       newAdminFormShow: false,
-      isShowDelAlert: false
+      isShowDelAlert: false,
+      adminDelId: '',
+      adminDelName: '',
+      adminLocationChar: ''
     }
     this.updateAdminInfo = this.updateAdminInfo.bind(this);
     this.addNewAdmin = this.addNewAdmin.bind(this);
+    this.showDelAlert = this.showDelAlert.bind(this);
+    this.handleLocationSelect = this.handleLocationSelect.bind(this);
   };
 
   componentDidMount(){
@@ -143,9 +148,11 @@ class AdminList extends Component {
     }
   }
 
-  showDelAlert(bool) {
+  showDelAlert(bool, e) {
     this.setState({
-      isShowDelAlert: bool
+      isShowDelAlert: bool,
+      adminDelId: bool ? e.union_id : '',
+      adminDelName: bool ? e.admin_name : ''
     })
   }
 
@@ -166,6 +173,58 @@ class AdminList extends Component {
       this.props.showAlert("操作成功", `「${adminName}」已从管理员中移除`, true);
       await this.findAdminwxList();
       await this.findAdminwxWaitList();
+      this.showDelAlert(false);
+    }
+  }
+
+  handleRegularInputChange(e) {
+    console.log(e)
+    // const target = e.target;
+    // const value = target.type === 'checkbox' ? target.checked : target.value;
+    // const name = target.name;
+    // this.setState({
+    //   [name]: value
+    // })
+  }
+
+  handleLocationSelect(location) {
+    switch(location) {
+      case("HD"):
+        this.setState({
+            adminLocationTxt: "海拉尔河东",
+            adminLocationChar: location
+        });
+        break;
+      case("HX"):
+        this.setState({
+            adminLocationTxt: "海拉尔河西",
+            adminLocationChar: location
+        });
+        break;
+      case("MA"):
+        this.setState({
+            adminLocationTxt: "满洲里一店",
+            adminLocationChar: location
+        });
+        break;
+      case("MB"):
+        this.setState({
+            adminLocationTxt: "满洲里二店",
+            adminLocationChar: location
+        });
+        break;
+      case("YA"):
+        this.setState({
+            adminLocationTxt: "牙克石",
+            adminLocationChar: location
+        });
+        break;
+      default:
+        this.setState({
+          adminLocationTxt: "",
+          adminLocationChar: ""
+        });
+        break;
     }
   }
   
@@ -303,44 +362,10 @@ class AdminList extends Component {
   };
 
   render() {
-    // const DelAlert = (props) => {
-    //   const {e} = props;
-    //   return (
-    //     <Modal
-    //       size="lg"
-    //       aria-labelledby="contained-modal-title-vcenter"
-    //       centered
-    //       show={this.state.isShowDelAlert}
-    //       onHide={() => this.showDelAlert(false)}
-    //     >
-    //       <Modal.Header closeButton>
-    //         <Modal.Title id="contained-modal-title-vcenter">
-    //           删除管理员
-    //         </Modal.Title>
-    //       </Modal.Header>
-    //       <Modal.Body>
-    //         确认要删除管理员{e.admin_name}？
-    //       </Modal.Body>
-    //       <Modal.Footer>
-    //         <Button 
-    //           onClick={() => this.removeAdmin(e.union_id)}
-    //           variant="danger"
-    //         >
-    //           确认
-    //         </Button>
-    //         <Button 
-    //           onClick={() => this.showDelAlert(false)}
-    //           variant="secondary"
-    //         >
-    //           取消
-    //         </Button>
-    //       </Modal.Footer>
-    //     </Modal>
-    //   )
-    // }
+    // info card of each admin
     const AdminCard = (props) => {
       const {e, location_char} = props;
-      if(e.location_char === location_char) {
+      if(location_char === "" || (location_char !== "" && e.location_char === location_char)) {
         let wxInfo = this.state.adminwxWaitList.find(data => data.union_id === e.union_id);
         return(
           <Card 
@@ -364,16 +389,15 @@ class AdminList extends Component {
             </Card.Body>
             <Card.Footer>
               <Button 
-                variant="primary" 
+                variant="warning" 
                 style = {{marginRight: '4px'}}
                 onClick={() => this.selectAdminToEdit(true, e.union_id)}
               >
                 编辑信息
               </Button>
               <Button 
-                variant="outline-danger" 
-                style={{marginBottom: "-1px"}}
-                onClick={() => this.removeAdmin(e.union_id, e.admin_name)}
+                variant="outline-light" 
+                onClick={() => this.showDelAlert(true, e)}
               >
                 删除
               </Button>
@@ -393,9 +417,22 @@ class AdminList extends Component {
               <h3 style={{margin: "0"}}>管理员列表</h3>
             </Navbar.Brand>
             <Nav>
+              <NavDropdown 
+                onSelect={this.handleLocationSelect} 
+                title={this.state.adminLocationChar === "" ? "全部门店" : this.state.adminLocationTxt}
+                style={{minWidth: "110px"}}
+              >
+                <NavDropdown.Item eventKey="HD">海拉尔河东</NavDropdown.Item>
+                <NavDropdown.Item eventKey="HX">海拉尔河西</NavDropdown.Item>
+                <NavDropdown.Item eventKey="MA">满洲里一店</NavDropdown.Item>
+                <NavDropdown.Item eventKey="MB">满洲里二店</NavDropdown.Item>
+                <NavDropdown.Item eventKey="YA">牙克石</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item eventKey="">全部</NavDropdown.Item>
+              </NavDropdown>
               <Nav.Item>
                 <Button 
-                  variant="success"
+                  variant="warning"
                   onClick={() => this.startAddingNewAdmin(true)}
                 >
                   添加新管理员
@@ -405,6 +442,39 @@ class AdminList extends Component {
           </Container>
         </Navbar>
 
+        {/* remove confirmation pop up */}
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+          show={this.state.isShowDelAlert}
+          onHide={() => this.showDelAlert(false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              删除管理员
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            确认要删除管理员{this.state.adminDelName}？
+          </Modal.Body>
+          <Modal.Footer>
+            <Button 
+              onClick={() => this.removeAdmin(this.state.adminDelId, this.state.adminDelName)}
+              variant="danger"
+            >
+              确认
+            </Button>
+            <Button 
+              onClick={() => this.showDelAlert(false)}
+              variant="secondary"
+            >
+              取消
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* new admin pop up */}
         {this.state.adminwxWaitList.length !== 0 ? 
           <Modal
             size="lg"
@@ -533,6 +603,8 @@ class AdminList extends Component {
           </Modal>
           : ''
         }
+
+        {/* admin info edit pop up */}
         <Modal
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
@@ -586,79 +658,14 @@ class AdminList extends Component {
             <Button variant='secondary' onClick={() => this.selectAdminToEdit(false)}>取消</Button>
           </Modal.Footer>
         </Modal>
+
+        {/* generate admin card for every admin depending on the filter */}
         {this.state.adminwxList.length !== 0 && this.state.adminwxWaitList.length !== 0 ? 
-          <Accordion defaultActiveKey="0">
-            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
-              <Accordion.Toggle as={Card.Header} eventKey="0" style={{cursor: "pointer"}}>
-                <b>河东门店</b>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>
-                  <Row>
-                    {this.state.adminwxList.map(e => {
-                      return <AdminCard e = {e} location_char = "HD" key={e.union_id} />
-                    })}
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
-              <Accordion.Toggle as={Card.Header} eventKey="1" style={{cursor: "pointer"}}>
-                <b>河西门店</b>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>
-                  <Row>
-                    {this.state.adminwxList.map(e => {
-                      return <AdminCard e = {e} location_char = "HX" key={e.union_id}  />
-                    })}
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
-              <Accordion.Toggle as={Card.Header} eventKey="2" style={{cursor: "pointer"}}>
-                <b>满洲里</b>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="2">
-                <Card.Body>
-                  <Row>
-                    {this.state.adminwxList.map(e => {
-                      return <AdminCard e = {e} location_char = "MA" key={e.union_id}  />
-                    })}
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
-              <Accordion.Toggle as={Card.Header} eventKey="3" style={{cursor: "pointer"}}>
-                <b>满洲里二店</b>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="3">
-                <Card.Body>
-                  <Row>
-                    {this.state.adminwxList.map(e => {
-                      return <AdminCard e = {e} location_char = "MB" key={e.union_id}  />
-                    })}
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-            <Card style={{backgroundColor: "rgba(0,0,0,0)"}}>
-              <Accordion.Toggle as={Card.Header} eventKey="4" style={{cursor: "pointer"}}>
-                <b>牙克石</b>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="4">
-                <Card.Body>
-                  <Row>
-                    {this.state.adminwxList.map(e => {
-                      return <AdminCard e = {e} location_char = "YA" key={e.union_id}  />
-                    })}
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+          <Row>
+            {this.state.adminwxList.map(e => {
+              return <AdminCard e = {e} location_char = {this.state.adminLocationChar} key={e.union_id} />
+            })}
+          </Row>
           : ''
         }
       </div>
