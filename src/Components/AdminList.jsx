@@ -29,7 +29,7 @@ class AdminList extends Component {
   };
 
   async findAdminwxWaitList() {
-    const domain = 'http://localhost:7001';
+    const domain = 'https://api.hulunbuirshell.com';
     const res = await axios.get(`${domain}/api/admin/wxwaiting`);
     if(!res || res.status !== 200) {
       this.props.showAlert('出错了', res.data, false);
@@ -40,7 +40,7 @@ class AdminList extends Component {
     }
   }
   async findAdminwxList() {
-    const domain = 'http://localhost:7001';
+    const domain = 'https://api.hulunbuirshell.com';
     const res = await axios.get(`${domain}/api/admin/all`);
     if(!res || res.status !== 200) {
       this.props.showAlert('出错了', res.data, false);
@@ -95,7 +95,7 @@ class AdminList extends Component {
     } else {
       let adminInfo = this.state.adminwxInfoEditing;
 
-      const domain = 'http://localhost:7001';
+      const domain = 'https://api.hulunbuirshell.com';
       const res = await axios({
         url: `${domain}/api/admin/role/update`,
         method: 'PUT',
@@ -124,7 +124,7 @@ class AdminList extends Component {
     } else {
       let adminInfo = this.state.newAdminInfoEditing;
 
-      const domain = 'http://localhost:7001';
+      const domain = 'https://api.hulunbuirshell.com';
       const res = await axios({
         url: `${domain}/api/admin/role/new`,
         method: 'PUT',
@@ -157,7 +157,7 @@ class AdminList extends Component {
   }
 
   async removeAdmin(id, adminName) {
-    const domain = 'http://localhost:7001';
+    const domain = 'https://api.hulunbuirshell.com';
     const res = await axios({
       url: `${domain}/api/admin/role/del`,
       method: "PUT",
