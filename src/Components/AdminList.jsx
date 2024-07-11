@@ -177,16 +177,6 @@ class AdminList extends Component {
     }
   }
 
-  handleRegularInputChange(e) {
-    console.log(e)
-    // const target = e.target;
-    // const value = target.type === 'checkbox' ? target.checked : target.value;
-    // const name = target.name;
-    // this.setState({
-    //   [name]: value
-    // })
-  }
-
   handleLocationSelect(location) {
     switch(location) {
       case("HD"):
@@ -371,25 +361,30 @@ class AdminList extends Component {
           <Card 
             key={e.open_id}
             bg="secondary"
-            style={{ width:'18rem', color: '#FFFFFF', margin: "10px" }}
+            style={{ 
+              width:'18rem', 
+              color: '#FFFFFF', 
+              margin: "10px",
+              boxShadow: "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px"
+            }}
             className="mb-2"
           >
+            <Card.Header style={{fontWeight: "600", fontSize: "20px"}}>{e.admin_name}</Card.Header>
             <Card.Body>
-              <Card.Title>{e.admin_name}</Card.Title>
-                <Card.Text style={{fontSize: '14px', textJustify: "center"}}>
-                  <Badge variant="warning" style={{fontSize:'12px', marginRight: '4px', lineHeight: '18px'}}>门店</Badge>
-                  {e.location}
-                </Card.Text>
+              <Card.Text style={{fontSize: '14px', textJustify: "center"}}>
+                <Badge variant="warning" style={{fontSize:'12px', marginRight: '6px', lineHeight: '18px'}}>门店</Badge>
+                {e.location}
+              </Card.Text>
 
-                <Card.Text style={{fontSize: '14px', textJustify: "center"}}>
-                  <Badge variant="success" style={{fontSize: '12px', marginRight: '4px', lineHeight: '18px'}}>微信</Badge>
-                  {wxInfo && wxInfo.nickname !== '' ? wxInfo.nickname : '无微信昵称' }
-                </Card.Text>
+              <Card.Text style={{fontSize: '14px', textJustify: "center"}}>
+                <Badge variant="success" style={{fontSize: '12px', marginRight: '6px', lineHeight: '18px'}}>微信</Badge>
+                {wxInfo && wxInfo.nickname !== '' ? wxInfo.nickname.length >= 15 ? wxInfo.nickname.slice(0, 14) + "..." : wxInfo.nickname : '无微信昵称' }
+              </Card.Text>
 
             </Card.Body>
             <Card.Footer>
               <Button 
-                variant="warning" 
+                variant="outline-warning" 
                 style = {{marginRight: '4px'}}
                 onClick={() => this.selectAdminToEdit(true, e.union_id)}
               >
@@ -491,7 +486,7 @@ class AdminList extends Component {
             <Modal.Body>
               <Container>
                 <Row>
-                  <Col style={{ maxHeight: "530px", overflow: "scroll" }}>
+                  <Col style={{ maxHeight: "550px", overflow: "scroll" }}>
                     <ListGroup>
                       {this.state.adminwxWaitList.map(e => {
                         return(
@@ -508,7 +503,7 @@ class AdminList extends Component {
                             key={e.union_id}
                             onClick={() => this.selectAdminFromWaitList(e.union_id)}
                           >
-                            {e.nickname}
+                            {e.nickname ? e.nickname.length >= 10 ? e.nickname.slice(0, 9) + "..." : e.nickname : ""}
                           </ListGroup.Item>
                         )
                       })}
@@ -521,23 +516,24 @@ class AdminList extends Component {
                           <Container>
                             <Row>
                               <Col>
-                                {this.state.newAdminInfoEditing.is_admin ?
-                                  <Badge variant="warning" style={{fontSize: '14px', marginBottom: '4px', lineHeight: '20px'}}>已授权</Badge>
-                                :
-                                  <Badge variant="secondary" style={{fontSize: '14px', marginBottom: '4px', lineHeight: '20px'}}>未授权</Badge>
-                                }
-                                <Card.Text
-                                  style={{height: "50px", overflow: "hidden"}}
-                                >
-                                  微信昵称：<br/>{this.state.newAdminInfoEditing !== "" ? this.state.newAdminInfoEditing.nickname : ""}
-                                </Card.Text>
-                              </Col>
-                              <Col>
                                 <Image 
                                   src={this.state.newAdminInfoEditing !== "" ? this.state.newAdminInfoEditing.headimgurl : ""}
                                   style={{minWidth: "80px", marginTop: "10px"}}
                                   thumbnail 
                                 />
+                              </Col>
+                              <Col style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                                {this.state.newAdminInfoEditing.is_admin ?
+                                  <Badge variant="warning" style={{fontSize: '14px', marginBottom: '4px', lineHeight: '20px'}}>已授权</Badge>
+                                :
+                                  <Badge variant="secondary" style={{fontSize: '14px', marginBottom: '4px', lineHeight: '20px'}}>未授权</Badge>
+                                }
+                                <Card.Text style={{fontSize: "12px", marginBottom: "2px", color: "#28A745"}}>
+                                  微信昵称
+                                </Card.Text>
+                                <Card.Text style={{height: "50px", overflow: "hidden"}}>
+                                  {this.state.newAdminInfoEditing !== "" ? this.state.newAdminInfoEditing.nickname : ""}
+                                </Card.Text>
                               </Col>
                             </Row>
                           </Container>
@@ -573,11 +569,11 @@ class AdminList extends Component {
                             <option value="YA">牙克石</option>
                           </Form.Control>
                           <Form.Text className="text-muted">
-                            管理员门店将影响其创建的换油证号
+                            门店影响其创建的换油证号
                           </Form.Text>
                         </Form.Group>
                         <Button 
-                          variant='success' 
+                          variant='warning' 
                           style={{width: "100%"}}
                           disabled = {!this.state.newAdminInfoEditing.is_admin ? false : true}
                           onClick={this.addNewAdmin}
@@ -591,7 +587,7 @@ class AdminList extends Component {
                        <Card style={{height: "100%"}}>
                         <Card.Body>
                           <Card.Text>
-                            请从列表选择待授权的管理员
+                            *请从列表中选择
                           </Card.Text>
                         </Card.Body>
                        </Card>
