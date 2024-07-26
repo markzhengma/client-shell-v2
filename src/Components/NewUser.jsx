@@ -20,7 +20,7 @@ class NewUser extends Component {
   };
 
   componentDidMount() {
-    if(this.props.adminwx.location_char !== '') {
+    if(this.props.adminwx.location_char && this.props.adminwx.location_char !== '') {
       this.setState({
         location_char: this.props.adminwx.location_char
       })
@@ -73,11 +73,9 @@ class NewUser extends Component {
           \n车型：${this.state.make}
           \n车牌号：${this.state.plate}`
         );
-      // let confirmed = window.confirm(`请核对新用户信息：\n客户姓名：${this.state.user_name}\n换油证号：${this.state.isManual ? this.state.record_num : '自动生成 - ' + this.props.admin.location}\n联系方式：${this.state.phone}\n车型：${this.state.make}\n车牌号：${this.state.plate}`);
       if(confirmed){
         axios({
           url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.state.location_char}`,
-          // url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.props.admin.location_char}`,
           method: 'POST',
           data: {
             make,
@@ -89,11 +87,17 @@ class NewUser extends Component {
         })
           .then(res => {
             if(res.data.code !== 200){
-              this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
+              if(res.data.code === 404) {
+                console.log(res.data);
+                this.props.showAlert(
+                  '出错了', 
+                  `【车牌号】${this.state.isManual ? '或【换油证号】' : ''}已经存在，请检查输入是否正确。\n可以搜索【车牌号】${this.state.isManual ? '或【换油证号】' : ''}查看此用户是否已经创建`, 
+                  false
+                );
+              } else {
+                this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
+              }
             } else {
-              // this.setState({
-              //   userData: res.data.data
-              // });
               this.props.showAlert('操作成功', '创建成功！新用户换油证号为：' + res.data.data.record_num, true);
               this.props.selectFindUserValue('record_num', res.data.data.record_num);
               this.props.changeAction('find_user');
@@ -145,9 +149,6 @@ class NewUser extends Component {
             : ''
           }
           
-          {/* <Form.Label>
-            所属门店：{this.props.adminwx.location}门店
-          </Form.Label> */}
           <Form.Check onChange = {this.changeManualState.bind(this)} type="checkbox" label="手动输入门店换油证号" />
           { this.state.isManual ? 
             <Form.Control type = "text" name = "record_num" 
