@@ -299,6 +299,9 @@ class ReminderList extends Component {
                     <option value="304">10个月后</option>
                     <option value="335">11个月后</option>
                     <option value="365">12个月后</option>
+                    <option value="730">24个月后</option>
+                    <option value="1095">36个月后</option>
+                    <option value="1460">48个月后</option>
                   </Form.Control>
                 </Form.Group>
               </Col>
