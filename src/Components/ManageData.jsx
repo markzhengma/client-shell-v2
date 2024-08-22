@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DataList from './DataList';
 import AdminList from './AdminList';
+import WxArticle from './WxArticle';
 
 class ManageData extends Component {
   constructor(props){
@@ -31,6 +32,7 @@ class ManageData extends Component {
             <div className="nav-btn" onClick = {() => this.changeDataPage('operator')}>操作人列表</div>
             <div className="nav-btn" onClick = {() => this.changeDataPage('product')}>产品列表</div>
             <div className="nav-btn" onClick = {() => this.changeDataPage('admin')}>管理员列表</div>
+            <div className="nav-btn" onClick = {() => this.changeDataPage('wxArticle')}>小程序展示管理</div>
           </div>
         </div>
         { this.state.dataPage === 'gift' ? 
@@ -62,6 +64,11 @@ class ManageData extends Component {
         : '' }
         { this.state.dataPage === 'admin' ? 
           <AdminList
+            showAlert = {this.props.showAlert}
+          />
+        : '' }
+        { this.state.dataPage === 'wxArticle' ? 
+          <WxArticle
             showAlert = {this.props.showAlert}
           />
         : '' }
