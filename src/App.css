@@ -214,3 +214,8 @@
 .admin-btn {
   margin: 10px 0;
 }
+
+.article-list:hover{
+  cursor: pointer;
+  background-color: rgba(249, 208, 72, 0.2);
+}

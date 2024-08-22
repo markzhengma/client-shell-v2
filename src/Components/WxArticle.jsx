@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Button, Badge, Modal, Alert, Form, InputGroup, ListGroup, Col, Row, Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Card, Button, ButtonGroup, Badge, Modal, Form, InputGroup, ListGroup, Col, Row, Container, Image, Nav, Navbar } from 'react-bootstrap';
 
 class WxArticle extends Component {
   constructor(props) {
@@ -174,15 +174,17 @@ class WxArticle extends Component {
 
   // TODO: temporary solution, will change to image upload later
   setImageUrl() {
-    if(this.state.articleInput.thumb_tmp.indexOf("https://qiniu.hulunbuirshell.com/wxarticle-cover/") !== 0) {
-      this.props.showAlert('非法图片', `${this.state.articleInput.thumb_tmp}不是合法的图片路径，不允许预览`, false);
-      return false;
-    } else {
-      this.setState({
-        articleInput: {
-          thumb_url: this.state.articleInput.thumb_tmp
-        }
-      })
+    if(this.state.articleInput.thumb_tmp) {
+      if(this.state.articleInput.thumb_tmp.indexOf("https://qiniu.hulunbuirshell.com/wxarticle-cover/") !== 0) {
+        this.props.showAlert('非法图片', `${this.state.articleInput.thumb_tmp}不是合法的图片路径，不允许预览`, false);
+        return false;
+      } else {
+        this.setState({
+          articleInput: {
+            thumb_url: this.state.articleInput.thumb_tmp
+          }
+        })
+      }
     }
   };
 
@@ -334,7 +336,7 @@ class WxArticle extends Component {
           <Modal.Body>
             <Container>
               <Row>
-                <Col style={{width: "50%", height: "400px"}}>
+                <Col style={{maxWidth: "calc(100% - 300px)", maxHeight: "400px", overflow: "scroll"}}>
                   <Form>
                     <Form.Group className="mb-3">
                       <Form.Label>文章标题</Form.Label>
@@ -374,6 +376,7 @@ class WxArticle extends Component {
                           />
                         <Button
                           onClick={() => this.setImageUrl()}
+                          disabled={!this.state.articleInput.thumb_tmp || this.state.articleInput.thumb_tmp === ""}
                           >
                           确认图片
                         </Button>
@@ -384,57 +387,57 @@ class WxArticle extends Component {
                     </Form.Group>
                   </Form>
                 </Col>
-                <Col style={{width: "50%"}}>
-                  <Row>
-                    效果预览
+                <Col style={{maxWidth: "300px"}}>
+                  <Row style={{position: 'fixed', zIndex: "2", padding: "6px 0 0 22px"}}>
+                    <h5>
+                      <Badge variant="primary">
+                        效果预览
+                      </Badge>
+                    </h5>
                   </Row>
-                  {!this.state.articleInput.thumb_url || this.state.articleInput.thumb_url === "" ?
-                    ""
-                  : 
-                    <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
-                      <Card.Header className="text-center">乘驾无忧</Card.Header>
-                      <Card.Img 
-                        variant="top" 
-                        style={{width: "100%", objectFit: "cover"}}
-                        src={this.state.articleInput.thumb_url} 
-                      />
-                      <Card.Body
-                        style={{marginTop: "-160px"}}
-                      >
-                        <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                          【车型】【车牌号】
-                        </Row>
-                        <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                          <Button 
-                            variant="warning" 
-                            style={{width: "100%"}}
-                          >
-                            查看保养记录
-                          </Button>
-                        </Row>
-                        <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
-                          近期养护提醒……
-                        </Row>
+                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
+                    <Card.Header className="text-center">乘驾无忧</Card.Header>
+                    <Card.Img 
+                      variant="top" 
+                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "400px"}}
+                      src={this.state.articleInput.thumb_url} 
+                    />
+                    <Card.Body
+                      style={{margin: "-220px 10px 10px 10px"}}
+                    >
+                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
+                        【车型】【车牌号】
+                      </Row>
+                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
+                        <Button 
+                          variant="warning" 
+                          style={{width: "100%"}}
+                        >
+                          查看保养记录
+                        </Button>
+                      </Row>
+                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
+                        近期养护提醒……
+                      </Row>
 
-                        <Row style={{marginTop: "6px"}}>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>关</Col>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>手</Col>
-                          <Col style={{backgroundColor: "#ffffff", height: "60px"}}>联</Col>
-                        </Row>
-                        <Row style={{marginTop: "6px", padding: "6px"}}>
-                          管理员操作
-                        </Row>
-                        <Row style={{marginTop: "6px"}}>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>查</Col>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>创</Col>
-                          <Col style={{height: "60px"}}/>
-                        </Row>
-                        <Row style={{marginTop: "6px", padding: "6px"}}>
-                          ……到底了
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                  }
+                      <Row style={{marginTop: "6px"}}>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>关</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>手</Col>
+                        <Col style={{backgroundColor: "#ffffff", height: "75px", border: "#dddddd solid 1px"}}>联</Col>
+                      </Row>
+                      <Row style={{marginTop: "6px", padding: "6px"}}>
+                        管理员操作
+                      </Row>
+                      <Row style={{marginTop: "6px"}}>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>查</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>创</Col>
+                        <Col style={{height: "60px"}}/>
+                      </Row>
+                      <Row style={{marginTop: "6px", padding: "6px"}}>
+                        ……到底了
+                      </Row>
+                    </Card.Body>
+                  </Card>
                 </Col>
               </Row>
             </Container>
@@ -473,7 +476,7 @@ class WxArticle extends Component {
           <Modal.Body>
             <Container>
               <Row>
-                <Col style={{width: "50%", height: "400px"}}>
+                <Col style={{maxWidth: "calc(100% - 300px)", maxHeight: "400px", overflow: "scroll"}}>
                   <Form>
                     <Form.Group className="mb-3">
                       <Form.Label>文章标题</Form.Label>
@@ -520,57 +523,57 @@ class WxArticle extends Component {
                     </Form.Group>
                   </Form>
                 </Col>
-                <Col style={{width: "50%"}}>
-                  <Row>
-                    效果预览
+                <Col style={{maxWidth: "300px"}}>
+                  <Row style={{position: 'fixed', zIndex: "2", padding: "6px 0 0 22px"}}>
+                    <h5>
+                      <Badge variant="primary">
+                        效果预览
+                      </Badge>
+                    </h5>
                   </Row>
-                  {!this.state.articleInput.thumb_url || this.state.articleInput.thumb_url === "" ?
-                    ""
-                  : 
-                    <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
-                      <Card.Header className="text-center">乘驾无忧</Card.Header>
-                      <Card.Img 
-                        variant="top" 
-                        style={{width: "100%", objectFit: "cover"}}
-                        src={this.state.articleInput.thumb_url} 
-                      />
-                      <Card.Body
-                        style={{marginTop: "-160px"}}
-                      >
-                        <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                          【车型】【车牌号】
-                        </Row>
-                        <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                          <Button 
-                            variant="warning" 
-                            style={{width: "100%"}}
-                          >
-                            查看保养记录
-                          </Button>
-                        </Row>
-                        <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
-                          近期养护提醒……
-                        </Row>
+                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
+                    <Card.Header className="text-center">乘驾无忧</Card.Header>
+                    <Card.Img 
+                      variant="top" 
+                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "400px"}}
+                      src={this.state.articleInput.thumb_url} 
+                    />
+                    <Card.Body
+                      style={{margin: "-220px 10px 10px 10px"}}
+                    >
+                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
+                        【车型】【车牌号】
+                      </Row>
+                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
+                        <Button 
+                          variant="warning" 
+                          style={{width: "100%"}}
+                        >
+                          查看保养记录
+                        </Button>
+                      </Row>
+                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
+                        近期养护提醒……
+                      </Row>
 
-                        <Row style={{marginTop: "6px"}}>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>关</Col>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>手</Col>
-                          <Col style={{backgroundColor: "#ffffff", height: "60px"}}>联</Col>
-                        </Row>
-                        <Row style={{marginTop: "6px", padding: "6px"}}>
-                          管理员操作
-                        </Row>
-                        <Row style={{marginTop: "6px"}}>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>查</Col>
-                          <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>创</Col>
-                          <Col style={{height: "60px"}}/>
-                        </Row>
-                        <Row style={{marginTop: "6px", padding: "6px"}}>
-                          ……到底了
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                  }
+                      <Row style={{marginTop: "6px"}}>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>关</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>手</Col>
+                        <Col style={{backgroundColor: "#ffffff", height: "75px", border: "#dddddd solid 1px"}}>联</Col>
+                      </Row>
+                      <Row style={{marginTop: "6px", padding: "6px"}}>
+                        管理员操作
+                      </Row>
+                      <Row style={{marginTop: "6px"}}>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>查</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>创</Col>
+                        <Col style={{height: "60px"}}/>
+                      </Row>
+                      <Row style={{marginTop: "6px", padding: "6px"}}>
+                        ……到底了
+                      </Row>
+                    </Card.Body>
+                  </Card>
                 </Col>
               </Row>
             </Container>
@@ -610,20 +613,24 @@ class WxArticle extends Component {
           <Modal.Body>
             <Container>
               <Row>
-                <Col style={{width: "50%"}}>
+                <Col style={{maxWidth: "calc(100% - 300px)", maxHeight: "400px", overflow: "scroll"}}>
                   <Card>
                     <Card.Body>
                       <Card.Title>
-                        <Badge variant="success">
-                          标题
-                        </Badge>
+                        <h5>
+                          <Badge variant="success">
+                            标题
+                          </Badge>
+                        </h5>
                         {this.state.selectedArticle.title}
                       </Card.Title>
                       <hr/>
                       <Card.Text>
-                        <Badge variant="secondary">
-                          公众号链接
-                        </Badge>
+                        <h5>
+                          <Badge variant="secondary">
+                            公众号链接
+                          </Badge>
+                        </h5>
                         {this.state.selectedArticle.url? 
                           this.state.selectedArticle.url.length > 40 ? 
                             this.state.selectedArticle.url.slice(0, 39) + "..." 
@@ -639,9 +646,11 @@ class WxArticle extends Component {
                       </Button>
                       <hr/>
                       <Card.Text>
-                        <Badge variant="warning">
-                          封面图链接
-                        </Badge>
+                        <h5>
+                          <Badge variant="warning">
+                            封面图链接
+                          </Badge>
+                        </h5>
                         {this.state.selectedArticle.thumb_url? 
                           this.state.selectedArticle.thumb_url.length > 40 ? 
                             this.state.selectedArticle.thumb_url.slice(0, 39) + "..." 
@@ -653,19 +662,23 @@ class WxArticle extends Component {
                     </Card.Body>
                   </Card>
                 </Col>
-                <Col style={{width: "50%"}}>
-                  <Row>
-                    效果预览
+                <Col style={{maxWidth: "300px"}}>
+                  <Row style={{position: 'fixed', zIndex: "2", padding: "6px 0 0 22px"}}>
+                    <h5>
+                      <Badge variant="primary">
+                        效果预览
+                      </Badge>
+                    </h5>
                   </Row>
                   <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
                     <Card.Header className="text-center">乘驾无忧</Card.Header>
                     <Card.Img 
                       variant="top" 
-                      style={{width: "100%", objectFit: "cover"}}
+                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "400px"}}
                       src={this.state.selectedArticle.thumb_url} 
                     />
                     <Card.Body
-                      style={{marginTop: "-160px"}}
+                      style={{margin: "-220px 10px 10px 10px"}}
                     >
                       <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
                         【车型】【车牌号】
@@ -683,16 +696,16 @@ class WxArticle extends Component {
                       </Row>
 
                       <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>关</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>手</Col>
-                        <Col style={{backgroundColor: "#ffffff", height: "60px"}}>联</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>关</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>手</Col>
+                        <Col style={{backgroundColor: "#ffffff", height: "75px", border: "#dddddd solid 1px"}}>联</Col>
                       </Row>
                       <Row style={{marginTop: "6px", padding: "6px"}}>
                         管理员操作
                       </Row>
                       <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>查</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "60px"}}>创</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>查</Col>
+                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>创</Col>
                         <Col style={{height: "60px"}}/>
                       </Row>
                       <Row style={{marginTop: "6px", padding: "6px"}}>
@@ -721,6 +734,7 @@ class WxArticle extends Component {
         </Navbar>
         
         {/* 展示文章 */}
+        <hr/>
         <Navbar style={{padding: "0", marginBottom: "12px"}}>
           <Container style={{justifyContent: "left", margin: "0"}}>
             <Navbar.Brand>
@@ -743,38 +757,38 @@ class WxArticle extends Component {
           <ListGroup>
             {this.state.wxArticleDisplayList.map(item => {
               return (
-                <ListGroup.Item variant="dark" key={"display" + item.article_id}>
+                <ListGroup.Item style={{backgroundColor: "#eeeeee"}} key={"display" + item.article_id}>
                   <Row>
-                    <Col md={1}>
-                      <Button 
-                        variant='danger'
-                        disabled={this.state.wxArticleDisplayList.length - 1 === item.order}
-                        onClick={() => this.changeDisplayOrder(this.state.wxArticleDisplayList.indexOf(item), true)}
-                      >
-                        前
-                      </Button>
-                      <Button 
-                        variant='success'
-                        disabled={item.order === 0}
-                        onClick={() => this.changeDisplayOrder(this.state.wxArticleDisplayList.indexOf(item), false)}
-                      >
-                        后
-                      </Button>
-                    </Col>
                     <Col
-                      style={{cursor: "pointer"}}
+                      className="article-list"
                       onClick={() => this.showOrHideArticleDetail(true, item)}
                     >
                       <Row>
-                        <Col md={3}>
-                          <Image style={{width: "80px"}} src={item.thumb_url} thumbnail />
+                        <Col md={2} style={{minWidth: '90px'}}>
+                          <Image style={{width: "80px", height: "110px", objectFit: "cover"}} src={item.thumb_url} thumbnail />
                         </Col>
-                        <Col>
-                          {item.title}
+                        <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center"}}>
+                          <h5>{item.title}</h5>
                         </Col>
                       </Row>
                     </Col>
-                    <Col md={2}>
+                    <Col md={2} style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                      <ButtonGroup style={{marginRight: "6px"}}>
+                        <Button 
+                          variant={this.state.wxArticleDisplayList.length - 1 === item.order ? 'secondary' : 'success'}
+                          disabled={this.state.wxArticleDisplayList.length - 1 === item.order}
+                          onClick={() => this.changeDisplayOrder(this.state.wxArticleDisplayList.indexOf(item), true)}
+                        >
+                          ↑
+                        </Button>
+                        <Button 
+                          variant={item.order === 0 ? 'secondary' : 'primary'}
+                          disabled={item.order === 0}
+                          onClick={() => this.changeDisplayOrder(this.state.wxArticleDisplayList.indexOf(item), false)}
+                        >
+                          ↓
+                        </Button>
+                      </ButtonGroup>
                       <Button 
                         variant='danger'
                         onClick={() => this.removeArticleFromDisplay(item.article_id)}
@@ -787,10 +801,11 @@ class WxArticle extends Component {
               )
             })}
           </ListGroup>
-          : ""
+          : "无展示文章"
         }
 
         {/* 文章库 */}
+        <hr/>
         <Navbar style={{padding: "0", marginBottom: "12px"}}>
           <Container style={{justifyContent: "left", margin: "0"}}>
             <Navbar.Brand>
@@ -812,37 +827,39 @@ class WxArticle extends Component {
           <ListGroup>
             {this.state.wxArticleLibList.map(item => {
               return (
-                <ListGroup.Item variant="dark" key={"lib" + item.article_id}>
+                <ListGroup.Item style={{backgroundColor: "#eeeeee"}} key={"lib" + item.article_id}>
                   <Row>
                     <Col
-                      style={{cursor: "pointer"}}
+                      className="article-list"
                       onClick={() => this.showOrHideArticleDetail(true, item)}
                     >
                       <Row>
-                        <Col md={3}>
-                          <Image style={{width: "80px"}} src={item.thumb_url} thumbnail />
+                        <Col md={2} style={{minWidth: '90px'}}>
+                          <Image style={{width: "80px", height: "110px", objectFit: "cover" }} src={item.thumb_url} thumbnail />
                         </Col>
-                        <Col>
-                          {item.title}
+                        <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center", color: "#808080"}}>
+                          <h5>{item.title}</h5>
                         </Col>
                       </Row>
                     </Col>
-                    <Col md={2}>
+                    <Col md={2} style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center", justifyContent: "center"}}>
                       <Button 
-                        variant='success'
+                        variant= {item.isDisplay ? 'secondary' : 'success'}
                         disabled={item.isDisplay}
+                        style={{marginRight: "6px"}}
                         onClick={() => this.addArticleToDisplay(item.article_id)}
                       >
                         展示
                       </Button>
                       <Button 
                         variant='info'
+                        style={{marginRight: "6px"}}
                         onClick={() => this.showOrHideArticleEdit(true, item)}
                       >
                         编辑
                       </Button>
                       <Button 
-                        variant='danger'
+                        variant={item.isDisplay ? 'secondary' : 'danger'}
                         disabled={item.isDisplay}
                         onClick={() => this.showOrHideDelAlert(true, item)}
                       >
@@ -854,7 +871,7 @@ class WxArticle extends Component {
               )
             })}
           </ListGroup>
-          : ""
+          : "文章库里没有内容，请先添加文章"
         }
       </div>
     );
