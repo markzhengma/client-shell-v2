@@ -162,7 +162,7 @@ class WxArticle extends Component {
 
   onArticleInputChange(e) {
     const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.type === 'file' ? target.files[0] : target.value;
     const name = target.name;
     this.setState({
       articleInput: {
@@ -170,23 +170,39 @@ class WxArticle extends Component {
         [name]: value
       }
     })
-  };
-
-  // TODO: temporary solution, will change to image upload later
-  setImageUrl() {
-    if(this.state.articleInput.thumb_tmp) {
-      if(this.state.articleInput.thumb_tmp.indexOf("https://qiniu.hulunbuirshell.com/wxarticle-cover/") !== 0) {
-        this.props.showAlert('非法图片', `${this.state.articleInput.thumb_tmp}不是合法的图片路径，不允许预览`, false);
-        return false;
-      } else {
-        this.setState({
-          articleInput: {
-            thumb_url: this.state.articleInput.thumb_tmp
-          }
-        })
-      }
+    if(target.type === "file") {
+      const url = URL.createObjectURL(target.files[0]);
+      console.log(url);
     }
   };
+
+  async uploadImg() {
+    let formData = new FormData();
+    formData.append("file", this.state.articleInput.thumb_file);
+    const res = await axios({
+      url: `http://localhost:7001/api/wxarticle/img/single?file_name=${new Date().getTime()}.png`,
+      method: "POST",
+      data: formData,
+      headers: {'Content-Type': 'multipart/form-data'}
+    });
+
+    console.log(res)
+    
+    if(!res || res.status !== 200) {
+      this.props.showAlert('出错了', res.data.msg, false);
+      console.log(res);
+    } else {
+      this.setState({
+        articleInput: {
+          ...this.state.articleInput,
+          thumb_url: res.data.data.url
+        }
+      })
+      // this.props.showAlert('添加成功', "文章已加至文章库", true);
+      // this.showOrHideArticleNew(false);
+      // await this.initArticleList();
+    }
+  }
 
   articleInputValidate() {
     let article = this.state.articleInput;
@@ -366,24 +382,12 @@ class WxArticle extends Component {
                     </Form.Group>
                     <Form.Group className="mb-3">
                       <Form.Label>封面图片</Form.Label>
-                      <InputGroup>
-                        <Form.Control 
-                          type="text" 
-                          name="thumb_tmp"
-                          placeholder="请填写"
-                          defaultValue={this.state.articleInput.thumb_url || ""}
-                          onChange = {this.onArticleInputChange.bind(this)}
-                          />
-                        <Button
-                          onClick={() => this.setImageUrl()}
-                          disabled={!this.state.articleInput.thumb_tmp || this.state.articleInput.thumb_tmp === ""}
-                          >
-                          确认图片
-                        </Button>
-                      </InputGroup>
-                      <Form.Text className="text-muted">
-                        暂时先手填链接，后面改成图片上传
-                      </Form.Text>
+                      <Form.Control 
+                        type="file" 
+                        name="thumb_file"
+                        onChange = {this.onArticleInputChange.bind(this)}
+                      />
+                      <Button onClick={() => this.uploadImg()}>上传</Button>
                     </Form.Group>
                   </Form>
                 </Col>
@@ -443,16 +447,9 @@ class WxArticle extends Component {
             </Container>
           </Modal.Body>
           <Modal.Footer>
-            {this.state.articleInput.thumb_tmp && this.state.articleInput.thumb_url !== this.state.articleInput.thumb_tmp ?
-              <div style={{color: "#F9D148"}}>
-                填入了新的封面图片，请点击确认图片以生成预览。
-              </div>
-              : ""
-            }
             <Button 
-              variant="success" 
+              variant="warning" 
               onClick={() => this.confirmUpdateArticleInLib()}
-              disabled={this.state.articleInput.thumb_tmp && this.state.articleInput.thumb_url !== this.state.articleInput.thumb_tmp}
             >
               保存
             </Button>
@@ -504,22 +501,12 @@ class WxArticle extends Component {
                     </Form.Group>
                     <Form.Group className="mb-3">
                       <Form.Label>封面图片</Form.Label>
-                      <InputGroup>
-                        <Form.Control 
-                          type="text" 
-                          name="thumb_tmp"
-                          placeholder="请填写"
-                          onChange = {this.onArticleInputChange.bind(this)}
-                          />
-                        <Button
-                          onClick={() => this.setImageUrl()}
-                          >
-                          确认图片
-                        </Button>
-                      </InputGroup>
-                      <Form.Text className="text-muted">
-                        暂时先手填链接，后面改成图片上传
-                      </Form.Text>
+                      <Form.Control 
+                        type="file" 
+                        name="thumb_file"
+                        onChange = {this.onArticleInputChange.bind(this)}
+                      />
+                      <Button onClick={() => this.uploadImg()}>上传</Button>
                     </Form.Group>
                   </Form>
                 </Col>
@@ -579,16 +566,9 @@ class WxArticle extends Component {
             </Container>
           </Modal.Body>
           <Modal.Footer>
-            {this.state.articleInput.thumb_tmp && this.state.articleInput.thumb_url !== this.state.articleInput.thumb_tmp ?
-              <div style={{color: "#F9D148"}}>
-                填入了新的封面图片，请点击确认图片以生成预览。
-              </div>
-              : ""
-            }
             <Button 
-              variant="success" 
+              variant="warning" 
               onClick={() => this.confirmCreateArticleInLib()}
-              disabled={this.state.articleInput.thumb_tmp && this.state.articleInput.thumb_url !== this.state.articleInput.thumb_tmp}
             >
               保存
             </Button>
@@ -618,19 +598,19 @@ class WxArticle extends Component {
                     <Card.Body>
                       <Card.Title>
                         <h5>
-                          <Badge variant="success">
+                          <Badge variant="primary">
                             标题
                           </Badge>
                         </h5>
                         {this.state.selectedArticle.title}
                       </Card.Title>
                       <hr/>
+                      <h5>
+                        <Badge variant="primary">
+                          公众号链接
+                        </Badge>
+                      </h5>
                       <Card.Text>
-                        <h5>
-                          <Badge variant="secondary">
-                            公众号链接
-                          </Badge>
-                        </h5>
                         {this.state.selectedArticle.url? 
                           this.state.selectedArticle.url.length > 40 ? 
                             this.state.selectedArticle.url.slice(0, 39) + "..." 
@@ -639,18 +619,18 @@ class WxArticle extends Component {
                         }
                       </Card.Text>
                       <Button 
-                        variant="primary"
+                        variant="warning"
                         onClick={() => this.openWxArticleLink(this.state.selectedArticle.url)}
                       >
                         查看文章
                       </Button>
                       <hr/>
+                      <h5>
+                        <Badge variant="primary">
+                          封面图链接
+                        </Badge>
+                      </h5>
                       <Card.Text>
-                        <h5>
-                          <Badge variant="warning">
-                            封面图链接
-                          </Badge>
-                        </h5>
                         {this.state.selectedArticle.thumb_url? 
                           this.state.selectedArticle.thumb_url.length > 40 ? 
                             this.state.selectedArticle.thumb_url.slice(0, 39) + "..." 
@@ -670,7 +650,7 @@ class WxArticle extends Component {
                       </Badge>
                     </h5>
                   </Row>
-                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
+                  <Card style={{minWidth: "268px", backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
                     <Card.Header className="text-center">乘驾无忧</Card.Header>
                     <Card.Img 
                       variant="top" 
@@ -718,7 +698,7 @@ class WxArticle extends Component {
             </Container>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="success" onClick={() => this.showOrHideArticleDetail(false)}>
+            <Button variant="secondary" onClick={() => this.showOrHideArticleDetail(false)}>
               关闭
             </Button>
           </Modal.Footer>
@@ -740,17 +720,20 @@ class WxArticle extends Component {
             <Navbar.Brand>
               <h4 style={{margin: "10px 0"}}>展示文章</h4>
             </Navbar.Brand>
-            <Nav>
-              <Nav.Item>
-                <Button 
-                  variant="warning"
-                  disabled={!this.state.isOrderChanged}
-                  onClick={() => this.updateDisplayOrder()}
-                >
-                  确认修改顺序
-                </Button>
-              </Nav.Item>
-            </Nav>
+            {this.state.isOrderChanged ? 
+              <Nav>
+                <Nav.Item>
+                  <Button 
+                    variant="warning"
+                    disabled={!this.state.isOrderChanged}
+                    onClick={() => this.updateDisplayOrder()}
+                  >
+                    确认修改顺序
+                  </Button>
+                </Nav.Item>
+              </Nav>
+              : ""
+            }
           </Container>
         </Navbar>
         {this.state.wxArticleDisplayList.length !== 0 ?
@@ -775,14 +758,15 @@ class WxArticle extends Component {
                     <Col md={2} style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center", justifyContent: "center"}}>
                       <ButtonGroup style={{marginRight: "6px"}}>
                         <Button 
-                          variant={this.state.wxArticleDisplayList.length - 1 === item.order ? 'secondary' : 'success'}
+                          variant='warning'
+                          style={{marginRight: "1px"}}
                           disabled={this.state.wxArticleDisplayList.length - 1 === item.order}
                           onClick={() => this.changeDisplayOrder(this.state.wxArticleDisplayList.indexOf(item), true)}
                         >
                           ↑
                         </Button>
                         <Button 
-                          variant={item.order === 0 ? 'secondary' : 'primary'}
+                          variant='dark'
                           disabled={item.order === 0}
                           onClick={() => this.changeDisplayOrder(this.state.wxArticleDisplayList.indexOf(item), false)}
                         >
@@ -790,7 +774,7 @@ class WxArticle extends Component {
                         </Button>
                       </ButtonGroup>
                       <Button 
-                        variant='danger'
+                        variant='outline-danger'
                         onClick={() => this.removeArticleFromDisplay(item.article_id)}
                       >
                         不展示
@@ -844,7 +828,7 @@ class WxArticle extends Component {
                     </Col>
                     <Col md={2} style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center", justifyContent: "center"}}>
                       <Button 
-                        variant= {item.isDisplay ? 'secondary' : 'success'}
+                        variant= 'warning'
                         disabled={item.isDisplay}
                         style={{marginRight: "6px"}}
                         onClick={() => this.addArticleToDisplay(item.article_id)}
@@ -852,14 +836,14 @@ class WxArticle extends Component {
                         展示
                       </Button>
                       <Button 
-                        variant='info'
+                        variant='dark'
                         style={{marginRight: "6px"}}
                         onClick={() => this.showOrHideArticleEdit(true, item)}
                       >
                         编辑
                       </Button>
                       <Button 
-                        variant={item.isDisplay ? 'secondary' : 'danger'}
+                        variant='danger'
                         disabled={item.isDisplay}
                         onClick={() => this.showOrHideDelAlert(true, item)}
                       >
