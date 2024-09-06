@@ -13,10 +13,12 @@ class WxArticle extends Component {
       isShowArticleEdit: false,
       selectedArticle: '',
       articleInput: '',
+      isLargeFile: false,
       isShowDelAlert: false,
       delArticle: '',
       editArticle: '',
-      isOrderChanged: false
+      isOrderChanged: false,
+      isLoading: false
     }
   };
 
@@ -26,11 +28,11 @@ class WxArticle extends Component {
   }
 
   async getAllArticleInLib() {
-    const domain = 'https://api.hulunbuirshell.com';
+    const domain = 'http://localhost:7001';
     const res = await axios.get(`${domain}/api/wxarticle/lib/all`);
 
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data, false);
+    if(!res || res.status !== 200 || res.data.code !== 200) {
+      this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
       let libList = res.data.data;
 
@@ -45,9 +47,9 @@ class WxArticle extends Component {
   };
 
   async getDisplayList() {
-    const res = await axios.get("https://api.hulunbuirshell.com/api/wxarticle/display/all");
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data, false);
+    const res = await axios.get("http://localhost:7001/api/wxarticle/display/all");
+    if(!res || res.status !== 200 || res.data.code !== 200) {
+      this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
       let list = res.data.data.map(article =>{
         return ({
@@ -100,15 +102,15 @@ class WxArticle extends Component {
       })
     })
     const res = await axios({
-      url: "https://api.hulunbuirshell.com/api/wxarticle/display/all",
+      url: "http://localhost:7001/api/wxarticle/display/all",
       method: "PUT",
       data: {
         article_list: articleList
       }
     });
     
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data, false);
+    if(!res || res.status !== 200 || res.data.code !== 200) {
+      this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
       this.props.showAlert('修改成功', "文章展示顺序已更新", true);
       this.showOrHideArticleEdit(false);
@@ -120,10 +122,10 @@ class WxArticle extends Component {
   };
 
   async removeArticleFromDisplay(id) {
-    const res = await axios.delete(`https://api.hulunbuirshell.com/api/wxarticle/display/single/${id}`);
+    const res = await axios.delete(`http://localhost:7001/api/wxarticle/display/single/${id}`);
     
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data, false);
+    if(!res || res.status !== 200 || res.data.code !== 200) {
+      this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
       this.props.showAlert('修改成功', "文章已不再展示于小程序", true);
       await this.initArticleList();
@@ -131,10 +133,10 @@ class WxArticle extends Component {
   };
 
   async removeArticleFromLib(id) {
-    const res = await axios.delete(`https://api.hulunbuirshell.com/api/wxarticle/lib/single/${id}`);
+    const res = await axios.delete(`http://localhost:7001/api/wxarticle/lib/single/${id}`);
     
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data, false);
+    if(!res || res.status !== 200 || res.data.code !== 200) {
+      this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
       this.props.showAlert('删除成功', "文章已从库中删除", true);
       this.showOrHideDelAlert(false)
@@ -143,10 +145,10 @@ class WxArticle extends Component {
   };
 
   async addArticleToDisplay(id) {
-    const res = await axios.post(`https://api.hulunbuirshell.com/api/wxarticle/display/single/${id}`);
+    const res = await axios.post(`http://localhost:7001/api/wxarticle/display/single/${id}`);
     
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data, false);
+    if(!res || res.status !== 200 || res.data.code !== 200) {
+      this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
       this.props.showAlert('修改成功', "文章已添加至小程序首页展示", true);
       await this.initArticleList();
@@ -162,62 +164,87 @@ class WxArticle extends Component {
 
   onArticleInputChange(e) {
     const target = e.target;
-    const value = target.type === 'file' ? target.files[0] : target.value;
     const name = target.name;
-    this.setState({
-      articleInput: {
-        ...this.state.articleInput,
-        [name]: value
-      }
-    })
-    if(target.type === "file") {
-      const url = URL.createObjectURL(target.files[0]);
-      console.log(url);
-    }
-  };
-
-  async uploadImg() {
-    let formData = new FormData();
-    formData.append("file", this.state.articleInput.thumb_file);
-    const res = await axios({
-      url: `http://localhost:7001/api/wxarticle/img/single?file_name=${new Date().getTime()}.png`,
-      method: "POST",
-      data: formData,
-      headers: {'Content-Type': 'multipart/form-data'}
-    });
-
-    console.log(res)
-    
-    if(!res || res.status !== 200) {
-      this.props.showAlert('出错了', res.data.msg, false);
-      console.log(res);
+    if(target.type === 'file') {
+      let fileSize = target.files[0] ? target.files[0].size : 0;
+      this.setState({
+        articleInput: {
+          ...this.state.articleInput,
+          isLargeFile: fileSize > 524288,
+          thumb_file: target.files[0],
+          preview_url: target.files.length > 0 ? URL.createObjectURL(target.files[0]) : ""
+        }
+      })
     } else {
       this.setState({
         articleInput: {
           ...this.state.articleInput,
-          thumb_url: res.data.data.url
+          [name]: target.value
         }
       })
-      // this.props.showAlert('添加成功', "文章已加至文章库", true);
-      // this.showOrHideArticleNew(false);
-      // await this.initArticleList();
+    }
+  };
+
+  async uploadImg() {
+    if(!this.state.articleInput.thumb_file) {
+      const res = {
+        data: {
+          code: 200
+        },
+        msg: 'no image uploaded'
+      };
+      return res;
+    } else {
+      let formData = new FormData();
+      formData.append("file", this.state.articleInput.thumb_file);
+      this.setState({
+        isLoading: true
+      });
+  
+      const res = await axios({
+        url: `http://localhost:7001/api/wxarticle/img/single?file_name=tmp_${new Date().getTime()}.png`,
+        method: "POST",
+        data: formData,
+        headers: {'Content-Type': 'multipart/form-data'}
+      });
+  
+      this.setState({
+        isLoading: false
+      });
+      
+      if(!res || res.status !== 200 || res.data.code !== 200) {
+        this.props.showAlert('出错了', JSON.stringify(res.data.msg), false);
+        console.log(res);
+      } else {
+        this.setState({
+          articleInput: {
+            ...this.state.articleInput,
+            thumb_url: res.data.data.url,
+            tmp_file_name: res.data.data.key
+          }
+        })
+      }
+      return res;
     }
   }
 
   articleInputValidate() {
     let article = this.state.articleInput;
-    if(!article.title || !article.url || !article.thumb_url) {
+    if(!article.title || !article.url || (!article.thumb_url && !article.thumb_file)) {
       this.props.showAlert('出错了', "所有内容都必填", false);
       return false;
-    } else if(article.title === "" || article.url === "" || article.thumb_url === "") {
+    } else if(article.title === "" || article.url === "" || (article.thumb_url === "" && !article.thumb_file)) {
       this.props.showAlert('出错了', "所有内容都必填", false);
       return false;
     } else if(article.url.indexOf("https://mp.weixin.qq.com/s?__biz=MzIwMDAwOTc3MA") !== 0) {
       this.props.showAlert('非法链接', `${article.url}不是我司公众号的文章链接，不允许保存`, false);
       return false;
-    } else if(article.thumb_url.indexOf("https://qiniu.hulunbuirshell.com/wxarticle-cover/") !== 0) {
-      this.props.showAlert('非法图片', `${article.thumb_url}不是合法的图片路径，不允许保存`, false);
+    } else if(this.state.articleInput.isLargeFile) {
+      this.props.showAlert('图片过大', "请重新选择一个小于500KB的图片上传", false);
       return false;
+    // } else if(article.thumb_url.indexOf("https://qiniu.hulunbuirshell.com/wxarticle-cover/") !== 0) {
+    //   this.props.showAlert('非法图片', `${article.thumb_url}不是合法的图片路径，不允许保存`, false);
+    //   return false;
     } else {
       return true;
     }
@@ -226,23 +253,33 @@ class WxArticle extends Component {
   async confirmCreateArticleInLib() {
     const isValidInput = this.articleInputValidate();
     if(isValidInput) {
-      const { title, url, thumb_url } = this.state.articleInput;
-      const res = await axios({
-        url: "https://api.hulunbuirshell.com/api/wxarticle/lib/single",
-        method: "POST",
-        data: {
-          title,
-          url,
-          thumb_url
+      let uploadRes = await this.uploadImg();
+      if(uploadRes.data.code === 200) {
+        const { title, url, thumb_url } = this.state.articleInput;
+        this.setState({
+          isLoading: true
+        });
+        const res = await axios({
+          url: "http://localhost:7001/api/wxarticle/lib/single",
+          method: "POST",
+          data: {
+            title,
+            url,
+            thumb_url
+          }
+        });
+
+        this.setState({
+          isLoading: false
+        });
+        
+        if(!res || res.status !== 200 || res.data.code !== 200) {
+          this.props.showAlert('出错了', JSON.stringify(res.data), false);
+        } else {
+          this.props.showAlert('添加成功', "文章已加至文章库", true);
+          this.showOrHideArticleNew(false);
+          await this.initArticleList();
         }
-      });
-      
-      if(!res || res.status !== 200) {
-        this.props.showAlert('出错了', res.data, false);
-      } else {
-        this.props.showAlert('添加成功', "文章已加至文章库", true);
-        this.showOrHideArticleNew(false);
-        await this.initArticleList();
       }
     }
   };
@@ -257,26 +294,36 @@ class WxArticle extends Component {
   async confirmUpdateArticleInLib() {
     const isValidInput = this.articleInputValidate();
     if(isValidInput) {
-      const { article_id, title, url, thumb_url } = this.state.articleInput;
-      const res = await axios({
-        url: "https://api.hulunbuirshell.com/api/wxarticle/lib/single",
-        method: "PUT",
-        data: {
-          article_id,
-          title,
-          url,
-          thumb_url
+      const uploadRes = await this.uploadImg();
+      if(uploadRes.data.code === 200) {
+        const { article_id, title, url, thumb_url } = this.state.articleInput;
+        this.setState({
+          isLoading: true
+        });
+        const res = await axios({
+          url: "http://localhost:7001/api/wxarticle/lib/single",
+          method: "PUT",
+          data: {
+            article_id,
+            title,
+            url,
+            thumb_url
+          }
+        });
+
+        this.setState({
+          isLoading: false
+        });
+        
+        if(!res || res.status !== 200 || res.data.code !== 200) {
+          this.props.showAlert('出错了', JSON.stringify(res.data), false);
+        } else {
+          this.props.showAlert('编辑成功', "文章内容已更新", true);
+          this.showOrHideArticleEdit(false);
+          await this.initArticleList();
         }
-      });
-      
-      if(!res || res.status !== 200) {
-        this.props.showAlert('出错了', res.data, false);
-      } else {
-        this.props.showAlert('编辑成功', "文章内容已更新", true);
-        this.showOrHideArticleEdit(false);
-        await this.initArticleList();
       }
-    }
+    };
   };
 
   showOrHideArticleDetail(isShow, article) {
@@ -294,6 +341,14 @@ class WxArticle extends Component {
     }
   };
 
+  openCoverImg(url) {
+    if(url.indexOf("https://qiniu.hulunbuirshell.com/wxarticle-cover/") === 0) {
+      window.open(url, "_blank");
+    } else {
+      this.props.showAlert('非法图片源', `${url}不是我司的图片源，不允许打开`, false)
+    }
+  };
+
   showOrHideDelAlert(isShow, article) {
     this.setState({
       isShowDelAlert: isShow,
@@ -306,6 +361,103 @@ class WxArticle extends Component {
   };
 
   render() { 
+    const linkIcon = require("../Icons/link.png");
+    const newIcon = require("../Icons/new.png");
+    const phoneIcon = require("../Icons/phone.png");
+    const recordIcon = require("../Icons/record.png");
+    const searchIcon = require("../Icons/search.png");
+
+    const PreviewContent = () => {
+      return (
+        <Card.Body
+          style={{margin: "-120px 10px 10px 10px"}}
+        >
+          <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px", border: "#dddddd solid 1px"}}>
+            用户信息
+          </Row>
+          <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "18px 12px", borderRadius: "6px", border: "#dddddd solid 1px"}}>
+            <Button 
+              variant="warning" 
+              style={{width: "100%"}}
+            >
+              查看保养记录
+            </Button>
+          </Row>
+          <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", border: "#dddddd solid 1px"}}>
+            近期养护提醒……
+          </Row>
+
+          <Row style={{marginTop: "6px"}}>
+            <Col 
+              className='flex-center'
+              style={{backgroundColor: "#ffffff", marginRight: "6px", height: "70px", border: "#dddddd solid 1px"}}
+            >
+              <Row>
+                <Image src={linkIcon} style={{width: "24px", marginBottom: "10px"}} />
+              </Row>
+              <Row>
+                关联账号
+              </Row>
+            </Col>
+            <Col 
+              className='flex-center'
+              style={{backgroundColor: "#ffffff", marginRight: "6px", height: "70px", border: "#dddddd solid 1px"}}
+            >
+              <Row>
+                <Image src={searchIcon} style={{width: "28px", marginBottom: "6px"}} />
+              </Row>
+              <Row>
+                输入查询
+              </Row>
+            </Col>
+            <Col 
+              className='flex-center'
+              style={{backgroundColor: "#ffffff", height: "70px", border: "#dddddd solid 1px"}}
+            >
+              <Row>
+                <Image src={phoneIcon} style={{width: "24px", marginBottom: "10px"}} />
+              </Row>
+              <Row>
+                联系我们
+              </Row>
+            </Col>
+          </Row>
+          <Row
+            className="justify-content-md-center" 
+            style={{marginTop: "6px", padding: "6px"}}
+          >
+            管理员操作
+          </Row>
+          <Row style={{marginTop: "6px"}}>
+            <Col 
+              className='flex-center'
+              style={{backgroundColor: "#ffffff", justifyContent: "center", marginRight: "6px", height: "70px", border: "#dddddd solid 1px"}}
+            >
+              <Row>
+                <Image src={recordIcon} style={{width: "26px", marginBottom: "8px"}} />
+              </Row>
+              <Row>
+                查询客户
+              </Row>
+            </Col>
+            <Col 
+              className='flex-center'
+              style={{backgroundColor: "#ffffff", justifyContent: "center", marginRight: "6px", height: "70px", border: "#dddddd solid 1px"}}
+            >
+              <Row>
+                <Image src={newIcon} style={{width: "24px", marginBottom: "10px"}} />
+              </Row>
+              <Row>
+                创建用户
+              </Row>
+            </Col>
+            <Col style={{height: "60px"}}/>
+          </Row>
+          <hr/>
+        </Card.Body>
+      )
+    }
+
     return ( 
       <div className = "record-list">
         {/* 确认删除 */}
@@ -367,6 +519,7 @@ class WxArticle extends Component {
                         以后文章标题也会展示在小程序首页
                       </Form.Text>
                     </Form.Group>
+                    <hr/>
                     <Form.Group className="mb-3">
                       <Form.Label>文章链接</Form.Label>
                       <Form.Control 
@@ -380,14 +533,47 @@ class WxArticle extends Component {
                         必须是公司公众号的文章链接
                       </Form.Text>
                     </Form.Group>
+                    <hr/>
                     <Form.Group className="mb-3">
-                      <Form.Label>封面图片</Form.Label>
-                      <Form.Control 
-                        type="file" 
-                        name="thumb_file"
-                        onChange = {this.onArticleInputChange.bind(this)}
-                      />
-                      <Button onClick={() => this.uploadImg()}>上传</Button>
+                      <Row>
+                        <Col sm={8}>
+                          <Form.Label>封面图片</Form.Label>
+                          <Form.File 
+                            id="formcheck-api-custom" 
+                            custom
+                            style={{marginBottom: "12px"}}
+                          >
+                            <Form.File.Input 
+                              isValid={this.state.articleInput.thumb_file && !this.state.articleInput.isLargeFile}
+                              isInvalid={this.state.articleInput.isLargeFile}
+                              name="thumb_file" 
+                              style={{cursor: "pointer"}}
+                              onChange = {this.onArticleInputChange.bind(this)} 
+                            />
+                            <Form.File.Label data-browse="选择图片">
+                              {this.state.articleInput.thumb_file ? this.state.articleInput.thumb_file.name : "选择后预览效果"}
+                            </Form.File.Label>
+                            {!this.state.articleInput.thumb_file ? 
+                              <Form.Text className="text-muted">
+                                请选择大小在500KB以内的图片
+                              </Form.Text>
+                              : ""
+                            }
+                            <Form.Control.Feedback type='invalid'>文件不可超过500KB!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="valid">添加成功！点击「保存」来上传</Form.Control.Feedback>
+                          </Form.File>
+                        </Col>
+                        <Col sm={4}>
+                          {this.state.articleInput.preview_url ? 
+                            <Image 
+                              style={{maxWidth: "120px"}}
+                              src={this.state.articleInput.preview_url} 
+                              thumbnail 
+                            />
+                            : ""
+                          }
+                        </Col>
+                      </Row>
                     </Form.Group>
                   </Form>
                 </Col>
@@ -399,48 +585,17 @@ class WxArticle extends Component {
                       </Badge>
                     </h5>
                   </Row>
-                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
+                  <Card style={{backgroundColor: "#f0f0f0", fontSize: "14px", color: "#808080"}}>
                     <Card.Header className="text-center">乘驾无忧</Card.Header>
+                  </Card>
+                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
                     <Card.Img 
                       variant="top" 
-                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "400px"}}
-                      src={this.state.articleInput.thumb_url} 
+                      alt="选择封面以预览效果"
+                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "300px"}}
+                      src={this.state.articleInput.preview_url || this.state.articleInput.thumb_url} 
                     />
-                    <Card.Body
-                      style={{margin: "-220px 10px 10px 10px"}}
-                    >
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                        【车型】【车牌号】
-                      </Row>
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                        <Button 
-                          variant="warning" 
-                          style={{width: "100%"}}
-                        >
-                          查看保养记录
-                        </Button>
-                      </Row>
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
-                        近期养护提醒……
-                      </Row>
-
-                      <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>关</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>手</Col>
-                        <Col style={{backgroundColor: "#ffffff", height: "75px", border: "#dddddd solid 1px"}}>联</Col>
-                      </Row>
-                      <Row style={{marginTop: "6px", padding: "6px"}}>
-                        管理员操作
-                      </Row>
-                      <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>查</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>创</Col>
-                        <Col style={{height: "60px"}}/>
-                      </Row>
-                      <Row style={{marginTop: "6px", padding: "6px"}}>
-                        ……到底了
-                      </Row>
-                    </Card.Body>
+                    <PreviewContent/>
                   </Card>
                 </Col>
               </Row>
@@ -450,6 +605,7 @@ class WxArticle extends Component {
             <Button 
               variant="warning" 
               onClick={() => this.confirmUpdateArticleInLib()}
+              disabled={this.state.isLoading}
             >
               保存
             </Button>
@@ -487,6 +643,7 @@ class WxArticle extends Component {
                         以后文章标题也会展示在小程序首页
                       </Form.Text>
                     </Form.Group>
+                    <hr/>
                     <Form.Group className="mb-3">
                       <Form.Label>文章链接</Form.Label>
                       <Form.Control 
@@ -499,14 +656,47 @@ class WxArticle extends Component {
                         必须是公司公众号的文章链接
                       </Form.Text>
                     </Form.Group>
+                    <hr/>
                     <Form.Group className="mb-3">
-                      <Form.Label>封面图片</Form.Label>
-                      <Form.Control 
-                        type="file" 
-                        name="thumb_file"
-                        onChange = {this.onArticleInputChange.bind(this)}
-                      />
-                      <Button onClick={() => this.uploadImg()}>上传</Button>
+                      <Row>
+                        <Col sm={8}>
+                          <Form.Label>封面图片</Form.Label>
+                          <Form.File 
+                            id="formcheck-api-custom" 
+                            custom
+                            style={{marginBottom: "12px"}}
+                          >
+                            <Form.File.Input 
+                              isValid={this.state.articleInput.thumb_file && !this.state.articleInput.isLargeFile}
+                              isInvalid={this.state.articleInput.isLargeFile}
+                              name="thumb_file" 
+                              style={{cursor: "pointer"}}
+                              onChange = {this.onArticleInputChange.bind(this)} 
+                            />
+                            <Form.File.Label data-browse="选择图片">
+                              {this.state.articleInput.thumb_file ? this.state.articleInput.thumb_file.name : "选择后预览效果"}
+                            </Form.File.Label>
+                            {!this.state.articleInput.thumb_file ? 
+                              <Form.Text className="text-muted">
+                                请选择大小在500KB以内的图片
+                              </Form.Text>
+                              : ""
+                            }
+                            <Form.Control.Feedback type='invalid'>文件不可超过500KB!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="valid">添加成功！点击「保存」来上传</Form.Control.Feedback>
+                          </Form.File>
+                        </Col>
+                        <Col sm={4}>
+                          {this.state.articleInput.preview_url ? 
+                            <Image 
+                              style={{maxWidth: "120px"}}
+                              src={this.state.articleInput.preview_url} 
+                              thumbnail 
+                            />
+                            : ""
+                          }
+                        </Col>
+                      </Row>
                     </Form.Group>
                   </Form>
                 </Col>
@@ -518,48 +708,17 @@ class WxArticle extends Component {
                       </Badge>
                     </h5>
                   </Row>
-                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
+                  <Card style={{backgroundColor: "#f0f0f0", fontSize: "14px", color: "#808080"}}>
                     <Card.Header className="text-center">乘驾无忧</Card.Header>
+                  </Card>
+                  <Card style={{backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
                     <Card.Img 
                       variant="top" 
-                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "400px"}}
-                      src={this.state.articleInput.thumb_url} 
+                      alt="选择封面以预览效果"
+                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "300px"}}
+                      src={this.state.articleInput.preview_url} 
                     />
-                    <Card.Body
-                      style={{margin: "-220px 10px 10px 10px"}}
-                    >
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                        【车型】【车牌号】
-                      </Row>
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                        <Button 
-                          variant="warning" 
-                          style={{width: "100%"}}
-                        >
-                          查看保养记录
-                        </Button>
-                      </Row>
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
-                        近期养护提醒……
-                      </Row>
-
-                      <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>关</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>手</Col>
-                        <Col style={{backgroundColor: "#ffffff", height: "75px", border: "#dddddd solid 1px"}}>联</Col>
-                      </Row>
-                      <Row style={{marginTop: "6px", padding: "6px"}}>
-                        管理员操作
-                      </Row>
-                      <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>查</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>创</Col>
-                        <Col style={{height: "60px"}}/>
-                      </Row>
-                      <Row style={{marginTop: "6px", padding: "6px"}}>
-                        ……到底了
-                      </Row>
-                    </Card.Body>
+                    <PreviewContent/>
                   </Card>
                 </Col>
               </Row>
@@ -569,6 +728,7 @@ class WxArticle extends Component {
             <Button 
               variant="warning" 
               onClick={() => this.confirmCreateArticleInLib()}
+              disabled={this.state.isLoading}
             >
               保存
             </Button>
@@ -582,7 +742,6 @@ class WxArticle extends Component {
         <Modal
           show={this.state.isShowArticleDetail}
           onHide={() => this.showOrHideArticleDetail(false)}
-          backdrop="static"
           keyboard={false}
           size="lg"
           centered
@@ -627,18 +786,15 @@ class WxArticle extends Component {
                       <hr/>
                       <h5>
                         <Badge variant="primary">
-                          封面图链接
+                          封面图
                         </Badge>
                       </h5>
-                      <Card.Text>
-                        {this.state.selectedArticle.thumb_url? 
-                          this.state.selectedArticle.thumb_url.length > 40 ? 
-                            this.state.selectedArticle.thumb_url.slice(0, 39) + "..." 
-                            : this.state.selectedArticle.thumb_url
-                          : ""
-                        }
-                      </Card.Text>
-                      <Image style={{width: "80px"}} src={this.state.selectedArticle.thumb_url} thumbnail />
+                      <Image 
+                        style={{width: "80px", cursor: "pointer"}} 
+                        src={this.state.selectedArticle.thumb_url} 
+                        thumbnail 
+                        onClick={() => this.openCoverImg(this.state.selectedArticle.thumb_url)}
+                      />
                     </Card.Body>
                   </Card>
                 </Col>
@@ -650,48 +806,17 @@ class WxArticle extends Component {
                       </Badge>
                     </h5>
                   </Row>
-                  <Card style={{minWidth: "268px", backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
+                  <Card style={{minWidth: "268px", backgroundColor: "#f0f0f0", fontSize: "12px", color: "#808080"}}>
                     <Card.Header className="text-center">乘驾无忧</Card.Header>
+                  </Card>
+                  <Card style={{minWidth: "268px", backgroundColor: "#f0f0f0", maxHeight: "400px", overflow: "scroll", fontSize: "12px", color: "#808080"}}>
                     <Card.Img 
                       variant="top" 
-                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "400px"}}
+                      alt="选择封面以预览效果"
+                      style={{width: "100%", objectFit: "cover", objectPosition: "center top", height: "300px"}}
                       src={this.state.selectedArticle.thumb_url} 
                     />
-                    <Card.Body
-                      style={{margin: "-220px 10px 10px 10px"}}
-                    >
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                        【车型】【车牌号】
-                      </Row>
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px"}}>
-                        <Button 
-                          variant="warning" 
-                          style={{width: "100%"}}
-                        >
-                          查看保养记录
-                        </Button>
-                      </Row>
-                      <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px"}}>
-                        近期养护提醒……
-                      </Row>
-
-                      <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>关</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>手</Col>
-                        <Col style={{backgroundColor: "#ffffff", height: "75px", border: "#dddddd solid 1px"}}>联</Col>
-                      </Row>
-                      <Row style={{marginTop: "6px", padding: "6px"}}>
-                        管理员操作
-                      </Row>
-                      <Row style={{marginTop: "6px"}}>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>查</Col>
-                        <Col style={{backgroundColor: "#ffffff", marginRight: "6px", height: "75px", border: "#dddddd solid 1px"}}>创</Col>
-                        <Col style={{height: "60px"}}/>
-                      </Row>
-                      <Row style={{marginTop: "6px", padding: "6px"}}>
-                        ……到底了
-                      </Row>
-                    </Card.Body>
+                    <PreviewContent/>
                   </Card>
                 </Col>
               </Row>
