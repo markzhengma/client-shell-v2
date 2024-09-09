@@ -373,18 +373,19 @@ class WxArticle extends Component {
           style={{margin: "-120px 10px 10px 10px"}}
         >
           <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", borderRadius: "6px", border: "#dddddd solid 1px"}}>
-            用户信息
+            <div style={{margin: "6px"}}>宝马x3 【蒙E00355】</div>
           </Row>
           <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "18px 12px", borderRadius: "6px", border: "#dddddd solid 1px"}}>
             <Button 
               variant="warning" 
+              disabled
               style={{width: "100%"}}
             >
               查看保养记录
             </Button>
           </Row>
           <Row style={{marginTop: "6px", backgroundColor: "#ffffff", padding: "6px", border: "#dddddd solid 1px"}}>
-            近期养护提醒……
+            <div>【通知】近期养护提醒……</div>
           </Row>
 
           <Row style={{marginTop: "6px"}}>
@@ -580,7 +581,7 @@ class WxArticle extends Component {
                 <Col style={{maxWidth: "300px"}}>
                   <Row style={{position: 'fixed', zIndex: "2", padding: "6px 0 0 22px"}}>
                     <h5>
-                      <Badge variant="primary">
+                      <Badge variant="dark">
                         效果预览
                       </Badge>
                     </h5>
@@ -703,7 +704,7 @@ class WxArticle extends Component {
                 <Col style={{maxWidth: "300px"}}>
                   <Row style={{position: 'fixed', zIndex: "2", padding: "6px 0 0 22px"}}>
                     <h5>
-                      <Badge variant="primary">
+                      <Badge variant="dark">
                         效果预览
                       </Badge>
                     </h5>
@@ -757,22 +758,22 @@ class WxArticle extends Component {
                     <Card.Body>
                       <Card.Title>
                         <h5>
-                          <Badge variant="primary">
-                            标题
+                          <Badge variant="dark">
+                            文章标题
                           </Badge>
                         </h5>
                         {this.state.selectedArticle.title}
                       </Card.Title>
                       <hr/>
                       <h5>
-                        <Badge variant="primary">
+                        <Badge variant="dark">
                           公众号链接
                         </Badge>
                       </h5>
-                      <Card.Text>
+                      <Card.Text style={{color: "#808080"}}>
                         {this.state.selectedArticle.url? 
-                          this.state.selectedArticle.url.length > 40 ? 
-                            this.state.selectedArticle.url.slice(0, 39) + "..." 
+                          this.state.selectedArticle.url.length > 200 ? 
+                            this.state.selectedArticle.url.slice(0, 199) + "..." 
                             : this.state.selectedArticle.url
                           : ""
                         }
@@ -785,12 +786,12 @@ class WxArticle extends Component {
                       </Button>
                       <hr/>
                       <h5>
-                        <Badge variant="primary">
-                          封面图
+                        <Badge variant="dark">
+                          封面图片
                         </Badge>
                       </h5>
                       <Image 
-                        style={{width: "80px", cursor: "pointer"}} 
+                        style={{width: "140px", cursor: "pointer"}} 
                         src={this.state.selectedArticle.thumb_url} 
                         thumbnail 
                         onClick={() => this.openCoverImg(this.state.selectedArticle.thumb_url)}
@@ -801,7 +802,7 @@ class WxArticle extends Component {
                 <Col style={{maxWidth: "300px"}}>
                   <Row style={{position: 'fixed', zIndex: "2", padding: "6px 0 0 22px"}}>
                     <h5>
-                      <Badge variant="primary">
+                      <Badge variant="dark">
                         效果预览
                       </Badge>
                     </h5>
@@ -876,7 +877,12 @@ class WxArticle extends Component {
                           <Image style={{width: "80px", height: "110px", objectFit: "cover"}} src={item.thumb_url} thumbnail />
                         </Col>
                         <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center"}}>
-                          <h5>{item.title}</h5>
+                          <h5>
+                            {item.title.length > 30 ? 
+                              item.title.slice(0, 29) + "..." 
+                              : item.title
+                            }
+                          </h5>
                         </Col>
                       </Row>
                     </Col>
@@ -946,8 +952,22 @@ class WxArticle extends Component {
                         <Col md={2} style={{minWidth: '90px'}}>
                           <Image style={{width: "80px", height: "110px", objectFit: "cover" }} src={item.thumb_url} thumbnail />
                         </Col>
-                        <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center", color: "#808080"}}>
-                          <h5>{item.title}</h5>
+                        <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                          <div>
+                            <h5>
+                              { item.isDisplay ?
+                                <Badge variant='success'>已展示</Badge>
+                                : 
+                                <Badge variant='secondary'>未展示</Badge>
+                              }
+                            </h5>
+                          </div>
+                          <h5>
+                            {item.title.length > 30 ? 
+                              item.title.slice(0, 29) + "..." 
+                              : item.title
+                            }
+                          </h5>
                         </Col>
                       </Row>
                     </Col>
