@@ -28,7 +28,7 @@ class WxArticle extends Component {
   }
 
   async getAllArticleInLib() {
-    const domain = 'http://localhost:7001';
+    const domain = 'https://api.hulunbuirshell.com';
     const res = await axios.get(`${domain}/api/wxarticle/lib/all`);
 
     if(!res || res.status !== 200 || res.data.code !== 200) {
@@ -47,7 +47,7 @@ class WxArticle extends Component {
   };
 
   async getDisplayList() {
-    const res = await axios.get("http://localhost:7001/api/wxarticle/display/all");
+    const res = await axios.get("https://api.hulunbuirshell.com/api/wxarticle/display/all");
     if(!res || res.status !== 200 || res.data.code !== 200) {
       this.props.showAlert('出错了', JSON.stringify(res.data), false);
     } else {
@@ -102,7 +102,7 @@ class WxArticle extends Component {
       })
     })
     const res = await axios({
-      url: "http://localhost:7001/api/wxarticle/display/all",
+      url: "https://api.hulunbuirshell.com/api/wxarticle/display/all",
       method: "PUT",
       data: {
         article_list: articleList
@@ -122,7 +122,7 @@ class WxArticle extends Component {
   };
 
   async removeArticleFromDisplay(id) {
-    const res = await axios.delete(`http://localhost:7001/api/wxarticle/display/single/${id}`);
+    const res = await axios.delete(`https://api.hulunbuirshell.com/api/wxarticle/display/single/${id}`);
     
     if(!res || res.status !== 200 || res.data.code !== 200) {
       this.props.showAlert('出错了', JSON.stringify(res.data), false);
@@ -133,7 +133,7 @@ class WxArticle extends Component {
   };
 
   async removeArticleFromLib(id) {
-    const res = await axios.delete(`http://localhost:7001/api/wxarticle/lib/single/${id}`);
+    const res = await axios.delete(`https://api.hulunbuirshell.com/api/wxarticle/lib/single/${id}`);
     
     if(!res || res.status !== 200 || res.data.code !== 200) {
       this.props.showAlert('出错了', JSON.stringify(res.data), false);
@@ -145,7 +145,7 @@ class WxArticle extends Component {
   };
 
   async addArticleToDisplay(id) {
-    const res = await axios.post(`http://localhost:7001/api/wxarticle/display/single/${id}`);
+    const res = await axios.post(`https://api.hulunbuirshell.com/api/wxarticle/display/single/${id}`);
     
     if(!res || res.status !== 200 || res.data.code !== 200) {
       this.props.showAlert('出错了', JSON.stringify(res.data), false);
@@ -202,7 +202,7 @@ class WxArticle extends Component {
       });
   
       const res = await axios({
-        url: `http://localhost:7001/api/wxarticle/img/single?file_name=tmp_${new Date().getTime()}.png`,
+        url: `https://api.hulunbuirshell.com/api/wxarticle/img/single?file_name=tmp_${new Date().getTime()}.png`,
         method: "POST",
         data: formData,
         headers: {'Content-Type': 'multipart/form-data'}
@@ -260,7 +260,7 @@ class WxArticle extends Component {
           isLoading: true
         });
         const res = await axios({
-          url: "http://localhost:7001/api/wxarticle/lib/single",
+          url: "https://api.hulunbuirshell.com/api/wxarticle/lib/single",
           method: "POST",
           data: {
             title,
@@ -301,7 +301,7 @@ class WxArticle extends Component {
           isLoading: true
         });
         const res = await axios({
-          url: "http://localhost:7001/api/wxarticle/lib/single",
+          url: "https://api.hulunbuirshell.com/api/wxarticle/lib/single",
           method: "PUT",
           data: {
             article_id,
