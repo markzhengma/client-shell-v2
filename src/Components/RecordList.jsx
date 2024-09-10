@@ -219,7 +219,8 @@ class RecordList extends Component {
             this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             console.log(res.data.data);
           } else {
-            console.log(res)
+            // console.log(res)
+            this.props.showAlert("操作成功", "已删除", true);
             this.props.handleFindUserSubmit(e)
           }
         })

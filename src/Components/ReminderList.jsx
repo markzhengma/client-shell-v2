@@ -143,7 +143,7 @@ class ReminderList extends Component {
           } else {
             console.log(res)
             this.props.handleFindUserSubmit(e);
-            this.props.showAlert('出错了', '删除成功', false);
+            this.props.showAlert('操作成功', '已删除', true);
           }
         })
         .catch(err => {
