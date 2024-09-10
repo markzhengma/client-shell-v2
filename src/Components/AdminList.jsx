@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Button, Badge, Modal, Form, ListGroup, Col, Row, Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Card, Button, Badge, Modal, Form, ListGroup, Col, Row, Container, Image, Nav, Navbar, NavDropdown, Spinner } from 'react-bootstrap';
 
 class AdminList extends Component {
   constructor(props){
@@ -15,7 +15,8 @@ class AdminList extends Component {
       isShowDelAlert: false,
       adminDelId: '',
       adminDelName: '',
-      adminLocationChar: ''
+      adminLocationChar: '',
+      isLoading: false
     }
     this.updateAdminInfo = this.updateAdminInfo.bind(this);
     this.addNewAdmin = this.addNewAdmin.bind(this);
@@ -96,6 +97,9 @@ class AdminList extends Component {
       let adminInfo = this.state.adminwxInfoEditing;
 
       const domain = 'https://api.hulunbuirshell.com';
+      this.setState({
+        isLoading: true
+      });
       const res = await axios({
         url: `${domain}/api/admin/role/update`,
         method: 'PUT',
@@ -105,6 +109,9 @@ class AdminList extends Component {
           location: adminInfo.location,
           location_char: adminInfo.location_char
           }
+      });
+      this.setState({
+        isLoading: false
       });
       if(res.data.status !== 200) {
         console.log(res);
@@ -125,6 +132,9 @@ class AdminList extends Component {
       let adminInfo = this.state.newAdminInfoEditing;
 
       const domain = 'https://api.hulunbuirshell.com';
+      this.setState({
+        isLoading: true
+      });
       const res = await axios({
         url: `${domain}/api/admin/role/new`,
         method: 'PUT',
@@ -134,6 +144,9 @@ class AdminList extends Component {
           location: adminInfo.location,
           location_char: adminInfo.location_char
         }
+      });
+      this.setState({
+        isLoading: false
       });
 
       if(res.data.status !== 200) {
@@ -158,12 +171,18 @@ class AdminList extends Component {
 
   async removeAdmin(id, adminName) {
     const domain = 'https://api.hulunbuirshell.com';
+    this.setState({
+      isLoading: true
+    });
     const res = await axios({
       url: `${domain}/api/admin/role/del`,
       method: "PUT",
       data: {
         unionid: id
       }
+    });
+    this.setState({
+      isLoading: false
     });
 
     if(res.data.status !== 200) {
@@ -457,8 +476,10 @@ class AdminList extends Component {
             <Button 
               onClick={() => this.removeAdmin(this.state.adminDelId, this.state.adminDelName)}
               variant="danger"
+              disabled={this.state.isLoading}
             >
-              确认
+              确认 
+              {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
             </Button>
             <Button 
               onClick={() => this.showDelAlert(false)}
@@ -575,10 +596,11 @@ class AdminList extends Component {
                         <Button 
                           variant='warning' 
                           style={{width: "100%"}}
-                          disabled = {!this.state.newAdminInfoEditing.is_admin ? false : true}
+                          disabled = {this.state.newAdminInfoEditing.is_admin || this.state.isLoading}
                           onClick={this.addNewAdmin}
                         >
                           确认
+                          {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
                         </Button>
                       </Form>
                     </Col>
@@ -650,7 +672,14 @@ class AdminList extends Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='success' onClick={this.updateAdminInfo}>确认</Button>
+            <Button 
+              variant='success' 
+              onClick={this.updateAdminInfo} 
+              disabled={this.state.isLoading}
+            >
+              确认 
+              {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+            </Button>
             <Button variant='secondary' onClick={() => this.selectAdminToEdit(false)}>取消</Button>
           </Modal.Footer>
         </Modal>

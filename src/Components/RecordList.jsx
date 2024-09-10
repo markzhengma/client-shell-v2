@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Table, Form, Row, Col, Button } from 'react-bootstrap';
+import { Table, Form, Row, Col, Button, Spinner } from 'react-bootstrap';
 
 class RecordList extends Component {
   constructor(props){
@@ -30,7 +30,8 @@ class RecordList extends Component {
       selectUpdateId: '',
       currDate: '',
       randomKey: 0,
-      isShowRecordList: true
+      isShowRecordList: true,
+      isLoading: false
     }
   };
 
@@ -159,9 +160,16 @@ class RecordList extends Component {
         }
       });
 
+      this.setState({
+        isLoading: true
+      });
+
       axios.all([newRecordRequest, newReminderRequest])
         .then(res => {
-          console.log(res)
+          // console.log(res);
+          this.setState({
+            isLoading: false
+          });
           if(res[0].data.code !== 200){
             this.props.showAlert('出错了', '保养记录创建失败' + res[0].data.code + '\n' + JSON.stringify(res[0].data.data), false);
             console.log(res[0].data.data);
@@ -187,6 +195,9 @@ class RecordList extends Component {
           }
         })
         .catch(err => {
+          this.setState({
+            isLoading: false
+          });
           this.props.showAlert('出错了', err, false);
           console.log(err);
         })
@@ -196,8 +207,14 @@ class RecordList extends Component {
   handleDeleteRecord(e, id){
     let confirmed = window.confirm('亲，您确认删除这条保养记录吗？')
     if(confirmed){
+      this.setState({
+        isLoading: true
+      });
       axios.delete(`https://api.hulunbuirshell.com/api/record/single/${id}`)
         .then(res => {
+          this.setState({
+            isLoading: false
+          });
           if(res.data.code !== 200){
             this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             console.log(res.data.data);
@@ -207,6 +224,9 @@ class RecordList extends Component {
           }
         })
         .catch(err => {
+          this.setState({
+            isLoading: false
+          });
           this.props.showAlert('出错了', err, false);
           console.log(err);
         })
@@ -230,18 +250,27 @@ class RecordList extends Component {
 
   confirmUpdateRecord(e){
     e.preventDefault();
+    this.setState({
+      isLoading: true
+    });
     axios({
       url: `https://api.hulunbuirshell.com/api/record/single/${this.state.selectUpdateId}`,
       method: 'PUT',
       data: this.state.updateRecord
     })
       .then(res => {
+        this.setState({
+          isLoading: false
+        });
         if(res.data.code === 200){
           this.resetUpdateRecord();
           this.props.handleFindUserSubmit(e);
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false
+        });
         console.log(err)
       })
   };
@@ -437,7 +466,15 @@ class RecordList extends Component {
               </Col>
               <Col style = {{ minWidth: '160px' }}>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
-                <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
+                <Button 
+                  variant="success" 
+                  style = {{ margin: '5px' }} 
+                  type = "submit"
+                  disabled = {this.state.isLoading}
+                >
+                  保存
+                  {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+                </Button>
                 <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>
               </Col>
             </Row>
@@ -502,7 +539,14 @@ class RecordList extends Component {
                         <td className = "record-list-column">{record.detail}</td>
                         <td className = "record-list-column">
                           <Button variant = "primary" onClick = {(e) => this.selectUpdateRecord(record)}>编辑</Button>
-                          <Button variant = "danger" onClick = {(e) => this.handleDeleteRecord(e, record._id)}>删除</Button>
+                          <Button 
+                            variant = "danger" 
+                            onClick = {(e) => this.handleDeleteRecord(e, record._id)}
+                            disabled = {this.state.isLoading}
+                          >
+                            删除
+                            {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+                          </Button>
                         </td>
                       </tr>
                     :
@@ -619,7 +663,14 @@ class RecordList extends Component {
                         </select>
                       </td>
                       <td className = "record-list-column"><input defaultValue = {record.detail} name = "detail" onChange = {this.handleUpdateRecordChange.bind(this)}/></td>                      <td className = "record-list-column">
-                        <Button variant = "success" onClick = {(e) => this.confirmUpdateRecord(e)}>保存</Button>
+                        <Button 
+                          variant = "success" 
+                          onClick = {(e) => this.confirmUpdateRecord(e)}
+                          disabled = {this.state.isLoading}
+                        >
+                          保存
+                          {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+                        </Button>
                         <Button variant = "warning" onClick = {this.resetUpdateRecord.bind(this)}>取消</Button>
                       </td>
                     </tr>

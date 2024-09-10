@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Button, ButtonGroup, Badge, Modal, Form, InputGroup, ListGroup, Col, Row, Container, Image, Nav, Navbar } from 'react-bootstrap';
+import { Card, Button, ButtonGroup, Badge, Modal, Form, Spinner, ListGroup, Col, Row, Container, Image, Nav, Navbar } from 'react-bootstrap';
 
 class WxArticle extends Component {
   constructor(props) {
@@ -609,6 +609,7 @@ class WxArticle extends Component {
               disabled={this.state.isLoading}
             >
               保存
+              {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
             </Button>
             <Button variant="secondary" onClick={() => this.showOrHideArticleEdit(false)}>
               取消
@@ -732,6 +733,7 @@ class WxArticle extends Component {
               disabled={this.state.isLoading}
             >
               保存
+              {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
             </Button>
             <Button variant="secondary" onClick={() => this.showOrHideArticleNew(false)}>
               取消
@@ -836,6 +838,16 @@ class WxArticle extends Component {
             <Navbar.Brand>
               <h3 style={{margin: "0"}}>小程序展示管理</h3>
             </Navbar.Brand>
+            <Nav>
+              <Nav.Item>
+              <Button 
+                  variant="warning"
+                  onClick={() => this.showOrHideArticleNew(true)}
+                >
+                  添加新文章
+                </Button>
+              </Nav.Item>
+            </Nav>
           </Container>
         </Navbar>
         
@@ -846,20 +858,23 @@ class WxArticle extends Component {
             <Navbar.Brand>
               <h4 style={{margin: "10px 0"}}>展示文章</h4>
             </Navbar.Brand>
-            {this.state.isOrderChanged ? 
-              <Nav>
-                <Nav.Item>
-                  <Button 
-                    variant="warning"
-                    disabled={!this.state.isOrderChanged}
-                    onClick={() => this.updateDisplayOrder()}
-                  >
-                    确认修改顺序
-                  </Button>
-                </Nav.Item>
-              </Nav>
-              : ""
-            }
+            <Nav>
+              <Nav.Item>
+              {this.state.isOrderChanged ? 
+                <Button 
+                  variant="success"
+                  disabled={!this.state.isOrderChanged}
+                  onClick={() => this.updateDisplayOrder()}
+                >
+                  确认修改顺序
+                </Button>
+                : 
+                <Nav.Link disabled>
+                  修改展示顺序后，点击「确认」按钮
+                </Nav.Link>
+              }
+              </Nav.Item>
+            </Nav>
           </Container>
         </Navbar>
         {this.state.wxArticleDisplayList.length !== 0 ?
@@ -874,7 +889,7 @@ class WxArticle extends Component {
                     >
                       <Row>
                         <Col md={2} style={{minWidth: '90px'}}>
-                          <Image style={{width: "80px", height: "110px", objectFit: "cover"}} src={item.thumb_url} thumbnail />
+                          <Image style={{width: "80px", height: "110px", objectFit: "cover", objectPosition: "center top"}} src={item.thumb_url} thumbnail />
                         </Col>
                         <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", alignItems: "center"}}>
                           <h5>
@@ -935,6 +950,11 @@ class WxArticle extends Component {
                   添加新文章
                 </Button>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link disabled>
+                  添加到文章库后，点击「展示」即可展示在小程序首页
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Container>
         </Navbar>
@@ -950,13 +970,13 @@ class WxArticle extends Component {
                     >
                       <Row>
                         <Col md={2} style={{minWidth: '90px'}}>
-                          <Image style={{width: "80px", height: "110px", objectFit: "cover" }} src={item.thumb_url} thumbnail />
+                          <Image style={{width: "80px", height: "110px", objectFit: "cover", objectPosition: "center top" }} src={item.thumb_url} thumbnail />
                         </Col>
                         <Col style={{minWidth: "220px", borderLeft: "#dddddd solid 1px", display: "flex", flexDirection: "column", justifyContent: "center"}}>
                           <div>
                             <h5>
                               { item.isDisplay ?
-                                <Badge variant='success'>已展示</Badge>
+                                <Badge variant='warning'>已展示</Badge>
                                 : 
                                 <Badge variant='secondary'>未展示</Badge>
                               }
@@ -1002,6 +1022,7 @@ class WxArticle extends Component {
           </ListGroup>
           : "文章库里没有内容，请先添加文章"
         }
+        <hr/>
       </div>
     );
   }

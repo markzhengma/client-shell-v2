@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import UserSingle from './UserSingle';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Button, Card, Spinner } from 'react-bootstrap';
 
 class NewUser extends Component {
   constructor(props){
@@ -15,7 +15,8 @@ class NewUser extends Component {
       record_num: '',
       phone: '',
       plate: '',
-      make: ''
+      make: '',
+      isFetching: false
     }
   };
 
@@ -74,6 +75,9 @@ class NewUser extends Component {
           \n车牌号：${this.state.plate}`
         );
       if(confirmed){
+        this.setState({
+          isFetching: true
+        });
         axios({
           url: `https://api.hulunbuirshell.com/api/user/single${this.state.isManual ? '' : '/' + this.state.location_char}`,
           method: 'POST',
@@ -86,6 +90,9 @@ class NewUser extends Component {
           }
         })
           .then(res => {
+            this.setState({
+              isFetching: false
+            });
             if(res.data.code !== 200){
               if(res.data.code === 404) {
                 console.log(res.data);
@@ -104,6 +111,9 @@ class NewUser extends Component {
             }
           })
           .catch(err => {
+            this.setState({
+              isFetching: false
+            });
             this.props.showAlert('出错了', err, false);
           })
       }
@@ -171,7 +181,15 @@ class NewUser extends Component {
             车型：
           </Form.Label>
           <Form.Control type = "text" name = "make" onChange = {this.handleChange.bind(this)} value = {this.state.make}></Form.Control>
-          <Button className = "admin-btn" variant = "info" onClick = {this.handleNewUserSubmit.bind(this)}>创建</Button>
+          <Button 
+            className = "admin-btn" 
+            variant = "info" 
+            onClick = {this.handleNewUserSubmit.bind(this)}
+            disabled = {this.state.isFetching}
+          >
+            创建
+            {this.state.isFetching ? <Spinner animation="border" size="sm" /> : ""}
+          </Button>
         </Form>
         }
         

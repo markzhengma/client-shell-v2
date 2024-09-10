@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Row, Col, Button, Card, Badge } from 'react-bootstrap';
+import { Form, Row, Col, Button, Card, Badge, Spinner } from 'react-bootstrap';
 
 class ReminderList extends Component {
   constructor(props){
@@ -17,7 +17,8 @@ class ReminderList extends Component {
       },
       selectUpdateId: '',
       randomKey: 0,
-      isShowReminderList: true
+      isShowReminderList: true,
+      isLoading: false
     }
   };
 
@@ -81,6 +82,9 @@ class ReminderList extends Component {
       let confirmed = window.confirm(`亲，您确定要为换油证号${this.props.record_num}的客户创建保养提醒嘛？`);
       if (confirmed) {
         const record_num = this.props.record_num;
+        this.setState({
+          isLoading: true
+        });
         axios({
           url: `https://api.hulunbuirshell.com/api/reminder/user/${record_num}`,
           method: 'POST',
@@ -90,6 +94,9 @@ class ReminderList extends Component {
           }
         })
           .then(res => {
+            this.setState({
+              isLoading: false
+            });
             if(res.data.code !== 200 ){
               if(res.data.code === 401) {
                 this.props.showAlert('出错了', `未找到换油证号为${record_num}的用户`, false);
@@ -109,6 +116,9 @@ class ReminderList extends Component {
             }
           })
           .catch(err => {
+            this.setState({
+              isLoading: false
+            });
             this.props.showAlert('出错了', err, false);
             console.log(err);
           })
@@ -119,8 +129,14 @@ class ReminderList extends Component {
   handleDeleteReminder(e, id){
     let confirmed = window.confirm('亲，您确认删除这条提醒记录吗？')
     if(confirmed){
+      this.setState({
+        isLoading: true
+      });
       axios.delete(`https://api.hulunbuirshell.com/api/reminder/single/${id}`)
         .then(res => {
+          this.setState({
+            isLoading: false
+          });
           if(res.data.code !== 200){
             this.props.showAlert('出错了', res.data.code + '\n' + JSON.stringify(res.data.data), false);
             console.log(res.data.data);
@@ -131,6 +147,9 @@ class ReminderList extends Component {
           }
         })
         .catch(err => {
+          this.setState({
+            isLoading: false
+          });
           this.props.showAlert('出错了', err, false);
           console.log(err);
         })
@@ -149,18 +168,27 @@ class ReminderList extends Component {
 
   confirmUpdateReminder(e){
     e.preventDefault();
+    this.setState({
+      isLoading: true
+    });
     axios({
       url: `https://api.hulunbuirshell.com/api/reminder/single/${this.state.selectUpdateId}`,
       method: 'PUT',
       data: this.state.updateReminder
     })
       .then(res => {
+        this.setState({
+          isLoading: false
+        });
         if(res.data.code === 200){
           this.resetUpdateReminder();
           this.props.handleFindUserSubmit(e);
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false
+        });
         console.log(err)
       })
   };
@@ -239,8 +267,10 @@ class ReminderList extends Component {
                         <Button
                           variant="danger"
                           onClick={(e) => this.handleDeleteReminder(e, reminder.reminder_id)}
+                          disabled = {this.state.isLoading}
                         >
                           删除
+                          {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
                         </Button>
                       </Card.Body>
                     </Card>
@@ -307,7 +337,14 @@ class ReminderList extends Component {
               </Col>
               <Col>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
-                <Button variant="success" style = {{ margin: '5px' }} type = "submit">保存</Button>
+                <Button 
+                  variant="success" 
+                  style = {{ margin: '5px' }} 
+                  type = "submit"
+                >
+                  保存
+                  {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+                </Button>
                 <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewReminderForm.bind(this)}>重置</Button>
               </Col>
             </Row>
