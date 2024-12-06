@@ -12,6 +12,10 @@ class ManageData extends Component {
   };
 
   componentDidMount() {
+    if(!this.props.adminwx.super_admin) {
+      this.props.changeAction('recent_record');
+    };
+
     this.setState({
       dataPage: 'gift'
     })

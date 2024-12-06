@@ -29,8 +29,8 @@ class Admin extends Component {
       this.getOperatorData();
       this.getProductData();
       this.setState({
-        action: 'recent_record'
-      })
+        action: window.localStorage.getItem('action')
+      });
     }
   };
 
@@ -158,6 +158,7 @@ class Admin extends Component {
   };
 
   changeAction(action) {
+    window.localStorage.setItem('action', action)
     this.setState({
       action: action
     })
@@ -223,8 +224,11 @@ class Admin extends Component {
             selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
         : '' }
-        { this.state.action === 'manage_data' ? 
+        { this.state.action === 'manage_data' ?
           <ManageData 
+            adminwx = {this.props.adminwx}
+            changeAction = {this.changeAction.bind(this)}
+            
             showAlert = {this.props.showAlert}
 
             getGiftData = {this.getGiftData.bind(this)}
