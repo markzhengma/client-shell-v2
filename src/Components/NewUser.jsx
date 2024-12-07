@@ -183,7 +183,7 @@ class NewUser extends Component {
           <Form.Control type = "text" name = "make" onChange = {this.handleChange.bind(this)} value = {this.state.make}></Form.Control>
           <Button 
             className = "admin-btn" 
-            variant = "info" 
+            variant = "success" 
             onClick = {this.handleNewUserSubmit.bind(this)}
             disabled = {this.state.isFetching}
           >

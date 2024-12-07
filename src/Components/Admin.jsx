@@ -29,7 +29,9 @@ class Admin extends Component {
       this.getOperatorData();
       this.getProductData();
       this.setState({
-        action: window.localStorage.getItem('action')
+        action: window.localStorage.getItem('action') ?
+          window.localStorage.getItem('action')
+          : "recent_record"
       });
     }
   };
@@ -158,10 +160,10 @@ class Admin extends Component {
   };
 
   changeAction(action) {
-    window.localStorage.setItem('action', action)
+    window.localStorage.setItem('action', action);
     this.setState({
       action: action
-    })
+    });
   };
 
   selectFindUserValue(filter, value){
@@ -176,7 +178,7 @@ class Admin extends Component {
       <div className = "admin">
         <div className = "nav-bar">
           <div className="nav-btn-group">
-            <div className="nav-btn" onClick = {() => this.changeAction('find_user')}>查找用户</div>
+            <div className="nav-btn" onClick = {() => this.changeAction('find_user')}>查询用户记录</div>
             <div className="nav-btn" onClick = {() => this.changeAction('new_user')}>创建用户</div>
             <div className="nav-btn" onClick = {() => this.changeAction('recent_record')}>浏览记录</div>
             <div className="nav-btn" onClick = {() => this.changeAction('recent_user')}>浏览用户</div>

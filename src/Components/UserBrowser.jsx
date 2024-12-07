@@ -20,7 +20,7 @@ class UserBrowser extends Component {
     const data = this.props.userListData;
     return (
       <div className = "record-list">
-        <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
+        <Table striped bordered hover style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
           <thead>
             <tr>
               <th>换油证号</th>

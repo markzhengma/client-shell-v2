@@ -43,7 +43,12 @@ class UserUpdate extends Component {
 
   render() {
     return (
-      <Form onSubmit = {(e) => this.props.confirmUserUpdate(e)}>
+      <Form 
+        onSubmit = {(e) => this.props.confirmUserUpdate(e)}
+        style = {{
+          padding: "10px"
+        }}
+      >
         <Form.Group>
         <Form.Label>车主姓名</Form.Label>
           <Form.Control name = "user_name" defaultValue = {this.props.userData.user_name} onChange = {this.props.handleUserUpdateChange.bind(this)} />

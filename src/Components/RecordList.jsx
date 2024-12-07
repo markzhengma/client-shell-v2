@@ -485,7 +485,7 @@ class RecordList extends Component {
           <div>
           <h5>
             保养记录历史  
-            {
+            {/* {
               this.state.isShowRecordList 
               ? <Button
                   variant="dark"
@@ -499,7 +499,7 @@ class RecordList extends Component {
                 >
                   展开
                 </Button>
-            }
+            } */}
           </h5>
           <div
             className="record-list-table-wrapper"
@@ -514,7 +514,7 @@ class RecordList extends Component {
               striped 
               bordered 
               hover 
-              style = {{ backgroundColor: 'grey', color: 'white' }}
+              style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
             >
               <thead>
                 <tr>

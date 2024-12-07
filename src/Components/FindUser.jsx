@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Form, Button, ButtonGroup, Spinner } from 'react-bootstrap'; 
+import { Card, Form, Button, ButtonGroup, Spinner, Row, Col, Nav } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
@@ -28,33 +28,45 @@ class FindUser extends Component {
         union_id: ''
       },
       isFetching: false,
+      currentTab: 'record'
     }
   };
 
   componentDidMount(){
+    let receivedFilterAndValue = this.props.selectedFilter !== "" && this.props.selectedValue !== "";
+    let findUserInput = JSON.parse(window.localStorage.getItem('find_user_input')) || {filter: "plate", value: ""};
     this.setState({
-      filter: this.props.selectedFilter === '' ? 'plate' : this.props.selectedFilter,
-      value: this.props.selectedValue
+      filter: !receivedFilterAndValue ? findUserInput.filter : this.props.selectedFilter,
+      value: !receivedFilterAndValue ? findUserInput.value : this.props.selectedValue
+    }, () => {
+      if(receivedFilterAndValue) {
+        this.findUser();
+      } else {
+        let findUserRecord = JSON.parse(window.localStorage.getItem('find_user_record')) || {recordNum: "", hasReturn: false};
+        if(findUserRecord.hasReturn) {
+          this.findUserRecords(findUserRecord.recordNum);
+        };
+      }
+      switch(this.props.selectedFilter) {
+        case 'record_num':
+          this.setState({
+            placeholder: '请输入换油证号',
+          });
+          break;
+        case 'phone':
+          this.setState({
+            placeholder: '请输入手机号',
+          });
+          break;
+        case 'plate':
+          this.setState({
+            placeholder: '请输入车牌号',
+          });
+          break;
+        default:
+          break;
+      };
     });
-    switch(this.props.selectedFilter) {
-      case 'record_num':
-        this.setState({
-          placeholder: '请输入换油证号',
-        });
-        break;
-      case 'phone':
-        this.setState({
-          placeholder: '请输入手机号',
-        });
-        break;
-      case 'plate':
-        this.setState({
-          placeholder: '请输入车牌号',
-        });
-        break;
-      default:
-        break;
-    }
   }
 
   handleChange(e) {
@@ -110,6 +122,9 @@ class FindUser extends Component {
       recordListData: '',
       reminderListData: '',
       userListData: ''
+    }, () => {
+      window.localStorage.removeItem('find_user_input');
+      window.localStorage.removeItem('find_user_record');
     })
   };
 
@@ -251,45 +266,55 @@ class FindUser extends Component {
       this.setState({
         isFetching: true,
       });
-      axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
-        .then(userList => {
-          this.setState({
-            isFetching: false,
-          });
-          if(userList.data.code !== 200) {
-            if(userList.data.code === 401) {
-              this.props.showAlert('出错了', '未找到用户~', false);
-            } else {
-              this.props.showAlert('出错了', userList.data.code + '\n' + JSON.stringify(userList.data.data), false);
-            }
-          } else {
-            if(userList.data.data.length === 0){
-              this.props.showAlert('出错了', '未找到用户', false);
-            } else if(userList.data.data.length > 1){
-              this.setState({
-                userData: '',
-                recordListData: '',
-                reminderListData: '',
-                userListData: userList.data.data
-              });
-            } else {
-              this.setState({
-                userListData: ''
-              })
-              this.findUserRecords(userList.data.data[0].record_num);
-            }
-          }
-        })
-        .catch(err => {
-          this.setState({
-            isFetching: false,
-          });
-          console.log(err);
-        })
+      this.findUser();
     }
   }
 
+  findUser(){
+    window.localStorage.setItem('find_user_input', JSON.stringify({filter: this.state.filter, value: this.state.value}));
+    window.localStorage.removeItem('find_user_record');
+    // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: false}));
+    axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
+      .then(userList => {
+        this.setState({
+          isFetching: false,
+        });
+        if(userList.data.code !== 200) {
+          if(userList.data.code === 401) {
+            this.props.showAlert('出错了', '未找到用户~', false);
+          } else {
+            this.props.showAlert('出错了', userList.data.code + '\n' + JSON.stringify(userList.data.data), false);
+          }
+        } else {
+          if(userList.data.data.length === 0){
+            this.props.showAlert('出错了', '未找到用户', false);
+          } else if(userList.data.data.length > 1){
+            // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: true}));
+            this.setState({
+              userData: '',
+              recordListData: '',
+              reminderListData: '',
+              userListData: userList.data.data
+            });
+          } else {
+            // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: true}));
+            this.setState({
+              userListData: ''
+            })
+            this.findUserRecords(userList.data.data[0].record_num);
+          }
+        }
+      })
+      .catch(err => {
+        this.setState({
+          isFetching: false,
+        });
+        console.log(err);
+      })
+  }
+
   findUserRecords(record_num) {
+    window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: false}));
     axios.get(`https://api.hulunbuirshell.com/api/user/single?filter=record_num&value=${record_num}`)
       .then(user => {
         if(user.data.code !== 200){
@@ -305,6 +330,7 @@ class FindUser extends Component {
                 this.props.showAlert('出错了', records.data, false);
                 console.log(records.data)
               } else {
+                window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: true}));
                 this.setState({
                   recordListData: records.data.data
                 });
@@ -340,41 +366,60 @@ class FindUser extends Component {
     })
   }
 
+  changeTab (tab) {
+    this.setState({
+      currentTab: tab
+    })
+  }
+
   render() {
     return (
       <div>
-        <h3 style = {{ margin: '20px' }}>查找用户</h3>
-        <Form className = "search-form" onSubmit = {this.handleFindUserSubmit.bind(this)}>
-          <Form.Group>
-            <Form.Label>查询条件</Form.Label>
-            <Form.Control as="select" name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
-              <option value = "plate">按车牌号查找</option>
-              <option value = "record_num">按换油证号查找</option>
-              <option value = "phone">按手机号查找</option>
-            </Form.Control>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>查询内容</Form.Label>
-            <Form.Control 
-              type = "text" 
-              name = "value" 
-              value = {this.state.value} 
-              onChange = {this.handleChange.bind(this)} 
-              placeholder = {this.state.placeholder} 
-            />
-          </Form.Group>
-          <Button variant="success" type = "submit" disabled = {this.state.isFetching}>
-            {this.state.isFetching ? 
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
+        <h3 style = {{ margin: '20px' }}>查询用户记录</h3>
+        <Form 
+          onSubmit = {this.handleFindUserSubmit.bind(this)}
+          style = {{ padding: "20px" }}
+        >
+          <Form.Row>
+            <Col xs="auto">
+              <Form.Control as="select" name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
+                <option value = "plate">按车牌号查找</option>
+                <option value = "record_num">按换油证号查找</option>
+                <option value = "phone">按手机号查找</option>
+              </Form.Control>
+            </Col>
+            <Col xs="auto">
+              <Form.Control 
+                type = "text" 
+                name = "value" 
+                value = {this.state.value} 
+                onChange = {this.handleChange.bind(this)} 
+                placeholder = {this.state.placeholder} 
               />
-            : ''}
-            查找
-          </Button>
+            </Col>
+            <Col xs="auto">
+              <Button variant="success" type = "submit" disabled = {this.state.isFetching}>
+              {this.state.isFetching ? 
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                : ''}
+                查找
+              </Button>
+              <Button 
+                variant = "warning" 
+                disabled = {this.state.isFetching}
+                onClick = {this.resetStates.bind(this)}
+                style = {{ marginLeft: "10px" }}
+              >
+                清空查询
+              </Button>
+            </Col>
+          </Form.Row>
         </Form>
         {this.state.userListData !== '' ? 
           <div className="user-list-scroller">
@@ -396,45 +441,115 @@ class FindUser extends Component {
             </div>
           </div>
         : ""}
-        {this.state.userData !== '' ? this.state.isUserUpdating ? 
-          <Card bg="secondary" text="white" border="light" className = "user-form">
-            <UserUpdate 
-              userData = {this.state.userData} 
-              cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
-              confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
-              handleUserUpdateChange = {this.handleUserUpdateChange.bind(this)}
-            />
-          </Card>
-        :
-          <div>
-            <Card bg="secondary" text="white" border="light" className = "user-single">
-              <UserSingle userData = {this.state.userData}/>
-              <ButtonGroup style = {{ margin: '10px' }}>
-                <Button variant="primary" onClick = {this.selectUserUpdate.bind(this)}>编辑客户信息</Button>
-                <Button variant="danger" onClick = {this.confirmUserDelete.bind(this)}>删除客户信息</Button>
-              </ButtonGroup>
-            </Card>
-          </div>
-        : ""}
-        {this.state.userData !== '' ? 
-          <RecordList 
-            productData = {this.props.productData}
-            giftData = {this.props.giftData}
-            operatorData = {this.props.operatorData}
-            recordListData = {this.state.recordListData}
-            record_num = {this.state.userData.record_num}
-            handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
-            showAlert = {this.props.showAlert}
-          />
-        : ""}
-        {this.state.userData !== '' ? 
-          <ReminderList 
-            reminderListData = {this.state.reminderListData}
-            record_num = {this.state.userData.record_num}
-            handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
-            showAlert = {this.props.showAlert}
-          />
-        : ""}
+        <br/>
+        <Row
+          style={{
+            margin: "20px 0 0 0",
+            padding: "5px"
+          }}
+        >
+          <Col sm={3}>
+            {this.state.userData !== '' ? this.state.isUserUpdating ? 
+              <div>
+                <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
+                  编辑客户信息
+                </div>
+                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6"}}>
+                  <UserUpdate 
+                    userData = {this.state.userData} 
+                    cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
+                    confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
+                    handleUserUpdateChange = {this.handleUserUpdateChange.bind(this)}
+                  />
+                </Card>
+              </div>
+            :
+              <div>
+                <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
+                  客户信息
+                </div>
+                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6"}}>
+                  <UserSingle userData = {this.state.userData}/>
+                  <Button 
+                    variant="primary" 
+                    onClick = {this.selectUserUpdate.bind(this)}
+                    style = {{
+                      margin: "6px 10px 0 10px"
+                    }}
+                  >
+                    编辑客户信息
+                  </Button>
+                  <Button 
+                    variant="danger" 
+                    onClick = {this.confirmUserDelete.bind(this)}
+                    style = {{
+                      margin: "10px"
+                    }}
+                  >
+                    删除客户信息
+                  </Button>
+                </Card>
+              </div>
+            : ""}
+          </Col>
+          {this.state.userData !== '' ?
+            <Col sm = {9}>
+              <Nav 
+                variant="tabs" 
+                defaultActiveKey="record" 
+                onSelect={(selectedKey) => this.changeTab(selectedKey)}
+              >
+                <Nav.Item>
+                  <Nav.Link 
+                    as="div"
+                    eventKey="record"
+                    disabled = {this.state.userData === ""}
+                    style={{
+                      cursor: "pointer",
+                      color: "#495057"
+                    }}
+                  >
+                    保养记录
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link 
+                    as="div"
+                    eventKey="reminder"
+                    disabled = {this.state.userData === ""}
+                    style={{
+                      cursor: "pointer",
+                      color: "#495057"
+                    }}
+                  >
+                    保养提醒
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+              <div style={{maxHeight: "Calc(100vh - 340px)", overflow: "scroll", padding: "0 6px", border: "1px solid #dee2e6", borderTop: "none"}}>
+                {this.state.currentTab === 'record' ?
+                  <RecordList 
+                    productData = {this.props.productData}
+                    giftData = {this.props.giftData}
+                    operatorData = {this.props.operatorData}
+                    recordListData = {this.state.recordListData}
+                    record_num = {this.state.userData.record_num}
+                    handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
+                    showAlert = {this.props.showAlert}
+                  />
+                : ""}
+                {this.state.currentTab === 'reminder' ?
+                  <ReminderList 
+                    reminderListData = {this.state.reminderListData}
+                    record_num = {this.state.userData.record_num}
+                    handleFindUserSubmit = {this.handleFindUserSubmit.bind(this)}
+                    showAlert = {this.props.showAlert}
+                  />
+                : ""}
+              </div>
+            </Col>
+          : ""}
+        </Row>
       </div>
     )
   }

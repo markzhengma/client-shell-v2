@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Form, Pagination, Spinner } from 'react-bootstrap';
+import { Button, Form, Pagination, Spinner, Row, Col } from 'react-bootstrap';
 import { CSVLink } from 'react-csv';
 
 import UserBrowser from './UserBrowser';
@@ -105,68 +105,59 @@ class RecentUser extends Component {
     ];
     return (
       <div>
-        <div className = "record-search-box">
+        <div style = {{padding: "20px"}}>
           <h3>浏览近期用户</h3>
-          <Form.Group>
-            <Form.Label>门店</Form.Label>
-            <Form.Control as = "select" name = "location_char" defaultValue = "" onChange = {this.handleChange.bind(this)}>
-              <option value = "" disabled>【请选择】</option>
-              <option value = "HD">海拉尔河东</option>
-              <option value = "HX">海拉尔河西</option>
-              <option value = "MA">满洲里</option>
-              <option value = "MB">满洲里二店</option>
-              <option value = "YA">牙克石</option>
-              <option value = "YB">牙克石二店</option>
-            </Form.Control>
-          </Form.Group>
-          <div className="search-btn-group">
-            <Button variant = "success" style = {{ margin: '10px', display: 'block' }} onClick = {() => this.findUserList(this.state.location_char, 1, 20)}>
-              {this.state.isFetching ? 
-                <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-                />
+          <Row>
+            <Col xs="auto">
+              <Form.Group as={Row}>
+                <Form.Label column>门店</Form.Label>
+                <Col xs="auto">
+                  <Form.Control as = "select" name = "location_char" defaultValue = "" onChange = {this.handleChange.bind(this)}>
+                    <option value = "" disabled>【请选择】</option>
+                    <option value = "HD">海拉尔河东</option>
+                    <option value = "HX">海拉尔河西</option>
+                    <option value = "MA">满洲里</option>
+                    <option value = "MB">满洲里二店</option>
+                    <option value = "YA">牙克石</option>
+                    <option value = "YB">牙克石二店</option>
+                  </Form.Control>
+                </Col>
+              </Form.Group>
+            </Col>
+            <Col xs="auto">
+              <Button variant = "success" onClick = {() => this.findUserList(this.state.location_char, 1, 20)}>
+                {this.state.isFetching ? 
+                  <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  />
+                : ''}
+                查看选中门店用户
+              </Button>
+            </Col>
+            <Col xs="auto">
+              {this.props.adminwx.super_admin ? 
+                this.state.totalData === '' ?
+                  <Button variant = "primary" disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
+                    {this.state.isFetchingTotal ? 
+                      <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      />
+                    : ''}
+                    获取选中门店全部
+                  </Button>
+                :
+                  <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
               : ''}
-              查看选中门店用户
-            </Button>
-            {this.props.adminwx.super_admin ? 
-              this.state.totalData === '' ?
-                <Button variant = "primary" style = {{ margin: '10px', display: 'block' }} disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
-                  {this.state.isFetchingTotal ? 
-                    <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    />
-                  : ''}
-                  获取选中门店全部
-                </Button>
-              :
-                <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
-            : ''}
-            {/* {this.props.admin.super_admin ? 
-              this.state.totalData === '' ?
-                <Button variant = "primary" style = {{ margin: '10px', display: 'block' }} disabled = {this.state.isFetchingTotal} onClick = {() => this.getTotalData()}>
-                  {this.state.isFetchingTotal ? 
-                    <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    />
-                  : ''}
-                  获取选中门店全部
-                </Button>
-              :
-                <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
-            : ''} */}
-          </div>
+            </Col>
+          </Row>
           <Pagination style = {{ margin: '20px 0' }}>
             <Pagination.First onClick = {() => this.findUserList(this.state.location_char, 1, 20)}/>
             <Pagination.Prev disabled={this.state.pn === 1} onClick = {() => this.findUserList(this.state.location_char, this.state.pn - 1 > 0 ? this.state.pn - 1 : 1, 20)}/>

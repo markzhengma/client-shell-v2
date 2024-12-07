@@ -214,73 +214,7 @@ class ReminderList extends Component {
     const data = this.props.reminderListData;
     return (
       <div className = "record-list">
-        {data ? 
-          data.length > 0 ? 
-            <div>
-              <h5>
-                保养提醒历史  
-                {
-                  this.state.isShowReminderList 
-                  ? <Button
-                      variant="dark"
-                      onClick={this.changeReminderListShow.bind(this)}
-                    >
-                      收起
-                    </Button>
-                  : <Button
-                      variant="success"
-                      onClick={this.changeReminderListShow.bind(this)}
-                    >
-                      展开
-                    </Button>
-                }
-              </h5>
-              <div 
-                className = "reminder-card-list"
-                style = {
-                          this.state.isShowReminderList
-                          ? { height: 'fit-content' }
-                          : { height: '0' }
-                        }
-              >
-                {data.map(reminder => {
-                  return (
-                    <Card 
-                      bg="secondary"
-                      text="white"
-                      key={reminder.reminder_id} 
-                      className = "reminder-card"
-                    >
-                      <Card.Header>提醒时间：{reminder.schedule}</Card.Header>
-                      <Card.Body>
-                        <Card.Text>
-                          保养项目：{reminder.content}
-                        </Card.Text>
-                        <Card.Text>
-                          发送状态：
-                          { 
-                            reminder.send_time === "" 
-                            ? <Badge variant="warning">未发送</Badge>
-                            : <Badge variant="success">已发送</Badge>
-                          }
-                        </Card.Text>
-                        <Button
-                          variant="danger"
-                          onClick={(e) => this.handleDeleteReminder(e, reminder.reminder_id)}
-                          disabled = {this.state.isLoading}
-                        >
-                          删除
-                          {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  )
-                })}
-              </div>
-            </div>
-          : ""
-        : ""}
-                <div>
+        <div>
           <h5>新保养提醒</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewReminderSubmit.bind(this)} key={this.state.randomKey}>
             <Row>
@@ -350,6 +284,72 @@ class ReminderList extends Component {
             </Row>
           </Form>
         </div>
+        {data ? 
+          data.length > 0 ? 
+            <div>
+              <h5>
+                保养提醒队列  
+                {/* {
+                  this.state.isShowReminderList 
+                  ? <Button
+                      variant="dark"
+                      onClick={this.changeReminderListShow.bind(this)}
+                    >
+                      收起
+                    </Button>
+                  : <Button
+                      variant="success"
+                      onClick={this.changeReminderListShow.bind(this)}
+                    >
+                      展开
+                    </Button>
+                } */}
+              </h5>
+              <div 
+                className = "reminder-card-list"
+                style = {
+                          this.state.isShowReminderList
+                          ? { height: 'fit-content' }
+                          : { height: '0' }
+                        }
+              >
+                {data.map(reminder => {
+                  return (
+                    <Card 
+                      bg="secondary"
+                      text="white"
+                      key={reminder.reminder_id} 
+                      className = "reminder-card"
+                    >
+                      <Card.Header>提醒时间：{reminder.schedule}</Card.Header>
+                      <Card.Body>
+                        <Card.Text>
+                          保养项目：{reminder.content}
+                        </Card.Text>
+                        <Card.Text>
+                          发送状态：
+                          { 
+                            reminder.send_time === "" 
+                            ? <Badge variant="warning">未发送</Badge>
+                            : <Badge variant="success">已发送</Badge>
+                          }
+                        </Card.Text>
+                        <Button
+                          variant="danger"
+                          onClick={(e) => this.handleDeleteReminder(e, reminder.reminder_id)}
+                          disabled = {this.state.isLoading}
+                        >
+                          删除
+                          {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  )
+                })}
+              </div>
+            </div>
+          : ""
+        : ""}
       </div>
     )
   }

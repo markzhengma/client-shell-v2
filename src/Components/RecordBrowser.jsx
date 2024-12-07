@@ -20,7 +20,7 @@ class RecordBrowser extends Component {
     const data = this.props.recordListData;
     return (
       <div className = "record-list">
-        <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
+        <Table striped bordered hover style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
           <thead>
             <tr>
               <th>日期</th>
