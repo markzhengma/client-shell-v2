@@ -304,14 +304,14 @@ class RecordList extends Component {
         <div>
           <h5>新保养记录</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewRecordSubmit.bind(this)} key={this.state.randomKey}>
-            <Row className='justify-content-md-center'>
-              <Col style = {{ minWidth: '180px' }}>
+            <Row>
+              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>日期</Form.Label>
                   <Form.Control type="date" name = "date" value = {this.state.newRecord.date} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col style = {{ minWidth: '160px' }}>
+              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>项目名称</Form.Label>
                   <Form.Control as="select" name = "product_name" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -375,13 +375,13 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col style = {{ minWidth: '160px' }}>
+              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>表示里程</Form.Label>
                   <Form.Control name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col style = {{ minWidth: '160px' }}>
+              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>赠品情况</Form.Label>
                   <Form.Control as="select" name = "gift" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -397,7 +397,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col style = {{ minWidth: '160px' }}>
+              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>操作人</Form.Label>
                   <Form.Control as="select" name = "operator" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -429,13 +429,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col style = {{ minWidth: '160px' }}>
-                <Form.Group>
-                  <Form.Label>累计积分/备注</Form.Label>
-                  <Form.Control name = "detail" value = {this.state.newRecord.detail} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "累计积分/备注"></Form.Control>
-                </Form.Group>
-              </Col>
-              <Col style = {{ minWidth: '160px' }}>
+              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>提醒时间</Form.Label>
                   <Form.Control 
@@ -465,18 +459,34 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col style = {{ minWidth: '160px' }}>
+            </Row>
+            <Row>
+              <Col sm={6} md={4} style = {{ minWidth: '220px', maxWidth: "300px" }}>
+                <Form.Group>
+                  <Form.Label>累计积分/备注</Form.Label>
+                  <Form.Control 
+                    name = "detail" 
+                    as="textarea" 
+                    rows={2}
+                    value = {this.state.newRecord.detail} 
+                    onChange = {this.handleNewRecordChange.bind(this)} 
+                    placeholder = "累计积分/备注"
+                    style={{minWidth: "200px"}}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+              <Col sm={6} md={4} style = {{ minWidth: '220px', maxWidth: "300px" }}>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
                 <Button 
                   variant="success" 
-                  style = {{ margin: '5px' }} 
+                  style = {{ marginRight: '5px' }} 
                   type = "submit"
                   disabled = {this.state.isLoading}
                 >
                   保存
                   {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
                 </Button>
-                <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>
+                <Button variant="warning" style = {{ marginRight: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>
               </Col>
             </Row>
           </Form>

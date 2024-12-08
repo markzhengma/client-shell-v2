@@ -19,8 +19,20 @@ class RecordBrowser extends Component {
   render() {
     const data = this.props.recordListData;
     return (
-      <div className = "record-list">
-        <Table striped bordered hover style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
+      <div 
+        className = "record-list" 
+        style={{
+          padding: "0 10px",
+          maxWidth: "Calc(100vw - 20px)", 
+          overflow: "scroll"
+        }}
+      >
+        <Table 
+          striped 
+          bordered 
+          hover 
+          style = {{backgroundColor: 'rgba(255, 255, 255, 0.5)'}}
+        >
           <thead>
             <tr>
               <th>日期</th>

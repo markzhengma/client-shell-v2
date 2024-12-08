@@ -448,13 +448,13 @@ class FindUser extends Component {
             padding: "5px"
           }}
         >
-          <Col sm={3}>
+          <Col sm={12} md={3} lg={2} style={{padding: "0"}}>
             {this.state.userData !== '' ? this.state.isUserUpdating ? 
               <div>
                 <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
                   编辑客户信息
                 </div>
-                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6"}}>
+                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6", marginBottom: "10px"}}>
                   <UserUpdate 
                     userData = {this.state.userData} 
                     cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
@@ -468,7 +468,7 @@ class FindUser extends Component {
                 <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
                   客户信息
                 </div>
-                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6"}}>
+                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6", marginBottom: "10px"}}>
                   <UserSingle userData = {this.state.userData}/>
                   <Button 
                     variant="primary" 
@@ -493,7 +493,7 @@ class FindUser extends Component {
             : ""}
           </Col>
           {this.state.userData !== '' ?
-            <Col sm = {9}>
+            <Col sm={12} md={9} lg={10} style={{padding: "0"}}>
               <Nav 
                 variant="tabs" 
                 defaultActiveKey="record" 
@@ -506,7 +506,7 @@ class FindUser extends Component {
                     disabled = {this.state.userData === ""}
                     style={{
                       cursor: "pointer",
-                      color: "#495057"
+                      color: "grey"
                     }}
                   >
                     保养记录
@@ -519,7 +519,7 @@ class FindUser extends Component {
                     disabled = {this.state.userData === ""}
                     style={{
                       cursor: "pointer",
-                      color: "#495057"
+                      color: "grey"
                     }}
                   >
                     保养提醒

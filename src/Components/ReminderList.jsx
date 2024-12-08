@@ -218,7 +218,7 @@ class ReminderList extends Component {
           <h5>新保养提醒</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewReminderSubmit.bind(this)} key={this.state.randomKey}>
             <Row>
-              <Col>
+              <Col sm={6} md={4} lg={3} style={{maxWidth: "300px"}}>
                 <Form.Group>
                   <Form.Label>保养类目</Form.Label>
                   <Form.Control 
@@ -239,7 +239,7 @@ class ReminderList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col sm={6} md={4} lg={3} style={{maxWidth: "300px"}}>
                 <Form.Group>
                   <Form.Label>提醒时间</Form.Label>
                   <Form.Control 
@@ -269,17 +269,17 @@ class ReminderList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col sm={6} md={4} lg={3} style={{maxWidth: "300px"}}>
                 <div style = {{ margin: '0 0 8px 0' }}>操作</div>
                 <Button 
                   variant="success" 
-                  style = {{ margin: '5px' }} 
+                  style = {{ marginRight: '5px' }} 
                   type = "submit"
                 >
                   保存
                   {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
                 </Button>
-                <Button variant="warning" style = {{ margin: '5px' }} onClick = {this.resetNewReminderForm.bind(this)}>重置</Button>
+                <Button variant="warning" style = {{ marginRight: '5px' }} onClick = {this.resetNewReminderForm.bind(this)}>重置</Button>
               </Col>
             </Row>
           </Form>

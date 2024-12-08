@@ -132,8 +132,8 @@ class RecentRecord extends Component {
           <Row>
             <Col xs="auto">
               <Form.Group as={Row}>
-                <Form.Label column>门店</Form.Label>
-                <Col xs="auto">
+                <Form.Label column style={{paddingRight: "0"}}>查看门店：</Form.Label>
+                <Col xs="auto" style={{paddingLeft: "0"}}>
                   <Form.Control as = "select" name = "location_char" defaultValue = "" onChange = {this.handleChange.bind(this)}>
                     <option value = "" disabled>【请选择】</option>
                     <option value = "HD">海拉尔河东</option>
@@ -148,8 +148,8 @@ class RecentRecord extends Component {
             </Col>
             <Col xs="auto">
               <Form.Group as={Row}>
-                <Form.Label column>开始时间</Form.Label>
-                <Col xs="auto">
+                <Form.Label column style={{paddingRight: "0"}}>开始时间：</Form.Label>
+                <Col xs="auto" style={{paddingLeft: "0"}}>
                   <Form.Control type = "date" value = {this.state.start} name = "start" onChange = {this.handleChange.bind(this)}>
                   </Form.Control>
                 </Col>
@@ -157,8 +157,8 @@ class RecentRecord extends Component {
             </Col>
             <Col xs="auto">
               <Form.Group as={Row}>
-                <Form.Label column>结束时间</Form.Label>
-                <Col xs="auto">
+                <Form.Label column style={{paddingRight: "0"}}>结束时间：</Form.Label>
+                <Col xs="auto" style={{paddingLeft: "0"}}>
                   <Form.Control type = "date" value = {this.state.end} name = "end" onChange = {this.handleChange.bind(this)}>
                   </Form.Control>
                 </Col>

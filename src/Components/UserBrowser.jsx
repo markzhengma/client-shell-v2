@@ -19,7 +19,14 @@ class UserBrowser extends Component {
   render() {
     const data = this.props.userListData;
     return (
-      <div className = "record-list">
+      <div 
+        className = "record-list"
+        style={{
+          padding: "0 10px",
+          maxWidth: "Calc(100vw - 20px)", 
+          overflow: "scroll"
+        }}
+      >
         <Table striped bordered hover style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
           <thead>
             <tr>
