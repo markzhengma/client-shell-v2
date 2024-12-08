@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Form, Button, ButtonGroup, Spinner, Row, Col, Nav } from 'react-bootstrap'; 
+import { Card, Form, Button, Modal, Container, ListGroup, Spinner, Row, Col, Nav } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
 import UserUpdate from './UserUpdate';
@@ -15,6 +15,7 @@ class FindUser extends Component {
       placeholder: '请输入车牌号',
       value: '',
       userListData: '',
+      isShowUserList: false,
       userData: '',
       recordListData: '',
       reminderListData: '',
@@ -28,7 +29,8 @@ class FindUser extends Component {
         union_id: ''
       },
       isFetching: false,
-      currentTab: 'record'
+      currentTab: 'record',
+      userSelectedFromList: ""
     }
   };
 
@@ -121,12 +123,20 @@ class FindUser extends Component {
       userData: '',
       recordListData: '',
       reminderListData: '',
-      userListData: ''
+      userListData: '',
+      isShowUserList: false
     }, () => {
       window.localStorage.removeItem('find_user_input');
       window.localStorage.removeItem('find_user_record');
     })
   };
+
+  hideUserList() {
+    this.setState({
+      userListData: '',
+      isShowUserList: false
+    })
+  }
 
   changeUserUpdateStatus() {
     this.setState({
@@ -206,11 +216,13 @@ class FindUser extends Component {
                       userData: '',
                       recordListData: '',
                       reminderListData: '',
-                      userListData: userList.data.data
+                      userListData: userList.data.data,
+                      isShowUserList: true
                     });
                   } else {
                     this.setState({
-                      userListData: ''
+                      userListData: '',
+                      isShowUserList: false
                     })
                     this.findUserRecords(userList.data.data[0].record_num);
                   }
@@ -294,12 +306,14 @@ class FindUser extends Component {
               userData: '',
               recordListData: '',
               reminderListData: '',
-              userListData: userList.data.data
+              userListData: userList.data.data,
+              isShowUserList: true
             });
           } else {
             // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: true}));
             this.setState({
-              userListData: ''
+              userListData: '',
+              isShowUserList: false
             })
             this.findUserRecords(userList.data.data[0].record_num);
           }
@@ -335,6 +349,7 @@ class FindUser extends Component {
                   recordListData: records.data.data
                 });
                 this.findUserReminders(record_num);
+                this.hideUserList();
               }
             })
             .catch(err => {
@@ -370,6 +385,18 @@ class FindUser extends Component {
     this.setState({
       currentTab: tab
     })
+  }
+
+  selectUserFromUserList(recordNum) {
+    let userData = this.state.userListData.find(e => e.record_num === recordNum);
+    if(userData && userData.record_num !== ""){
+      this.setState({
+        userSelectedFromList: userData
+      });
+    } else {
+      this.props.showAlert('出错了', "用户信息错误");
+      console.log(userData);
+    }
   }
 
   render() {
@@ -421,26 +448,83 @@ class FindUser extends Component {
             </Col>
           </Form.Row>
         </Form>
-        {this.state.userListData !== '' ? 
-          <div className="user-list-scroller">
-          <h5>找到多个用户，请选择要查看的用户。</h5>
-            <div className = "user-list">
-              { this.state.userListData.map(user => {
+        {this.state.userListData !== "" ?
+          <Modal
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={this.state.isShowUserList}
+            onHide={() => this.hideUserList.bind(this)}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                找到多个用户，请选择要查看的用户
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Container>
+                <Row>
+                  <Col md={6} lg={4} style={{ height: "550px", overflow: "scroll" }}>
+                    <ListGroup>
+                      {this.state.userListData.map(user => {
+                        return (
+                          <ListGroup.Item 
+                            as="li" 
+                            onClick={() => this.selectUserFromUserList(user.record_num)}
+                            key={user.record_num}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {user.user_name} {user.record_num || ''}
+                            {/* <Button variant="primary" style = {{ margin: '10px' }} onClick = {() => this.findUserRecords(user.record_num)}>查看</Button> */}
+                          </ListGroup.Item>
+                        )
+                      })}
+                    </ListGroup>
+                  </Col>
+                  {this.state.userSelectedFromList !== "" ? 
+                    <Col md={6} lg={8}>
+                      <Card style={{height: "100%"}}>
+                        <UserSingle userData = {this.state.userSelectedFromList}/>
+                        <Button 
+                          variant="primary" 
+                          style = {{ margin: '10px' }} 
+                          onClick = {() => this.findUserRecords(this.state.userSelectedFromList.record_num)}
+                        >
+                          查看
+                        </Button>
+                      </Card>
+                    </Col>
+                  :
+                    <Col md={6} lg={8}>
+                      <Card style={{height: "100%"}}>
+                        <Card.Body>
+                          <Card.Text>
+                            *请从列表中选择
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  }
+                </Row>
+              </Container>
+            </Modal.Body>
+          </Modal>
+        : "" }
+        {/* {this.state.userListData !== '' ? 
+          <div style = {{height: "420px"}}>
+            <div>找到多个用户，请选择要查看的用户。</div>
+            <ListGroup as="ul" style={{height: "400px", overflow: "scroll"}}>
+              {this.state.userListData.map(user => {
                 return (
-                  <Card className = "user-list-single" bg="secondary" text="white" style={{ minWidth: '200px'}} key = {user._id}>
-                    <Card.Title className="mb-2 text-warning">
-                      {user.user_name}
-                    </Card.Title>
-                    <Card.Text>
-                      换油证号: {user.record_num || ''}
-                    </Card.Text>
+                  <ListGroup.Item as="li">
+                    {user.user_name} {user.record_num || ''}
                     <Button variant="primary" style = {{ margin: '10px' }} onClick = {() => this.findUserRecords(user.record_num)}>查看</Button>
-                  </Card>
+                  </ListGroup.Item>
                 )
               })}
-            </div>
+            </ListGroup>
           </div>
-        : ""}
+        : ""} */}
         <br/>
         <Row
           style={{
