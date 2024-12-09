@@ -300,7 +300,7 @@ class RecordList extends Component {
   render() {
     const data = this.props.recordListData;
     return (
-      <div className = "record-list">
+      <div className = "record-list" >
         <div>
           <h5>新保养记录</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewRecordSubmit.bind(this)} key={this.state.randomKey}>

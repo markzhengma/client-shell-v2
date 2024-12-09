@@ -316,22 +316,21 @@ class ReminderList extends Component {
                 {data.map(reminder => {
                   return (
                     <Card 
-                      bg="secondary"
-                      text="white"
                       key={reminder.reminder_id} 
                       className = "reminder-card"
+                      style={{backgroundColor: 'rgba(255, 255, 255, 0.5)'}}
                     >
-                      <Card.Header>提醒时间：{reminder.schedule}</Card.Header>
+                      <Card.Header>提醒时间：<b>{reminder.schedule}</b></Card.Header>
                       <Card.Body>
                         <Card.Text>
-                          保养项目：{reminder.content}
+                          保养项目：<b>{reminder.content}</b>
                         </Card.Text>
                         <Card.Text>
                           发送状态：
                           { 
                             reminder.send_time === "" 
-                            ? <Badge variant="warning">未发送</Badge>
-                            : <Badge variant="success">已发送</Badge>
+                            ? <Badge variant="warning" style={{fontSize: "100%"}}>未发送</Badge>
+                            : <Badge variant="success" style={{fontSize: "100%"}}>已发送</Badge>
                           }
                         </Card.Text>
                         <Button

@@ -523,7 +523,7 @@ class FindUser extends Component {
                 <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
                   编辑客户信息
                 </div>
-                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6", marginBottom: "10px"}}>
+                <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', border: "1px solid #dee2e6", marginBottom: "10px"}}>
                   <UserUpdate 
                     userData = {this.state.userData} 
                     cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
@@ -534,10 +534,10 @@ class FindUser extends Component {
               </div>
             :
               <div style={{paddingRight: "4px"}}>
-                <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
+                <div style={{padding: "8px 16px", fontSize: "16px", color: "#212529"}}>
                   客户信息
                 </div>
-                <Card style={{backgroundColor: "#F9D148", border: "1px solid #dee2e6", marginBottom: "10px"}}>
+                <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', border: "1px solid #dee2e6", marginBottom: "10px"}}>
                   <UserSingle userData = {this.state.userData}/>
                   <Button 
                     variant="primary" 
@@ -564,7 +564,7 @@ class FindUser extends Component {
           {this.state.userData !== '' ?
             <Col sm={12} md={9} lg={10} style={{padding: "0 4px 0 0"}}>
               <Nav 
-                variant="tabs" 
+                variant="pills" 
                 defaultActiveKey="record" 
                 onSelect={(selectedKey) => this.changeTab(selectedKey)}
               >
@@ -575,7 +575,7 @@ class FindUser extends Component {
                     disabled = {this.state.userData === ""}
                     style={{
                       cursor: "pointer",
-                      color: "grey"
+                      color: "#656565"
                     }}
                   >
                     保养记录
@@ -588,14 +588,14 @@ class FindUser extends Component {
                     disabled = {this.state.userData === ""}
                     style={{
                       cursor: "pointer",
-                      color: "grey"
+                      color: "#656565"
                     }}
                   >
                     保养提醒
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
-              <div style={{maxHeight: "Calc(100vh - 340px)", overflow: "scroll", padding: "0 6px", border: "1px solid #dee2e6", borderTop: "none"}}>
+              <div style={{maxHeight: "Calc(100vh - 340px)", overflow: "scroll", padding: "0 6px"}}>
                 {this.state.currentTab === 'record' ?
                   <RecordList 
                     productData = {this.props.productData}

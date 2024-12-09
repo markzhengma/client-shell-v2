@@ -229,7 +229,6 @@
 }
 
 .nav-link.active{
-  background-color: #F9D148 !important;
-  color: #212529 !important;
-  border-bottom: none !important;
+  background-color: #656565 !important;
+  color: #F9D148 !important;
 }
