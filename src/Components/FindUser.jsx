@@ -454,7 +454,7 @@ class FindUser extends Component {
             aria-labelledby="contained-modal-title-vcenter"
             centered
             show={this.state.isShowUserList}
-            onHide={() => this.hideUserList.bind(this)}
+            onHide={this.hideUserList.bind(this)}
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
@@ -464,12 +464,12 @@ class FindUser extends Component {
             <Modal.Body>
               <Container>
                 <Row>
-                  <Col md={6} lg={4} style={{ height: "550px", overflow: "scroll" }}>
+                  <Col sm={6} md={6} lg={4} style={{ height: "500px", overflow: "scroll" }}>
                     <ListGroup>
                       {this.state.userListData.map(user => {
                         return (
                           <ListGroup.Item 
-                            as="li" 
+                            action
                             onClick={() => this.selectUserFromUserList(user.record_num)}
                             key={user.record_num}
                             style={{ cursor: "pointer" }}
@@ -482,11 +482,11 @@ class FindUser extends Component {
                     </ListGroup>
                   </Col>
                   {this.state.userSelectedFromList !== "" ? 
-                    <Col md={6} lg={8}>
+                    <Col sm={6} md={6} lg={8}>
                       <Card style={{height: "100%"}}>
                         <UserSingle userData = {this.state.userSelectedFromList}/>
                         <Button 
-                          variant="primary" 
+                          variant="success" 
                           style = {{ margin: '10px' }} 
                           onClick = {() => this.findUserRecords(this.state.userSelectedFromList.record_num)}
                         >
@@ -495,7 +495,7 @@ class FindUser extends Component {
                       </Card>
                     </Col>
                   :
-                    <Col md={6} lg={8}>
+                    <Col sm={6} md={6} lg={8}>
                       <Card style={{height: "100%"}}>
                         <Card.Body>
                           <Card.Text>
@@ -510,21 +510,6 @@ class FindUser extends Component {
             </Modal.Body>
           </Modal>
         : "" }
-        {/* {this.state.userListData !== '' ? 
-          <div style = {{height: "420px"}}>
-            <div>找到多个用户，请选择要查看的用户。</div>
-            <ListGroup as="ul" style={{height: "400px", overflow: "scroll"}}>
-              {this.state.userListData.map(user => {
-                return (
-                  <ListGroup.Item as="li">
-                    {user.user_name} {user.record_num || ''}
-                    <Button variant="primary" style = {{ margin: '10px' }} onClick = {() => this.findUserRecords(user.record_num)}>查看</Button>
-                  </ListGroup.Item>
-                )
-              })}
-            </ListGroup>
-          </div>
-        : ""} */}
         <br/>
         <Row
           style={{
@@ -534,7 +519,7 @@ class FindUser extends Component {
         >
           <Col sm={12} md={3} lg={2} style={{padding: "0"}}>
             {this.state.userData !== '' ? this.state.isUserUpdating ? 
-              <div>
+              <div style={{paddingRight: "4px"}}>
                 <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
                   编辑客户信息
                 </div>
@@ -548,7 +533,7 @@ class FindUser extends Component {
                 </Card>
               </div>
             :
-              <div>
+              <div style={{paddingRight: "4px"}}>
                 <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
                   客户信息
                 </div>
@@ -577,7 +562,7 @@ class FindUser extends Component {
             : ""}
           </Col>
           {this.state.userData !== '' ?
-            <Col sm={12} md={9} lg={10} style={{padding: "0"}}>
+            <Col sm={12} md={9} lg={10} style={{padding: "0 4px 0 0"}}>
               <Nav 
                 variant="tabs" 
                 defaultActiveKey="record" 

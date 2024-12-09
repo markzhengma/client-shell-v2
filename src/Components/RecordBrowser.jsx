@@ -29,7 +29,7 @@ class RecordBrowser extends Component {
       >
         <Table 
           striped 
-          bordered 
+          // bordered 
           hover 
           style = {{backgroundColor: 'rgba(255, 255, 255, 0.5)'}}
         >

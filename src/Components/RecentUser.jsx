@@ -110,8 +110,8 @@ class RecentUser extends Component {
           <Row>
             <Col xs="auto">
               <Form.Group as={Row}>
-                <Form.Label column>门店</Form.Label>
-                <Col xs="auto">
+                <Form.Label column style={{paddingRight: "0"}}>查看门店：</Form.Label>
+                <Col xs="auto" style={{paddingLeft: "0"}}>
                   <Form.Control as = "select" name = "location_char" defaultValue = "" onChange = {this.handleChange.bind(this)}>
                     <option value = "" disabled>【请选择】</option>
                     <option value = "HD">海拉尔河东</option>

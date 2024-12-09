@@ -522,7 +522,7 @@ class RecordList extends Component {
             <Table 
               className="record-list-table" 
               striped 
-              bordered 
+              // bordered 
               hover 
               style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
             >

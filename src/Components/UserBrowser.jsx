@@ -27,7 +27,12 @@ class UserBrowser extends Component {
           overflow: "scroll"
         }}
       >
-        <Table striped bordered hover style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
+        <Table 
+          striped 
+          // bordered 
+          hover 
+          style = {{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
+        >
           <thead>
             <tr>
               <th>换油证号</th>

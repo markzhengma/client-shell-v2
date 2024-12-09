@@ -87,7 +87,12 @@ class DataList extends Component {
           <div>
             <div className = "record-list" style = {{width: '50vw'}}> 
               <h3>赠品列表</h3>
-              <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
+              <Table 
+                striped 
+                // bordered 
+                hover 
+                style = {{ backgroundColor: 'grey', color: 'white' }}
+              >
               <thead>
                 <tr>
                   <th>赠品名称</th>
@@ -128,7 +133,12 @@ class DataList extends Component {
           <div>
             <div className = "record-list" style = {{width: '50vw'}}> 
               <h3>操作人列表</h3>
-              <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
+              <Table 
+                striped 
+                // bordered 
+                hover 
+                style = {{ backgroundColor: 'grey', color: 'white' }}
+              >
                 <thead>
                   <tr>
                     <th>操作人</th>
@@ -184,7 +194,12 @@ class DataList extends Component {
           <div>
             <div className = "record-list" style = {{width: '50vw'}}> 
               <h3>产品列表</h3>
-              <Table striped bordered hover style = {{ backgroundColor: 'grey', color: 'white' }}>
+              <Table 
+                striped 
+                // bordered 
+                hover 
+                style = {{ backgroundColor: 'grey', color: 'white' }}
+              >
                 <thead>
                   <tr>
                     <th>产品名称</th>
