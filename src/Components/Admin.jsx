@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Row, Col, Nav } from 'react-bootstrap'; 
+
 
 import FindUser from './FindUser';
 import NewUser from './NewUser';
@@ -176,7 +178,7 @@ class Admin extends Component {
   render() {
     return (
       <div className = "admin">
-        <div className = "nav-bar">
+        {/* <div className = "nav-bar">
           <div className="nav-btn-group">
             <div className="nav-btn" onClick = {() => this.changeAction('find_user')}>查询用户记录</div>
             <div className="nav-btn" onClick = {() => this.changeAction('new_user')}>创建用户</div>
@@ -186,7 +188,84 @@ class Admin extends Component {
               <div className="nav-btn" onClick = {() => this.changeAction('manage_data')}>编辑基本信息</div>
             : ''}
           </div>
-        </div>
+        </div> */}
+        <Nav
+          variant="pills" 
+          defaultActiveKey={this.state.action !== "" ? this.state.action : "find_user"}
+          onSelect={(selectedKey) => this.changeAction(selectedKey)}
+          style={{
+            backgroundColor: "#656565",
+            padding: "8px 0"
+          }}
+        >
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="find_user"
+              className="admin_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              查询用户记录
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="new_user"
+              className="admin_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              创建用户
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="recent_record"
+              className="admin_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              浏览记录
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="recent_user"
+              className="admin_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              浏览用户
+            </Nav.Link>
+          </Nav.Item>
+          {this.props.adminwx.super_admin ? 
+            <Nav.Item>
+              <Nav.Link
+                as="div"
+                eventKey="manage_data"
+                className="admin_navs"
+                style={{
+                  cursor: "pointer",
+                  color: "#F9D148"
+                }}
+              >
+                编辑基本信息
+              </Nav.Link>
+            </Nav.Item>
+          : ""}
+        </Nav>
         { this.state.action === 'find_user' ? 
           <FindUser 
             giftData = {this.state.giftData}

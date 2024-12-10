@@ -571,6 +571,7 @@ class FindUser extends Component {
                 <Nav.Item>
                   <Nav.Link 
                     as="div"
+                    className="find_user_navs"
                     eventKey="record"
                     disabled = {this.state.userData === ""}
                     style={{
@@ -584,6 +585,7 @@ class FindUser extends Component {
                 <Nav.Item>
                   <Nav.Link 
                     as="div"
+                    className="find_user_navs"
                     eventKey="reminder"
                     disabled = {this.state.userData === ""}
                     style={{

@@ -228,7 +228,12 @@
   background-color: rgba(249, 208, 72, 0.2);
 }
 
-.nav-link.active{
+.find_user_navs.nav-link.active{
   background-color: #656565 !important;
   color: #F9D148 !important;
+}
+.admin_navs.nav-link.active{
+  background-color: #393939 !important;
+  color: #F9D148 !important;
+  font-weight: 400;
 }
