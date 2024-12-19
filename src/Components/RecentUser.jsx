@@ -154,7 +154,7 @@ class RecentUser extends Component {
                     获取选中门店全部
                   </Button>
                 :
-                  <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success" style = {{ margin: '10px', display: 'block' }}>下载选中门店全部</Button></CSVLink>
+                  <CSVLink data = {this.state.totalData} headers = {headers} style = {{ textDecoration: 'none' }}><Button variant = "success">下载选中门店全部</Button></CSVLink>
               : ''}
             </Col>
           </Row>
