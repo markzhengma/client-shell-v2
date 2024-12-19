@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Nav } from 'react-bootstrap'; 
+import { Nav } from 'react-bootstrap'; 
 
 
 import FindUser from './FindUser';
@@ -22,7 +22,7 @@ class Admin extends Component {
     }
   };
 
-  componentDidMount(){
+  componentWillMount(){
     if(this.props.adminwx === ''){
       console.log('logged out, redirect to auth page');
       this.props.handlePageChange('auth');
@@ -178,17 +178,6 @@ class Admin extends Component {
   render() {
     return (
       <div className = "admin">
-        {/* <div className = "nav-bar">
-          <div className="nav-btn-group">
-            <div className="nav-btn" onClick = {() => this.changeAction('find_user')}>查询用户记录</div>
-            <div className="nav-btn" onClick = {() => this.changeAction('new_user')}>创建用户</div>
-            <div className="nav-btn" onClick = {() => this.changeAction('recent_record')}>浏览记录</div>
-            <div className="nav-btn" onClick = {() => this.changeAction('recent_user')}>浏览用户</div>
-            {this.props.adminwx.super_admin ? 
-              <div className="nav-btn" onClick = {() => this.changeAction('manage_data')}>编辑基本信息</div>
-            : ''}
-          </div>
-        </div> */}
         <Nav
           variant="pills" 
           defaultActiveKey={this.state.action !== "" ? this.state.action : "find_user"}

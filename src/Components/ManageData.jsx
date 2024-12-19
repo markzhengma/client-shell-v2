@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Nav } from 'react-bootstrap'; 
 import DataList from './DataList';
 import AdminList from './AdminList';
 import WxArticle from './WxArticle';
@@ -30,7 +31,7 @@ class ManageData extends Component {
   render() {
     return (
       <div>
-        <div className = "nav-bar" style = {{backgroundColor: '#888888'}}>
+        {/* <div className = "nav-bar" style = {{backgroundColor: '#888888'}}>
           <div className="nav-btn-group">
             <div className="nav-btn" onClick = {() => this.changeDataPage('gift')}>赠品列表</div>
             <div className="nav-btn" onClick = {() => this.changeDataPage('operator')}>操作人列表</div>
@@ -38,7 +39,82 @@ class ManageData extends Component {
             <div className="nav-btn" onClick = {() => this.changeDataPage('admin')}>管理员列表</div>
             <div className="nav-btn" onClick = {() => this.changeDataPage('wxArticle')}>小程序展示管理</div>
           </div>
-        </div>
+        </div> */}
+        <Nav
+          variant="pills" 
+          defaultActiveKey="gift"
+          onSelect={(selectedKey) => this.changeDataPage(selectedKey)}
+          style={{
+            backgroundColor: "#393939",
+            padding: "8px 0"
+          }}
+        >
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="gift"
+              className="data_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              赠品列表
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="operator"
+              className="data_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              操作人列表
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="product"
+              className="data_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              产品列表
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="admin"
+              className="data_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              管理员列表
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as="div"
+              eventKey="wxArticle"
+              className="data_navs"
+              style={{
+                cursor: "pointer",
+                color: "#F9D148"
+              }}
+            >
+              小程序展示管理
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
         { this.state.dataPage === 'gift' ? 
           <DataList
             showAlert = {this.props.showAlert}

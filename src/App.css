@@ -235,5 +235,26 @@
 .admin_navs.nav-link.active{
   background-color: #393939 !important;
   color: #F9D148 !important;
-  font-weight: 400;
+  font-weight: 500;
+}
+
+.admin_navs.nav-link:hover{
+  background-color: #464646 !important;
+}
+
+.data_navs.nav-link {
+  padding: 2px;
+  margin: 6px 14px;
+}
+.data_navs.nav-link.active{
+  background-color: #393939 !important;
+  border-radius: 0%;
+  border-bottom: 1px solid #F9D148;
+  color: #F9D148 !important;
+  font-weight: 500;
+}
+.data_navs.nav-link:hover{
+  /* background-color: #464646 !important; */
+  border-radius: 0%;
+  border-bottom: 1px solid #F9D148;
 }
