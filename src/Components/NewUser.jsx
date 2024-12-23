@@ -48,6 +48,7 @@ class NewUser extends Component {
   }
 
   handleNewUserSubmit(e) {
+    e.persist();
     e.preventDefault();
 
     const { make, phone, plate, record_num, user_name } = this.state;

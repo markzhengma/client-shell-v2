@@ -21,6 +21,7 @@ class Login extends Component {
   };
 
   handleAdminLogin = (e) => {
+    e.persist();
     e.preventDefault();
     if(this.state.admin_name === "" || this.state.admin_pass === "") {
       alert('请输入管理员账号和密码');

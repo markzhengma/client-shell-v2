@@ -6,14 +6,7 @@ class UserUpdate extends Component {
     super();
     this.state = {
       filter: 'record_num',
-      value: '',
-      // user_input: {
-      //   user_name: '',
-      //   phone: '',
-      //   plate: '',
-      //   make: '',
-      //   detail: '',
-      // }
+      value: ''
     };
   };
 
@@ -29,54 +22,78 @@ class UserUpdate extends Component {
     })
   }
 
-  // handleUserUpdateChange(e) {
-  //   const target = e.target;
-  //   const value = target.type === 'checkbox' ? target.checked : target.value;
-  //   const name = target.name;
-  //   this.setState({
-  //     user_input: {
-  //       ...this.state.user_input,
-  //       [name]: value
-  //     }
-  //   })
-  // };
-
   render() {
     return (
       <Form 
         onSubmit = {(e) => this.props.confirmUserUpdate(e)}
-        style = {{
-          padding: "10px"
-        }}
+        className='text-secondary'
+        style={{padding: "10px"}}
       >
-        <Form.Group>
-        <Form.Label>车主姓名</Form.Label>
-          <Form.Control name = "user_name" defaultValue = {this.props.userData.user_name} onChange = {this.props.handleUserUpdateChange.bind(this)} />
+        <Form.Group style = {{padding: "10px 10px 0 10px"}}>
+          <Form.Label style={{marginBottom: "0"}}>客户姓名</Form.Label>
+          <Form.Control 
+            name = "user_name" 
+            defaultValue = {this.props.userData.user_name} 
+            onChange = {this.props.handleUserUpdateChange.bind(this)} 
+            style={{marginBottom: "9px"}}
+          />
+          <Form.Label style={{marginBottom: "0"}}>换油证号</Form.Label>
+          <Form.Control 
+            value = {this.props.userData.record_num} 
+            disabled
+            style={{marginBottom: "9px"}}
+          />
+          <Form.Label style={{marginBottom: "0"}}>联系方式</Form.Label>
+          <Form.Control 
+            name = "phone" 
+            defaultValue = {this.props.userData.phone} 
+            onChange = {this.props.handleUserUpdateChange.bind(this)}
+            style={{marginBottom: "9px"}}
+          />
+          <Form.Label style={{marginBottom: "0"}}>车牌号</Form.Label>
+          <Form.Control 
+            name = "plate" 
+            defaultValue = {this.props.userData.plate} 
+            onChange = {this.props.handleUserUpdateChange.bind(this)}
+            style={{marginBottom: "9px"}}
+          />
+          <Form.Label style={{marginBottom: "0"}}>车型</Form.Label>
+          <Form.Control 
+            name = "make" 
+            defaultValue = {this.props.userData.make} 
+            onChange = {this.props.handleUserUpdateChange.bind(this)}
+            style={{marginBottom: "9px"}}
+          />
+          <Form.Label style={{marginBottom: "0"}}>备注</Form.Label>
+          <Form.Control 
+            as="textarea" 
+            rows="2" 
+            name = "detail" 
+            defaultValue = {this.props.userData.detail} 
+            onChange = {this.props.handleUserUpdateChange.bind(this)}
+            style={{marginBottom: "9px"}}
+          />
         </Form.Group>
-        <Form.Group>
-          <Form.Label>换油证号</Form.Label>
-          <Form.Control value = {this.props.userData.record_num} disabled></Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>联系方式</Form.Label>
-          <Form.Control name = "phone" defaultValue = {this.props.userData.phone} onChange = {this.props.handleUserUpdateChange.bind(this)}></Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>车牌号</Form.Label>
-          <Form.Control name = "plate" defaultValue = {this.props.userData.plate} onChange = {this.props.handleUserUpdateChange.bind(this)}></Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>车型</Form.Label>
-          <Form.Control name = "make" defaultValue = {this.props.userData.make} onChange = {this.props.handleUserUpdateChange.bind(this)}></Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>备注</Form.Label>
-          <Form.Control as="textarea" rows="3" name = "detail" defaultValue = {this.props.userData.detail} onChange = {this.props.handleUserUpdateChange.bind(this)}></Form.Control>
-        </Form.Group>
-        <ButtonGroup style = {{ width: '100%' }}>
-          <Button variant="success" type = "submit">保存</Button>
-          <Button variant="warning" onClick = {this.props.cancelUserUpdate}>取消</Button>
-        </ButtonGroup>
+        <Button 
+          block 
+          variant="success" 
+          type = "submit"
+          style={{
+            width: "100%"
+          }}
+        >
+          保存
+        </Button>
+        <Button 
+          block 
+          variant="warning" 
+          onClick = {this.props.cancelUserUpdate}
+          style={{
+            width: "100%"
+          }}
+        >
+          取消
+        </Button>
       </Form>
     )
   }

@@ -166,6 +166,7 @@ class FindUser extends Component {
   }
 
   confirmUserUpdate(e) {
+    e.persist();
     e.preventDefault();
 
     const { make, phone, plate, user_name, union_id } = this.state.updateUser;
@@ -268,6 +269,7 @@ class FindUser extends Component {
   }
 
   handleFindUserSubmit(e) {
+    e.persist();
     e.preventDefault();
 
     const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
@@ -399,55 +401,68 @@ class FindUser extends Component {
     }
   }
 
+  setFindUserInputAndFetchSelectedUserData(recordNum) {
+    if(recordNum && recordNum !== "") {
+      this.setState({
+        filter: "record_num",
+        value: recordNum
+      })
+      this.findUserRecords(recordNum);
+    }
+  }
+
   render() {
     return (
-      <div>
-        <h3 style = {{ margin: '20px' }}>查询用户记录</h3>
-        <Form 
-          onSubmit = {this.handleFindUserSubmit.bind(this)}
-          style = {{ padding: "20px" }}
-        >
-          <Form.Row>
-            <Col xs="auto">
-              <Form.Control as="select" name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
-                <option value = "plate">按车牌号查找</option>
-                <option value = "record_num">按换油证号查找</option>
-                <option value = "phone">按手机号查找</option>
-              </Form.Control>
-            </Col>
-            <Col xs="auto">
-              <Form.Control 
-                type = "text" 
-                name = "value" 
-                value = {this.state.value} 
-                onChange = {this.handleChange.bind(this)} 
-                placeholder = {this.state.placeholder} 
-              />
-            </Col>
-            <Col xs="auto">
-              <Button variant="success" type = "submit" disabled = {this.state.isFetching}>
-              {this.state.isFetching ? 
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-                : ''}
-                查找
-              </Button>
-              <Button 
-                variant = "warning" 
-                disabled = {this.state.isFetching}
-                onClick = {this.resetStates.bind(this)}
-                style = {{ marginLeft: "10px" }}
-              >
-                清空查询
-              </Button>
-            </Col>
-          </Form.Row>
-        </Form>
+      <div style={{padding: "20px"}}>
+        <Row>
+          <Col xs="auto">
+            <h3>查询用户记录</h3>
+          </Col>
+          <Col xs="auto">
+            <Form onSubmit = {this.handleFindUserSubmit.bind(this)}>
+              <Form.Row>
+                <Col xs="auto" style={{marginBottom: "10px"}}>
+                  <Form.Control as="select" name = "filter" value = {this.state.filter} onChange = {this.handleChange.bind(this)}>
+                    <option value = "plate">按车牌号查找</option>
+                    <option value = "record_num">按换油证号查找</option>
+                    <option value = "phone">按手机号查找</option>
+                  </Form.Control>
+                </Col>
+                <Col xs="auto" style={{marginBottom: "10px"}}>
+                  <Form.Control 
+                    type = "text" 
+                    name = "value" 
+                    value = {this.state.value} 
+                    onChange = {this.handleChange.bind(this)} 
+                    placeholder = {this.state.placeholder} 
+                  />
+                </Col>
+                <Col xs="auto" style={{marginBottom: "10px"}}>
+                  <Button variant="success" type = "submit" disabled = {this.state.isFetching}>
+                  {this.state.isFetching ? 
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    : ''}
+                    查找
+                  </Button>
+                  <Button 
+                    variant = "warning" 
+                    disabled = {this.state.isFetching}
+                    onClick = {this.resetStates.bind(this)}
+                    style = {{ marginLeft: "10px" }}
+                  >
+                    清空查询
+                  </Button>
+                </Col>
+              </Form.Row>
+            </Form>
+          </Col>
+        </Row>
         {this.state.userListData !== "" ?
           <Modal
             size="lg"
@@ -456,19 +471,23 @@ class FindUser extends Component {
             show={this.state.isShowUserList}
             onHide={this.hideUserList.bind(this)}
           >
-            <Modal.Header closeButton>
+            <Modal.Header 
+              style={{backgroundColor: "#F9D148"}}
+              closeButton
+            >
               <Modal.Title id="contained-modal-title-vcenter">
                 找到多个用户，请选择要查看的用户
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{backgroundColor: "#656565"}}>
               <Container>
                 <Row>
-                  <Col sm={6} md={6} lg={4} style={{ height: "500px", overflow: "scroll" }}>
+                  <Col sm={6} md={6} lg={4} style={{ height: "300px", overflow: "scroll" }}>
                     <ListGroup>
                       {this.state.userListData.map(user => {
                         return (
                           <ListGroup.Item 
+                            variant='warning'
                             action
                             onClick={() => this.selectUserFromUserList(user.record_num)}
                             key={user.record_num}
@@ -483,12 +502,16 @@ class FindUser extends Component {
                   </Col>
                   {this.state.userSelectedFromList !== "" ? 
                     <Col sm={6} md={6} lg={8}>
-                      <Card style={{height: "100%"}}>
+                      <Card 
+                        bg="dark" 
+                        text='light'
+                        style={{height: "100%"}}
+                      >
                         <UserSingle userData = {this.state.userSelectedFromList}/>
                         <Button 
                           variant="success" 
                           style = {{ margin: '10px' }} 
-                          onClick = {() => this.findUserRecords(this.state.userSelectedFromList.record_num)}
+                          onClick = {() => this.setFindUserInputAndFetchSelectedUserData(this.state.userSelectedFromList.record_num)}
                         >
                           查看
                         </Button>
@@ -496,7 +519,11 @@ class FindUser extends Component {
                     </Col>
                   :
                     <Col sm={6} md={6} lg={8}>
-                      <Card style={{height: "100%"}}>
+                      <Card 
+                        bg="dark" 
+                        text='light'
+                        style={{height: "100%"}}
+                      >
                         <Card.Body>
                           <Card.Text>
                             *请从列表中选择
@@ -510,7 +537,7 @@ class FindUser extends Component {
             </Modal.Body>
           </Modal>
         : "" }
-        <br/>
+
         <Row
           style={{
             margin: "20px 0 0 0",
@@ -520,7 +547,7 @@ class FindUser extends Component {
           <Col sm={12} md={3} lg={2} style={{padding: "0"}}>
             {this.state.userData !== '' ? this.state.isUserUpdating ? 
               <div style={{paddingRight: "4px"}}>
-                <div style={{padding: "10px", fontSize: "16px", color: "#212529"}}>
+                <div style={{padding: "8px 12px", fontSize: "16px", color: "#393939", fontWeight: "500"}}>
                   编辑客户信息
                 </div>
                 <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', border: "1px solid #dee2e6", marginBottom: "10px"}}>
@@ -534,7 +561,7 @@ class FindUser extends Component {
               </div>
             :
               <div style={{paddingRight: "4px"}}>
-                <div style={{padding: "8px 16px", fontSize: "16px", color: "#212529"}}>
+                <div style={{padding: "8px 12px", fontSize: "16px", color: "#393939", fontWeight: "500"}}>
                   客户信息
                 </div>
                 <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', border: "1px solid #dee2e6", marginBottom: "10px"}}>
@@ -559,12 +586,13 @@ class FindUser extends Component {
                   </Button>
                 </Card>
               </div>
-            : ""}
+            : "请输入用户信息查询"}
           </Col>
           {this.state.userData !== '' ?
             <Col sm={12} md={9} lg={10} style={{padding: "0 4px 0 0"}}>
               <Nav 
-                variant="pills" 
+                variant="tabs" 
+                
                 defaultActiveKey="record" 
                 onSelect={(selectedKey) => this.changeTab(selectedKey)}
               >
@@ -597,7 +625,7 @@ class FindUser extends Component {
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
-              <div style={{maxHeight: "Calc(100vh - 340px)", overflow: "scroll", padding: "0 6px"}}>
+              <div style={{padding: "0 6px"}}>
                 {this.state.currentTab === 'record' ?
                   <RecordList 
                     productData = {this.props.productData}

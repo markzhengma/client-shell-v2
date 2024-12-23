@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Table, Form, Row, Col, Button, Spinner } from 'react-bootstrap';
+import { Table, Form, Row, Col, Button, Spinner, Navbar, Nav } from 'react-bootstrap';
 
 class RecordList extends Component {
   constructor(props){
@@ -131,6 +131,7 @@ class RecordList extends Component {
   }
 
   handleNewRecordSubmit(e){
+    e.persist();
     e.preventDefault();
     if(this.state.newRecord.date === "" || this.state.newRecord.gift === "" || this.state.newRecord.milage === "" || this.state.newRecord.operator === "" || this.state.newRecord.product_name === "" || this.state.newRecord.detail === "" || this.state.newReminder.time_span === "" || this.state.newReminder.reminder_cat === "" ) {
       this.props.showAlert('出错了', '亲，请将保养记录填写完整哟~', false);
@@ -205,6 +206,7 @@ class RecordList extends Component {
   };
 
   handleDeleteRecord(e, id){
+    e.persist();
     let confirmed = window.confirm('亲，您确认删除这条保养记录吗？')
     if(confirmed){
       this.setState({
@@ -250,6 +252,7 @@ class RecordList extends Component {
   };
 
   confirmUpdateRecord(e){
+    e.persist();
     e.preventDefault();
     this.setState({
       isLoading: true
@@ -302,16 +305,36 @@ class RecordList extends Component {
     return (
       <div className = "record-list" >
         <div>
-          <h5>新保养记录</h5>
           <Form className = "new-record-form" onSubmit = {this.handleNewRecordSubmit.bind(this)} key={this.state.randomKey}>
+          <Navbar style={{padding: "0", marginBottom: "10px"}}>
+            <Navbar.Brand>新保养记录</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Button 
+                variant="success" 
+                style = {{ marginRight: '10px' }} 
+                type = "submit"
+                disabled = {this.state.isLoading}
+              >
+                添加
+                {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+              </Button>
+              <Button 
+                variant="warning" 
+                style = {{ marginRight: '10px' }} 
+                onClick = {this.resetNewRecordForm.bind(this)}
+              >
+                重置
+              </Button>
+            </Nav>
+          </Navbar>
             <Row>
-              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>日期</Form.Label>
                   <Form.Control type="date" name = "date" value = {this.state.newRecord.date} onChange = {this.handleNewRecordChange.bind(this)} placeholder = "日期"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>项目名称</Form.Label>
                   <Form.Control as="select" name = "product_name" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -375,13 +398,13 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>表示里程</Form.Label>
                   <Form.Control name = "milage" onChange = {this.handleNewRecordChange.bind(this)} placeholder = "表示里程"></Form.Control>
                 </Form.Group>
               </Col>
-              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>赠品情况</Form.Label>
                   <Form.Control as="select" name = "gift" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -397,7 +420,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>操作人</Form.Label>
                   <Form.Control as="select" name = "operator" defaultValue = "" onChange = {this.handleNewRecordChange.bind(this)}>
@@ -429,7 +452,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col sm={6} md={4} lg={2} style = {{ minWidth: '180px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>提醒时间</Form.Label>
                   <Form.Control 
@@ -459,9 +482,7 @@ class RecordList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
-              <Col sm={6} md={4} style = {{ minWidth: '220px', maxWidth: "300px" }}>
+              <Col sm={6} md={4} lg={1} style = {{ minWidth: '180px', maxWidth: "300px" }}>
                 <Form.Group>
                   <Form.Label>累计积分/备注</Form.Label>
                   <Form.Control 
@@ -471,46 +492,17 @@ class RecordList extends Component {
                     value = {this.state.newRecord.detail} 
                     onChange = {this.handleNewRecordChange.bind(this)} 
                     placeholder = "累计积分/备注"
-                    style={{minWidth: "200px"}}
                   ></Form.Control>
                 </Form.Group>
-              </Col>
-              <Col sm={6} md={4} style = {{ minWidth: '220px', maxWidth: "300px" }}>
-                <div style = {{ margin: '0 0 8px 0' }}>操作</div>
-                <Button 
-                  variant="success" 
-                  style = {{ marginRight: '5px' }} 
-                  type = "submit"
-                  disabled = {this.state.isLoading}
-                >
-                  保存
-                  {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
-                </Button>
-                <Button variant="warning" style = {{ marginRight: '5px' }} onClick = {this.resetNewRecordForm.bind(this)}>重置</Button>
               </Col>
             </Row>
           </Form>
         </div>
         {data.length > 0 ? 
-          <div>
-          <h5>
-            保养记录历史  
-            {/* {
-              this.state.isShowRecordList 
-              ? <Button
-                  variant="dark"
-                  onClick={this.changeRecordListShow.bind(this)}
-                >
-                  收起
-                </Button>
-              : <Button
-                  variant="success"
-                  onClick={this.changeRecordListShow.bind(this)}
-                >
-                  展开
-                </Button>
-            } */}
-          </h5>
+          <div style={{padding: "4px 10px"}}>
+          <Navbar style={{padding: "0", marginBottom: "10px"}}>
+            <Navbar.Brand>保养记录历史</Navbar.Brand>
+          </Navbar>
           <div
             className="record-list-table-wrapper"
             style = {
@@ -544,11 +536,11 @@ class RecordList extends Component {
                       <tr key = {record._id} id = {record._id}>
                         <td className = "record-list-column">{record.date}</td>
                         <td className = "record-list-column">{record.product_name}</td>
-                        <td className = "record-list-column">{record.milage}</td>
+                        <td className = "record-list-column" style={{minWidth: "100px"}}>{record.milage}</td>
                         <td className = "record-list-column">{record.gift}</td>
-                        <td className = "record-list-column">{record.operator}</td>
+                        <td className = "record-list-column" style={{minWidth: "100px"}}>{record.operator}</td>
                         <td className = "record-list-column">{record.detail}</td>
-                        <td className = "record-list-column">
+                        <td className = "record-list-column" style={{minWidth: "160px"}}>
                           <Button variant = "primary" onClick = {(e) => this.selectUpdateRecord(record)}>编辑</Button>
                           <Button 
                             variant = "danger" 

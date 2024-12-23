@@ -44,7 +44,7 @@
   /* background-color: grey;
   border: 1px solid #95999c;
   color: #FFF; */
-  padding: 16px;
+  padding: 4px 10px;
   margin-bottom: 20px;
   max-width: 95vw;
   border-bottom: 1px solid #dee2e6;
@@ -89,10 +89,12 @@
 }
 .record-list{
   padding-top: 20px;
+  width: 100%;
+  max-width: calc(100vw - 60px);
 }
 .record-list-table-wrapper{
   overflow: scroll;
-  max-width: 95vw;
+  max-width: 100%;
 }
 .record-list-column{
   min-width: 130px;
@@ -228,10 +230,30 @@
   background-color: rgba(249, 208, 72, 0.2);
 }
 
-.find_user_navs.nav-link.active{
-  background-color: #656565 !important;
-  color: #F9D148 !important;
+/* .find_user_navs.nav-link{
+  padding: 2px;
+  margin: 6px 14px;
 }
+.find_user_navs.nav-link.active{
+  background-color: #F9D148 !important;
+  color: #393939 !important;
+  font-weight: 500;
+  border-radius: 0%;
+  border-bottom: 2px solid #393939;
+}
+.find_user_navs.nav-link:hover{
+  color: #393939 !important;
+  border-radius: 0%;
+  border-bottom: 2px solid #393939;
+} */
+
+.find_user_navs.nav-link.active{
+  background-color: #F9D148 !important;
+  color: #393939 !important;
+  font-weight: 500;
+  border-bottom: 1px solid #F9D148 !important;
+}
+
 .admin_navs.nav-link.active{
   background-color: #393939 !important;
   color: #F9D148 !important;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Row, Col, Button, Card, Badge, Spinner } from 'react-bootstrap';
+import { Form, Row, Col, Button, Card, Badge, Spinner, Navbar, Nav } from 'react-bootstrap';
 
 class ReminderList extends Component {
   constructor(props){
@@ -75,6 +75,7 @@ class ReminderList extends Component {
   }
 
   handleNewReminderSubmit(e){
+    e.persist();
     e.preventDefault();
     if(this.state.newReminder.reminder_cat === "" || this.state.newReminder.time_span === 0) {
       this.props.showAlert('出错了', '亲，请将提醒内容填写完整哟~', false);
@@ -127,6 +128,7 @@ class ReminderList extends Component {
   };
 
   handleDeleteReminder(e, id){
+    e.persist();
     let confirmed = window.confirm('亲，您确认删除这条提醒记录吗？')
     if(confirmed){
       this.setState({
@@ -167,6 +169,7 @@ class ReminderList extends Component {
   };
 
   confirmUpdateReminder(e){
+    e.persist();
     e.preventDefault();
     this.setState({
       isLoading: true
@@ -215,8 +218,28 @@ class ReminderList extends Component {
     return (
       <div className = "record-list">
         <div>
-          <h5>新保养提醒</h5>
-          <Form className = "new-record-form" onSubmit = {this.handleNewReminderSubmit.bind(this)} key={this.state.randomKey}>
+          <Form className = "new-record-form" onSubmit = {(e) => this.handleNewReminderSubmit(e)} key={this.state.randomKey}>
+            <Navbar style={{padding: "0", marginBottom: "10px"}}>
+            <Navbar.Brand>新保养提醒</Navbar.Brand>
+              <Nav className="mr-auto">
+                <Button 
+                  variant="success" 
+                  style = {{ marginRight: '10px' }} 
+                  type = "submit"
+                  disabled = {this.state.isLoading}
+                >
+                  添加
+                  {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
+                </Button>
+                <Button 
+                  variant="warning" 
+                  style = {{ marginRight: '10px' }} 
+                  onClick = {this.resetNewReminderForm.bind(this)}
+                >
+                  重置
+                </Button>
+              </Nav>
+            </Navbar>
             <Row>
               <Col sm={6} md={4} lg={3} style={{maxWidth: "300px"}}>
                 <Form.Group>
@@ -269,49 +292,22 @@ class ReminderList extends Component {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col sm={6} md={4} lg={3} style={{maxWidth: "300px"}}>
-                <div style = {{ margin: '0 0 8px 0' }}>操作</div>
-                <Button 
-                  variant="success" 
-                  style = {{ marginRight: '5px' }} 
-                  type = "submit"
-                >
-                  保存
-                  {this.state.isLoading ? <Spinner animation="border" size="sm" /> : ""}
-                </Button>
-                <Button variant="warning" style = {{ marginRight: '5px' }} onClick = {this.resetNewReminderForm.bind(this)}>重置</Button>
-              </Col>
             </Row>
           </Form>
         </div>
         {data ? 
           data.length > 0 ? 
-            <div>
-              <h5>
-                保养提醒队列  
-                {/* {
-                  this.state.isShowReminderList 
-                  ? <Button
-                      variant="dark"
-                      onClick={this.changeReminderListShow.bind(this)}
-                    >
-                      收起
-                    </Button>
-                  : <Button
-                      variant="success"
-                      onClick={this.changeReminderListShow.bind(this)}
-                    >
-                      展开
-                    </Button>
-                } */}
-              </h5>
+            <div style={{padding: "4px 10px"}}>
+                <Navbar style={{padding: "0", marginBottom: "10px"}}>
+                  <Navbar.Brand>保养提醒队列</Navbar.Brand>
+                </Navbar>
               <div 
                 className = "reminder-card-list"
                 style = {
-                          this.state.isShowReminderList
-                          ? { height: 'fit-content' }
-                          : { height: '0' }
-                        }
+                  this.state.isShowReminderList
+                  ? { height: 'fit-content', marginLeft: "-10px" }
+                  : { height: '0', marginLeft: "-10px" }
+                }
               >
                 {data.map(reminder => {
                   return (
