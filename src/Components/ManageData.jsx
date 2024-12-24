@@ -31,15 +31,6 @@ class ManageData extends Component {
   render() {
     return (
       <div>
-        {/* <div className = "nav-bar" style = {{backgroundColor: '#888888'}}>
-          <div className="nav-btn-group">
-            <div className="nav-btn" onClick = {() => this.changeDataPage('gift')}>赠品列表</div>
-            <div className="nav-btn" onClick = {() => this.changeDataPage('operator')}>操作人列表</div>
-            <div className="nav-btn" onClick = {() => this.changeDataPage('product')}>产品列表</div>
-            <div className="nav-btn" onClick = {() => this.changeDataPage('admin')}>管理员列表</div>
-            <div className="nav-btn" onClick = {() => this.changeDataPage('wxArticle')}>小程序展示管理</div>
-          </div>
-        </div> */}
         <Nav
           variant="pills" 
           defaultActiveKey="gift"

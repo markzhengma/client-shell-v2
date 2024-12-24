@@ -85,13 +85,16 @@ class DataList extends Component {
       case "gift":
         return (
           <div>
-            <div className = "record-list" style = {{width: '50vw'}}> 
+            <div className = "record-list" style = {{width: '50vw', padding: "20px"}}> 
               <h3>赠品列表</h3>
+              <hr/>
               <Table 
                 striped 
+                borderless
                 // bordered 
-                hover 
-                style = {{ backgroundColor: 'grey', color: 'white' }}
+                hover
+                variant="warning"
+                style = {{ marginTop: "22px", borderRadius: "4px", boxShadow: "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px" }}
               >
               <thead>
                 <tr>
@@ -131,13 +134,16 @@ class DataList extends Component {
       case "operator":
         return (
           <div>
-            <div className = "record-list" style = {{width: '50vw'}}> 
+            <div className = "record-list" style = {{width: '50vw', padding: "20px"}}> 
               <h3>操作人列表</h3>
+              <hr/>
               <Table 
                 striped 
+                borderless
                 // bordered 
-                hover 
-                style = {{ backgroundColor: 'grey', color: 'white' }}
+                hover
+                variant="warning"
+                style = {{ marginTop: "22px", borderRadius: "4px", boxShadow: "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px" }}
               >
                 <thead>
                   <tr>
@@ -192,13 +198,16 @@ class DataList extends Component {
       case "product":
         return (
           <div>
-            <div className = "record-list" style = {{width: '50vw'}}> 
+            <div className = "record-list" style = {{width: '50vw', padding: "20px"}}> 
               <h3>产品列表</h3>
+              <hr/>
               <Table 
                 striped 
                 // bordered 
-                hover 
-                style = {{ backgroundColor: 'grey', color: 'white' }}
+                borderless
+                hover
+                variant="warning"
+                style = {{ marginTop: "22px", borderRadius: "4px", boxShadow: "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px" }}
               >
                 <thead>
                   <tr>

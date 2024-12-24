@@ -424,7 +424,7 @@ class AdminList extends Component {
     }
 
     return (
-      <div className = "record-list">
+      <div className = "record-list" style={{padding: "15px 20px"}}>
         <Navbar style={{padding: "0", marginBottom: "12px"}}>
           <Container style={{justifyContent: "left", margin: "0"}}>
             <Navbar.Brand>
@@ -455,6 +455,7 @@ class AdminList extends Component {
             </Nav>
           </Container>
         </Navbar>
+        <hr/>
 
         {/* remove confirmation pop up */}
         <Modal

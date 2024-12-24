@@ -460,7 +460,7 @@ class WxArticle extends Component {
     }
 
     return ( 
-      <div className = "record-list">
+      <div className = "record-list" style={{padding: "15px 20px"}}>
         {/* 确认删除 */}
         <Modal
           aria-labelledby="contained-modal-title-vcenter"
