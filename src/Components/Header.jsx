@@ -12,10 +12,11 @@ class Header extends Component {
     this.logOut = this.logOut.bind(this);
   };
 
-  logOut() {
+  async logOut() {
     Cookies.set('union_id', '');
-    this.props.setAdminWx('');
-    this.props.handlePageChange('auth');
+    await this.props.setAdminWx('');
+    // await this.props.handlePageChange('auth');
+    window.location.replace("https://hulunbuirshell.com");
   }
 
   render() {

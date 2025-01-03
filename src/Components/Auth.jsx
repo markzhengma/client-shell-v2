@@ -38,17 +38,17 @@ class Auth extends Component {
       hasInfo: false,
       isAdmin: false,
       code: ''
+    }, () => {
+      this.props.setAdminWx('');
+      Cookies.set('union_id', '');
     })
-    this.props.setAdminWx('');
-    Cookies.set('union_id', '');
   }
 
   async authAndChangePage(data) {
     this.setState({ 
       isAdmin: true,
       waitTime: '3'
-    });
-    this.props.setAdminWx(data);
+    }, this.props.setAdminWx(data));
     await this.timeout(1000);
     this.setState({
       waitTime: '2'
@@ -88,10 +88,11 @@ class Auth extends Component {
         this.setState({
           userInfo,
           hasInfo: true
+        }, () => {
+          if(res.data.code === 200) {
+            this.authAndChangePage(userInfo);
+          }
         })
-        if(res.data.code === 200) {
-          this.authAndChangePage(userInfo);
-        }
       } else {
         this.props.showAlert('登录失败', res.data, false);
         console.log(res.data);
@@ -131,15 +132,16 @@ class Auth extends Component {
           this.setState({ 
             userInfo,
             hasInfo: true
+          }, () => {
+            Cookies.set("union_id", res.data.data.union_id, {
+              expires: 1,
+              overwrite: true
+            });
+  
+            if(res.data.code === 200) {
+              this.authAndChangePage(userInfo);
+            }
           })
-          Cookies.set("union_id", res.data.data.union_id, {
-            expires: 1,
-            overwrite: true
-          });
-
-          if(res.data.code === 200) {
-            this.authAndChangePage(userInfo);
-          }
   
         } else {
           this.props.showAlert('已退出', '请重新登陆', false);
