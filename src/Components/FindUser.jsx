@@ -118,7 +118,8 @@ class FindUser extends Component {
 
   resetStates(){
     this.setState({
-      filter: 'record_num',
+      filter: 'plate',
+      placeholder: "请输入车牌号",
       value: '',
       userData: '',
       recordListData: '',
@@ -222,10 +223,12 @@ class FindUser extends Component {
                     });
                   } else {
                     this.setState({
+                      userData: '',
+                      recordListData: '',
+                      reminderListData: '',
                       userListData: '',
                       isShowUserList: false
-                    })
-                    this.findUserRecords(userList.data.data[0].record_num);
+                    }, this.findUserRecords(userList.data.data[0].record_num));
                   }
                 }
               })
@@ -314,10 +317,12 @@ class FindUser extends Component {
           } else {
             // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: true}));
             this.setState({
+              userData: '',
+              recordListData: '',
+              reminderListData: '',
               userListData: '',
               isShowUserList: false
-            })
-            this.findUserRecords(userList.data.data[0].record_num);
+            }, this.findUserRecords(userList.data.data[0].record_num))
           }
         }
       })
@@ -347,6 +352,8 @@ class FindUser extends Component {
                 console.log(records.data)
               } else {
                 window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: true}));
+                // ! note that this might cause a problem because of the async set state
+                // keep an eye on this...
                 this.setState({
                   recordListData: records.data.data
                 });
@@ -402,12 +409,12 @@ class FindUser extends Component {
   }
 
   setFindUserInputAndFetchSelectedUserData(recordNum) {
+    console.log("fetch!")
     if(recordNum && recordNum !== "") {
       this.setState({
         filter: "record_num",
         value: recordNum
-      })
-      this.findUserRecords(recordNum);
+      }, this.findUserRecords(recordNum));
     }
   }
 
