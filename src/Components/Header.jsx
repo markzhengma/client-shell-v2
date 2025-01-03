@@ -15,8 +15,8 @@ class Header extends Component {
   async logOut() {
     Cookies.set('union_id', '');
     await this.props.setAdminWx('');
-    // await this.props.handlePageChange('auth');
-    window.location.replace("https://hulunbuirshell.com");
+    await this.props.handlePageChange('auth');
+    // window.location.replace("https://hulunbuirshell.com");
   }
 
   render() {
