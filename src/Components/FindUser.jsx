@@ -35,6 +35,7 @@ class FindUser extends Component {
   };
 
   componentDidMount(){
+    window.localStorage.removeItem('find_user_record');
     let receivedFilterAndValue = this.props.selectedFilter !== "" && this.props.selectedValue !== "";
     let findUserInput = JSON.parse(window.localStorage.getItem('find_user_input')) || {filter: "plate", value: ""};
     this.setState({
@@ -44,7 +45,8 @@ class FindUser extends Component {
       if(receivedFilterAndValue) {
         this.findUser();
       } else {
-        let findUserRecord = JSON.parse(window.localStorage.getItem('find_user_record')) || {recordNum: "", hasReturn: false};
+        // let findUserRecord = JSON.parse(window.localStorage.getItem('find_user_record')) || {recordNum: "", hasReturn: false};
+        let findUserRecord = {recordNum: "", hasReturn: false};
         if(findUserRecord.hasReturn) {
           this.findUserRecords(findUserRecord.recordNum);
         };
@@ -289,8 +291,7 @@ class FindUser extends Component {
 
   findUser(){
     window.localStorage.setItem('find_user_input', JSON.stringify({filter: this.state.filter, value: this.state.value}));
-    window.localStorage.removeItem('find_user_record');
-    // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: false}));
+    // window.localStorage.removeItem('find_user_record');
     axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
       .then(userList => {
         this.setState({
@@ -306,7 +307,6 @@ class FindUser extends Component {
           if(userList.data.data.length === 0){
             this.props.showAlert('出错了', '未找到用户', false);
           } else if(userList.data.data.length > 1){
-            // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: true}));
             this.setState({
               userData: '',
               recordListData: '',
@@ -315,7 +315,6 @@ class FindUser extends Component {
               isShowUserList: true
             });
           } else {
-            // window.localStorage.setItem('find_user_return', JSON.stringify({hasReturn: true}));
             this.setState({
               userData: '',
               recordListData: '',
@@ -335,7 +334,7 @@ class FindUser extends Component {
   }
 
   findUserRecords(record_num) {
-    window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: false}));
+    // window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: false}));
     axios.get(`https://api.hulunbuirshell.com/api/user/single?filter=record_num&value=${record_num}`)
       .then(user => {
         if(user.data.code !== 200){
@@ -351,7 +350,7 @@ class FindUser extends Component {
                 this.props.showAlert('出错了', records.data, false);
                 console.log(records.data)
               } else {
-                window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: true}));
+                // window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: true}));
                 // ! note that this might cause a problem because of the async set state
                 // keep an eye on this...
                 this.setState({
@@ -409,8 +408,8 @@ class FindUser extends Component {
   }
 
   setFindUserInputAndFetchSelectedUserData(recordNum) {
-    console.log("fetch!")
     if(recordNum && recordNum !== "") {
+      window.localStorage.setItem('find_user_input', JSON.stringify({filter: "record_num", value: recordNum}));
       this.setState({
         filter: "record_num",
         value: recordNum
