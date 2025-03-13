@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Form, Button, Modal, Container, ListGroup, Spinner, Row, Col, Nav } from 'react-bootstrap'; 
+import { Card, Form, Button, Modal, Container, ListGroup, Spinner, Row, Col, Nav, ButtonGroup } from 'react-bootstrap'; 
 
 import UserSingle from './UserSingle';
-import UserUpdate from './UserUpdate';
 import RecordList from './RecordList';
 import ReminderList from './ReminderList';
 
@@ -19,18 +18,12 @@ class FindUser extends Component {
       userData: '',
       recordListData: '',
       reminderListData: '',
-      isUserUpdating: '',
-      updateUser: {
-        user_name: '',
-        phone: '',
-        plate: '',
-        make: '',
-        detail: '',
-        union_id: ''
-      },
       isFetching: false,
       currentTab: 'record',
-      userSelectedFromList: ""
+      userSelectedFromList: "",
+      isUpdatingUser: false,
+      updatingUserField: "",
+      updatingUserInput: ""
     }
   };
 
@@ -43,10 +36,11 @@ class FindUser extends Component {
       value: !receivedFilterAndValue ? findUserInput.value : this.props.selectedValue
     }, () => {
       if(receivedFilterAndValue) {
+        this.props.selectFindUserValue("", "");
         this.findUser();
       } else {
-        // let findUserRecord = JSON.parse(window.localStorage.getItem('find_user_record')) || {recordNum: "", hasReturn: false};
-        let findUserRecord = {recordNum: "", hasReturn: false};
+        let findUserRecord = JSON.parse(window.localStorage.getItem('find_user_record')) || {recordNum: "", hasReturn: false};
+        // let findUserRecord = {recordNum: "", hasReturn: false};
         if(findUserRecord.hasReturn) {
           this.findUserRecords(findUserRecord.recordNum);
         };
@@ -106,18 +100,6 @@ class FindUser extends Component {
     }
   };
 
-  handleUserUpdateChange(e) {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      updateUser: {
-        ...this.state.updateUser,
-        [name]: value
-      }
-    })
-  };
-
   resetStates(){
     this.setState({
       filter: 'plate',
@@ -140,114 +122,6 @@ class FindUser extends Component {
       isShowUserList: false
     })
   }
-
-  changeUserUpdateStatus() {
-    this.setState({
-      isUserUpdating: !this.state.isUserUpdating
-    })
-  };
-
-  selectUserUpdate(){
-    this.setState({
-      isUserUpdating: true,
-      updateUser: this.state.userData
-    })
-  };
-
-  cancelUserUpdate(){
-    this.setState({
-      isUserUpdating: false,
-      updateUser: {
-        user_name: '',
-        phone: '',
-        plate: '',
-        make: '',
-        detail: '',
-        union_id: ''
-      }
-    })
-  }
-
-  confirmUserUpdate(e) {
-    e.persist();
-    e.preventDefault();
-
-    const { make, phone, plate, user_name, union_id } = this.state.updateUser;
-    const detail = this.state.updateUser.detail !== '' ? this.state.updateUser.detail : '无备注';
-    const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
-
-    if(!user_name.match(REGEX_CHINESE)) {
-      this.props.showAlert('出错了', '请重新检查输入的姓名', false);
-    } else if((phone.length !== 7 && phone.length !== 11) || !phone.match(/^\d+$/)) {
-      this.props.showAlert('出错了', '请重新检查输入的联系方式', false);
-    } else if(!make.match(REGEX_CHINESE) && !make.match(/[0-9]/)) {
-      this.props.showAlert('出错了', '请重新检查输入的车型', false);
-    } else if((plate.length !== 7 && plate.length !== 8) || !plate.match(REGEX_CHINESE)) {
-      this.props.showAlert('出错了', '请重新检查输入的车牌号', false);
-    } else {
-      axios({
-        url: `https://api.hulunbuirshell.com/api/user/single/${this.state.userData.record_num}`,
-        method: 'PUT',
-        data: {
-          make,
-          phone,
-          plate,
-          user_name,
-          detail,
-          union_id,
-        }
-      })
-        .then(res => {
-          if(res.data.code === 200){
-            this.cancelUserUpdate();
-            // this.handleFindUserSubmit(e);
-  
-            this.setState({
-              isFetching: true,
-            });
-            axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=record_num&value=${res.data.data.record_num}`)
-              .then(userList => {
-                this.setState({
-                  isFetching: false,
-                });
-                if(userList.data.code !== 200) {
-                  this.props.showAlert('出错了', userList.data.code + '\n' + JSON.stringify(userList.data.data), false);
-                } else {
-                  if(userList.data.data.length === 0){
-                    this.props.showAlert('出错了', '未找到用户~', false);
-                  } else if(userList.data.data.length > 1){
-                    this.setState({
-                      userData: '',
-                      recordListData: '',
-                      reminderListData: '',
-                      userListData: userList.data.data,
-                      isShowUserList: true
-                    });
-                  } else {
-                    this.setState({
-                      userData: '',
-                      recordListData: '',
-                      reminderListData: '',
-                      userListData: '',
-                      isShowUserList: false
-                    }, this.findUserRecords(userList.data.data[0].record_num));
-                  }
-                }
-              })
-              .catch(err => {
-                this.setState({
-                  isFetching: false,
-                });
-                console.log(err);
-              })
-  
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-  };
 
   confirmUserDelete() {
     if (this.state.recordListData.length > 0){
@@ -291,7 +165,7 @@ class FindUser extends Component {
 
   findUser(){
     window.localStorage.setItem('find_user_input', JSON.stringify({filter: this.state.filter, value: this.state.value}));
-    // window.localStorage.removeItem('find_user_record');
+    window.localStorage.removeItem('find_user_record');
     axios.get(`https://api.hulunbuirshell.com/api/user/all?filter=${this.state.filter}&value=${this.state.value}`)
       .then(userList => {
         this.setState({
@@ -335,6 +209,7 @@ class FindUser extends Component {
 
   findUserRecords(record_num) {
     // window.localStorage.setItem('find_user_record', JSON.stringify({recordNum: record_num, hasReturn: false}));
+    this.resetUpdateUser();
     axios.get(`https://api.hulunbuirshell.com/api/user/single?filter=record_num&value=${record_num}`)
       .then(user => {
         if(user.data.code !== 200){
@@ -414,6 +289,106 @@ class FindUser extends Component {
         filter: "record_num",
         value: recordNum
       }, this.findUserRecords(recordNum));
+    }
+  }
+
+  resetUpdateUser() {
+    this.setState({
+      isUpdatingUser: false,
+      updatingUserField: "",
+      updatingUserInput: ""
+    })
+  }
+
+  selectUserFieldToUpdate(field) {
+    if(field && field !== "") {
+      this.setState({
+        isUpdatingUser: true,
+        updatingUserField: field,
+        updatingUserInput: ""
+      })
+    } 
+  }
+
+  handleUserUpdatingFieldChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    this.setState({
+      updatingUserInput: value
+    })
+  };
+
+  updateUserSingleFieldValue() {
+    const REGEX_CHINESE = /^[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/;
+    const field = this.state.updatingUserField;
+    const input = this.state.updatingUserInput;
+    if(!this.state.isUpdatingUser) {
+      console.log("Error: not updating");
+    } else if(field === "") {
+      console.log("Error: no field selected");
+    } else if(this.state.userData.record_num === "") {
+      console.log("Error: no record num")
+    } else if(field === "user_name" && !input.match(REGEX_CHINESE)) {
+      this.props.showAlert('出错了', '请重新检查输入的姓名', false);
+    } else if (field === "phone" && ((input.length !== 7 && input.length !== 11) || !input.match(/^\d+$/))){
+      this.props.showAlert('出错了', '请重新检查输入的联系方式', false);
+    } else if (field === "make" && !input.match(REGEX_CHINESE) && !input.match(/[0-9]/)){
+      this.props.showAlert('出错了', '请重新检查输入的车型', false);
+    } else if (field === "plate" && ((input.length !== 7 && input.length !== 8) || !input.match(REGEX_CHINESE))){
+      this.props.showAlert('出错了', '请重新检查输入的车牌号', false);
+    } else {
+      let fieldChinese = "";
+      switch(field) {
+        case "user_name" :
+          fieldChinese = "客户姓名";
+          break;
+        case "phone" :
+          fieldChinese = "电话号码";
+          break;
+        case "plate" :
+          fieldChinese = "车牌号";
+          break;
+        case "make" :
+          fieldChinese = "车型";
+          break;
+        case "detail" :
+          fieldChinese = "备注";
+          break;
+        default:
+          break;
+      }
+      let confirm = window.confirm(`确定更新换油证号为${this.state.userData.record_num}的客户信息？\n${fieldChinese}: ${this.state.userData[field]} -> ${input}？`);
+      if(confirm){
+        this.setState({
+          isFetching: true,
+        });
+        axios({
+          url: `https://api.hulunbuirshell.com/api/user/single-field-update/${this.state.userData.record_num}`,
+          method: "PUT",
+          data: {
+            field: this.state.updatingUserField,
+            value: this.state.updatingUserInput
+          }
+        })
+          .then(res => {
+            this.setState({
+              isFetching: false,
+            });
+            this.resetUpdateUser();
+            if(res.data.code !== 200) {
+              console.log("update failed");
+              console.log(res.data);
+            } else {
+              this.findUserRecords(this.state.userData.record_num);
+            }
+          })
+          .catch(err => {
+            this.setState({
+              isFetching: false,
+            });
+            console.log(err);
+          })
+      }
     }
   }
 
@@ -551,36 +526,168 @@ class FindUser extends Component {
           }}
         >
           <Col sm={12} md={3} lg={2} style={{padding: "0"}}>
-            {this.state.userData !== '' ? this.state.isUserUpdating ? 
-              <div style={{paddingRight: "4px"}}>
-                <div style={{padding: "8px 12px", fontSize: "16px", color: "#393939", fontWeight: "500"}}>
-                  编辑客户信息
-                </div>
-                <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', border: "1px solid #dee2e6", marginBottom: "10px"}}>
-                  <UserUpdate 
-                    userData = {this.state.userData} 
-                    cancelUserUpdate = {this.cancelUserUpdate.bind(this)}
-                    confirmUserUpdate = {this.confirmUserUpdate.bind(this)}
-                    handleUserUpdateChange = {this.handleUserUpdateChange.bind(this)}
-                  />
-                </Card>
-              </div>
-            :
+            {this.state.userData !== '' ? 
               <div style={{paddingRight: "4px"}}>
                 <div style={{padding: "8px 12px", fontSize: "16px", color: "#393939", fontWeight: "500"}}>
                   客户信息
                 </div>
                 <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', border: "1px solid #dee2e6", marginBottom: "10px"}}>
-                  <UserSingle userData = {this.state.userData}/>
-                  <Button 
-                    variant="primary" 
-                    onClick = {this.selectUserUpdate.bind(this)}
-                    style = {{
-                      margin: "6px 10px 0 10px"
-                    }}
-                  >
-                    编辑客户信息
-                  </Button>
+                  <Card.Body>
+                    <Row>
+                      <Col 
+                        className='user-info-block'
+                        sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "2px"}}
+                      >
+                        <Row className = "user-info-field">
+                          <Card.Text className="mb-2 text-secondary">
+                            客户姓名
+                          </Card.Text>
+                          {this.state.updatingUserField !== "user_name" ? 
+                            <Button 
+                              className="user-info-btn"
+                              variant='outline-secondary' size="sm"
+                              onClick={() => this.selectUserFieldToUpdate("user_name")}
+                              style={{position: "absolute", right: "15px"}}
+                            >
+                              编辑
+                            </Button>
+                          :
+                            <ButtonGroup style={{position: "absolute", right: "15px"}}>
+                              <Button variant="success" size="sm" onClick={this.updateUserSingleFieldValue.bind(this)}>确认</Button>
+                              <Button variant="warning" size="sm" onClick={() => this.resetUpdateUser()}>取消</Button>
+                            </ButtonGroup>
+                          }
+                        </Row>
+                        {this.state.isUpdatingUser && this.state.updatingUserField === "user_name" ?
+                          <Form.Control defaultValue={this.state.userData.user_name || ""} onChange={this.handleUserUpdatingFieldChange.bind(this)}/>
+                        :
+                          <Card.Title>
+                            {this.state.userData.user_name || ''}
+                          </Card.Title>
+                        }
+                      </Col>
+                      <Col sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "15px"}}>
+                        <Card.Text className="mb-2 text-secondary">
+                          换油证号
+                        </Card.Text>
+                        <Card.Text>
+                          {this.state.userData.record_num || ''}
+                        </Card.Text>
+                      </Col>
+                      <Col sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "15px"}}>
+                        <Row className = "user-info-field">
+                          <Card.Text className="mb-2 text-secondary">
+                            联系方式
+                          </Card.Text>
+                          {this.state.updatingUserField !== "phone" ? 
+                            <Button 
+                              variant='outline-secondary' size="sm"
+                              onClick={() => this.selectUserFieldToUpdate("phone")}
+                              style={{position: "absolute", right: "15px"}}
+                            >
+                              编辑
+                            </Button>
+                          :
+                            <ButtonGroup style={{position: "absolute", right: "15px"}}>
+                              <Button variant="success" size="sm" onClick={this.updateUserSingleFieldValue.bind(this)}>确认</Button>
+                              <Button variant="warning" size="sm" onClick={() => this.resetUpdateUser()}>取消</Button>
+                            </ButtonGroup>
+                          }
+                        </Row>
+                        {this.state.isUpdatingUser && this.state.updatingUserField === "phone" ?
+                          <Form.Control defaultValue={this.state.userData.phone || ""} onChange={this.handleUserUpdatingFieldChange.bind(this)}/>
+                        :
+                          <Card.Text>
+                            {this.state.userData.phone || ''}
+                          </Card.Text>
+                        }
+                      </Col>
+                      <Col sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "15px"}}>
+                        <Row className = "user-info-field">
+                          <Card.Text className="mb-2 text-secondary">
+                            车牌号
+                          </Card.Text>
+                          {this.state.updatingUserField !== "plate" ? 
+                            <Button 
+                              variant='outline-secondary' size="sm"
+                              onClick={() => this.selectUserFieldToUpdate("plate")}
+                              style={{position: "absolute", right: "15px"}}
+                            >
+                              编辑
+                            </Button>
+                          :
+                            <ButtonGroup style={{position: "absolute", right: "15px"}}>
+                              <Button variant="success" size="sm" onClick={this.updateUserSingleFieldValue.bind(this)}>确认</Button>
+                              <Button variant="warning" size="sm" onClick={() => this.resetUpdateUser()}>取消</Button>
+                            </ButtonGroup>
+                          }
+                        </Row>
+                        {this.state.isUpdatingUser && this.state.updatingUserField === "plate" ?
+                          <Form.Control defaultValue={this.state.userData.plate || ""} onChange={this.handleUserUpdatingFieldChange.bind(this)}/>
+                        :
+                          <Card.Text>
+                            {this.state.userData.plate || ''}
+                          </Card.Text>
+                        }
+                      </Col>
+                      <Col sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "15px"}}>
+                        <Row className = "user-info-field">
+                          <Card.Text className="mb-2 text-secondary">
+                            车型
+                          </Card.Text>
+                          {this.state.updatingUserField !== "make" ? 
+                            <Button 
+                              variant='outline-secondary' size="sm"
+                              onClick={() => this.selectUserFieldToUpdate("make")}
+                              style={{position: "absolute", right: "15px"}}
+                            >
+                              编辑
+                            </Button>
+                          :
+                            <ButtonGroup style={{position: "absolute", right: "15px"}}>
+                              <Button variant="success" size="sm" onClick={this.updateUserSingleFieldValue.bind(this)}>确认</Button>
+                              <Button variant="warning" size="sm" onClick={() => this.resetUpdateUser()}>取消</Button>
+                            </ButtonGroup>
+                          }
+                        </Row>
+                        {this.state.isUpdatingUser && this.state.updatingUserField === "make" ?
+                          <Form.Control defaultValue={this.state.userData.make || ""} onChange={this.handleUserUpdatingFieldChange.bind(this)}/>
+                        :
+                          <Card.Text>
+                            {this.state.userData.make || ''}
+                          </Card.Text>
+                        }
+                      </Col>
+                      <Col sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "15px"}}>
+                        <Row className = "user-info-field">
+                          <Card.Text className="mb-2 text-secondary">
+                            备注
+                          </Card.Text>
+                          {this.state.updatingUserField !== "detail" ? 
+                            <Button 
+                              variant='outline-secondary' size="sm"
+                              onClick={() => this.selectUserFieldToUpdate("detail")}
+                              style={{position: "absolute", right: "15px"}}
+                            >
+                              编辑
+                            </Button>
+                          :
+                            <ButtonGroup style={{position: "absolute", right: "15px"}}>
+                              <Button variant="success" size="sm" onClick={this.updateUserSingleFieldValue.bind(this)}>确认</Button>
+                              <Button variant="warning" size="sm" onClick={() => this.resetUpdateUser()}>取消</Button>
+                            </ButtonGroup>
+                          }
+                        </Row>
+                        {this.state.isUpdatingUser && this.state.updatingUserField === "detail" ?
+                          <Form.Control as="textarea" rows={2} defaultValue={this.state.userData.detail || ""} onChange={this.handleUserUpdatingFieldChange.bind(this)}/>
+                        :
+                          <Card.Text>
+                            {this.state.userData.detail || ''}
+                          </Card.Text>
+                        }
+                      </Col>
+                    </Row>
+                  </Card.Body>
                   <Button 
                     variant="danger" 
                     onClick = {this.confirmUserDelete.bind(this)}

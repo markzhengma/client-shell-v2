@@ -263,6 +263,7 @@ class Admin extends Component {
             selectedValue = {this.state.selectedValue}
             selectedFilter = {this.state.selectedFilter}
             showAlert = {this.props.showAlert}
+            selectFindUserValue = {this.selectFindUserValue.bind(this)}
           /> 
           : 
           '' 

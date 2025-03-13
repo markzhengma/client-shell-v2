@@ -280,3 +280,7 @@
   border-radius: 0%;
   border-bottom: 1px solid #F9D148;
 }
+
+.user-info-field {
+  padding-left: 15px;
+}

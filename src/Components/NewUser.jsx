@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import UserSingle from './UserSingle';
 import { Form, Button, Card, Spinner } from 'react-bootstrap';
 
 class NewUser extends Component {
@@ -130,7 +129,58 @@ class NewUser extends Component {
         <div>
           <h3>新用户：</h3>
           <Card bg="secondary" text="white" border="light" className = "user-single">
-            <UserSingle userData = {this.state.userData}/>
+            <Card.Body>
+              <Row>
+                <Col sm={6} md={12} lg={12} style={{minWidth: "140px", marginBottom: "2px"}}>
+                  <Card.Text className="mb-2 text-secondary">
+                    客户姓名
+                  </Card.Text>
+                  <Card.Title>
+                    {this.state.userData.user_name || ''}
+                  </Card.Title>
+                </Col>
+                <Col sm={6} md={3} lg={3} style={{minWidth: "140px", marginBottom: "15px"}}>
+                  <Card.Text className="mb-2 text-secondary">
+                    换油证号
+                  </Card.Text>
+                  <Card.Text>
+                    {this.state.userData.record_num || ''}
+                  </Card.Text>
+                </Col>
+                <Col sm={6} md={3} lg={3} style={{minWidth: "140px", marginBottom: "15px"}}>
+                  <Card.Text className="mb-2 text-secondary">
+                    联系方式
+                  </Card.Text>
+                  <Card.Text>
+                    {this.state.userData.phone || ''}
+                  </Card.Text>
+                </Col>
+                <Col sm={6} md={3} lg={3} style={{minWidth: "140px", marginBottom: "15px"}}>
+                  <Card.Text className="mb-2 text-secondary">
+                    车牌号
+                  </Card.Text>
+                  <Card.Text>
+                    {this.state.userData.plate || ''}
+                  </Card.Text>
+                </Col>
+                <Col sm={6} md={3} lg={3} style={{minWidth: "140px", marginBottom: "15px"}}>
+                  <Card.Text className="mb-2 text-secondary">
+                    车型
+                  </Card.Text>
+                  <Card.Text>
+                    {this.state.userData.make || ''}
+                  </Card.Text>
+                </Col>
+                <Col sm={6} md={3} lg={3} style={{minWidth: "140px", marginBottom: "15px"}}>
+                  <Card.Text className="mb-2 text-secondary">
+                    备注
+                  </Card.Text>
+                <Card.Text>
+                  {this.state.userData.detail || ''}
+                </Card.Text>
+                </Col>
+              </Row>
+            </Card.Body>
           </Card>
           <h5>请返回<Button variant = "secondary" onClick = {() => this.props.changeAction('find_user')}>查找老用户</Button>来查找该用户，并添加保养记录。</h5>
         </div>
